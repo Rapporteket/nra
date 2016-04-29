@@ -27,7 +27,7 @@ nraUtvalg <- function(RegData, datoFra, datoTil, valgtShus='', minald, maxald, e
   utvalgTxt <- c(paste('Dato: ',
                        min(RegData$HovedDato, na.rm=T), ' til ', max(RegData$HovedDato, na.rm=T), sep='' ),
                  if ((minald>0) | (maxald<130)) {
-                   paste('Pasienter fra ', min(RegData$Alder, na.rm=T), ' til ', max(RegData$Alder, na.rm=T), ' år', sep='')},
+                   paste('Pasienter fra ', min(RegData$PasientAlder, na.rm=T), ' til ', max(RegData$PasientAlder, na.rm=T), ' år', sep='')},
                  if (erMann %in% 0:1) {paste('Kjønn: ', c('Kvinner', 'Menn')[erMann+1], sep='')},
                  if (length(valgtShus)>1) {paste0('Valgte RESH: ', paste(as.character(valgtShus), collapse=','))},
                  if (forlopstype1[1] !='') {paste0('Hovedforløp: ', paste(as.character(RegData$ForlopsType1[

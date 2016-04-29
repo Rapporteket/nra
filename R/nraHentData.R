@@ -13,15 +13,38 @@ nraHentRegData <- function() {
   dbType <- "mysql"
 
   query <- paste0("SELECT
-                  alleVarNum.AvdRESH,
-                  alleVarNum.Sykehusnavn,
-                  alleVarNum.PatientID,
-                  alleVarNum.FodselsDato,
-                  ForlopsOversikt.ErMann,
-                  ForlopsOversikt.PasientAlder,
+                  alleVarNum.AnnenBekkenKirurgi,
+                  alleVarNum.AnnetTraume,
+                  alleVarNum.Hemoroidereksjon,
+                  alleVarNum.NevrologiskSykdom,
+                  alleVarNum.ObsteriskSkade,
+                  alleVarNum.PeriferNervskade,
+                  alleVarNum.PerinealAbscess,
+                  alleVarNum.Rectumreseksjon,
+                  alleVarNum.Sfinkterotomi,
+                  alleVarNum.AnnetEtiologi,
+                  alleVarNum.Konservativ,
+                  alleVarNum.Irrigasjon,
+                  alleVarNum.Tibialisstimulering,
+                  alleVarNum.AnalInjection,
+                  alleVarNum.SNM,
+                  alleVarNum.Sfinkterplastikk,
+                  alleVarNum.Rectopexi,
+                  alleVarNum.KirurgiForRectumprolaps,
+                  alleVarNum.Gracilisplastikk,
+                  alleVarNum.Stomi,
+                  alleVarNum.AnnetTidligereBeh,
+                  alleVarNum.SenterKortNavn,
+                  alleVarNum.Symtomvarighet,
+                  ForlopsOversikt.ForlopsID,
                   ForlopsOversikt.HovedDato,
-                  ForlopsOversikt.BasisRegStatus,
-                  ForlopsOversikt.ForlopsID
+                  ForlopsOversikt.PasientAlder,
+                  ForlopsOversikt.PasientID,
+                  ForlopsOversikt.AvdRESH,
+                  ForlopsOversikt.Sykehusnavn,
+                  ForlopsOversikt.ForlopsType1Num,
+                  ForlopsOversikt.ForlopsType2Num,
+                  ForlopsOversikt.ErMann
                   FROM alleVarNum INNER JOIN ForlopsOversikt
                   ON alleVarNum.ForlopsID = ForlopsOversikt.ForlopsID")
 

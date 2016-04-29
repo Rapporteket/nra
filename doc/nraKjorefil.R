@@ -2,32 +2,41 @@ setwd('c:/GIT/nra/doc')
 rm(list = ls())
 
 RegData <- read.table('C:/SVN/jasper/nra/data/alleVarNum2016-04-22 08-17-00.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+RegData <- RegData[, c('ForlopsID', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
+                       'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
+                       'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
+                       'KirurgiForRectumprolaps', 'Gracilisplastikk', 'Stomi', 'AnnetTidligereBeh', "SenterKortNavn")]
+
 ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-04-22 08-17-00.txt', header=TRUE, sep=";", encoding = 'UFT-8')
-RegData <- RegData[ , -which(names(RegData) %in% c('AvdRESH', "Sykehusnavn", "ForlopsType1", 'ForlopsType1Num', 'ForlopsType2',
-                                                   'ForlopsType2Num', 'KobletForlopsID', 'ErOppfolging', 'KryptertFnr', 'PasientKjonn',
-                                                   'PasientAlder', 'HovedDato', 'BasisRegStatus'))]
+ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
+                             'ForlopsType2Num', 'ErMann')]
+
+#
+# RegData <- RegData[ , -which(names(RegData) %in% c('AvdRESH', "Sykehusnavn", "ForlopsType1", 'ForlopsType1Num', 'ForlopsType2',
+#                                                    'ForlopsType2Num', 'KobletForlopsID', 'ErOppfolging', 'KryptertFnr', 'PasientKjonn',
+#                                                    'PasientAlder', 'HovedDato', 'BasisRegStatus'))]
 RegData <- merge(RegData, ForlopData, by = "ForlopsID")
 
 
 reshID <- 601225 #  #Må sendes med til funksjon
 minald <- 0  #alder, fra og med
 maxald <- 130	#alder, til og med
-erMann <- 99
+erMann <- 0
 datoFra <- '2012-01-01'	 # min og max dato i utvalget vises alltid i figuren.
 datoTil <- '2016-12-31'
 enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 # valgtVar <- 'Etiologi'
 valgtVar <- 'TidlBeh'
-# valgtVar <- 'Alder'
+valgtVar <- 'PasientAlder'
 outfile <- ''
 preprosess<-T
 hentData <- F
-forlopstype1='2'
+forlopstype1=''
 forlopstype2=''
 valgtShus <- c('')
 
 if (outfile == '') {x11()}
-nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
+tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
@@ -43,13 +52,11 @@ nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoT
 
 
 
-
-utforsk <- RegData[which(RegData$KobletForlopsID.x %in% RegData$ForlopsID), ]
-
-
-RegData[RegData$PasientID==24, c("PasientID", 'AnnenBekkenKirurgi', 'AnnetTraume', "Hemoroidereksjon",
-                                 "NevrologiskSykdom", "ObsteriskSkade", "PeriferNervskade", "PerinealAbscess", "Rectumreseksjon",
-                                 "Sfinkterotomi")]
+#
+# utforsk <- RegData[which(RegData$KobletForlopsID.x %in% RegData$ForlopsID), ]
+# RegData[RegData$PasientID==24, c("PasientID", 'AnnenBekkenKirurgi', 'AnnetTraume', "Hemoroidereksjon",
+#                                  "NevrologiskSykdom", "ObsteriskSkade", "PeriferNervskade", "PerinealAbscess", "Rectumreseksjon",
+#                                  "Sfinkterotomi")]
 
 # Etiologi <- read.table('C:/SVN/jasper/nra/data/Etiologi2016-04-18 08-37-06.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 # SkjemaOversikt <- read.table('C:/SVN/jasper/nra/data/SkjemaOversikt2016-04-18 08-37-06.txt', header=TRUE, sep=";", encoding = 'UFT-8')

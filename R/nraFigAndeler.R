@@ -73,7 +73,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   if (enhetsUtvalg==0) {
     shtxt <- 'Hele landet'
   } else {
-    shtxt <- as.character(RegData$SykehusNavn[match(reshID, RegData$AvdRESH)])
+    shtxt <- as.character(RegData$SenterKortNavn[match(reshID, RegData$AvdRESH)])
   }
 
   if (enhetsUtvalg!=0 & length(valgtShus)>1) {
@@ -171,7 +171,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   antDes <- PlotParams$antDes
 
 
-  if ( NHoved %in% 1:5 | 	(medSml ==1 & NRest<10)) {	#(valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) |
+  if ( NHoved %in% 1:5 | 	(medSml ==1 & NRest<5)) {	#(valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) |
     FigTypUt <- figtype(outfile)
     farger <- FigTypUt$farger
     plot.new()

@@ -17,7 +17,7 @@ nraPrepVar <- function(RegData, valgtVar)
 
 
   RegData$Variabel <- NA
-  if (valgtVar %in% c('Alder')) {
+  if (valgtVar == 'PasientAlder') {
     RegData$Variabel <- RegData[ ,valgtVar]
     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
     tittel <- 'Aldersfordeling'
@@ -27,15 +27,26 @@ nraPrepVar <- function(RegData, valgtVar)
     subtxt <- 'Aldersgrupper'
   }
 
+#   RegData$Variabel <- NA
+#   if (valgtVar == 'PasientAlder') {
+#     RegData$Variabel <- RegData[ ,valgtVar]
+#     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
+#     tittel <- 'Aldersfordeling'
+#     gr <- c(0, seq(45, 85, 10), 120)  #c(0,16,31,46,61,76,200)
+#     RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
+#     grtxt <- c('<45','45-54','55-64','65-74','75-84','85+')
+#     subtxt <- 'Aldersgrupper'
+#   }
+
   if (valgtVar == 'Etiologi') {
     retn <- 'H'
-    Ukjente <- unique(RegData$PatientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)])
+    Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)])
     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==0, ]
-    N <- length(unique(union(Ukjente, unique(RegData$PatientID))))
+    N <- length(unique(union(Ukjente, unique(RegData$PasientID))))
 
     SamletPrPID <- aggregate(RegData[, c("AnnenBekkenKirurgi", 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom',
                                  'ObsteriskSkade','PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi')],
-                     by=list(RegData$PatientID), max, na.rm = TRUE)
+                     by=list(RegData$PasientID), max, na.rm = TRUE)
     SamletPrPID[SamletPrPID==-Inf] <- NA
     AntVar <- c(colSums(SamletPrPID[,-1], na.rm = T), Ukjent=length(Ukjente))
     NVar<-rep(N, length(AntVar))
@@ -46,13 +57,13 @@ nraPrepVar <- function(RegData, valgtVar)
 
   if (valgtVar == 'TidlBeh') {
     retn <- 'H'
-    # Ukjente <- unique(RegData$PatientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)])
+    # Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)])
     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==0, ]
-    N <- length(unique(RegData$PatientID))
+    N <- length(unique(RegData$PasientID))
 
     SamletPrPID <- aggregate(RegData[, c("Konservativ", "Irrigasjon", "Tibialisstimulering", "AnalInjection", "SNM", "Sfinkterplastikk",
                                          "Rectopexi", "KirurgiForRectumprolaps", "Gracilisplastikk", "Stomi", "AnnetTidligereBeh")],
-                             by=list(RegData$PatientID), max, na.rm = TRUE)
+                             by=list(RegData$PasientID), max, na.rm = TRUE)
     # SamletPrPID[SamletPrPID==-Inf] <- NA
     AntVar <- colSums(SamletPrPID[,-1], na.rm = T)
     NVar<-rep(N, length(AntVar))
