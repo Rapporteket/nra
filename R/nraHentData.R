@@ -13,6 +13,7 @@ nraHentRegData <- function() {
   dbType <- "mysql"
 
   query <- paste0("SELECT
+                  alleVarNum.Ukjent,
                   alleVarNum.AnnenBekkenKirurgi,
                   alleVarNum.AnnetTraume,
                   alleVarNum.Hemoroidereksjon,
