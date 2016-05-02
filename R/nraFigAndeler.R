@@ -117,62 +117,66 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     flerevar <- 0
   }
 
-
-  if (flerevar == 0 ) {
-    PlotParams <- nraPrepVar(RegData, valgtVar)
-    RegData <- PlotParams$RegData
-    PlotParams$RegData <- NA
-    AntHoved <- table(RegData$VariabelGr[indHoved])
-    NHoved <- sum(AntHoved)
-    Andeler$Hoved <- 100*AntHoved/NHoved
-    if (medSml==1) {
-      AntRest <- table(RegData$VariabelGr[indRest])
-      NRest <- sum(AntRest)	#length(indRest)- Kan inneholde NA
-      Andeler$Rest <- 100*AntRest/NRest
+  if (dim(RegData)[1] > 0) {
+    if (flerevar == 0 ) {
+      PlotParams <- nraPrepVar(RegData, valgtVar)
+      RegData <- PlotParams$RegData
+      PlotParams$RegData <- NA
+      AntHoved <- table(RegData$VariabelGr[indHoved])
+      NHoved <- sum(AntHoved)
+      Andeler$Hoved <- 100*AntHoved/NHoved
+      if (medSml==1) {
+        AntRest <- table(RegData$VariabelGr[indRest])
+        NRest <- sum(AntRest)	#length(indRest)- Kan inneholde NA
+        Andeler$Rest <- 100*AntRest/NRest
+      }
     }
+
+    #FIGURER SATT SAMMEN AV FLERE VARIABLE, ULIKT TOTALUTVALG
+    if (flerevar == 1){
+      utvalg <- c('Hoved', 'Rest')	#Hoved vil angi enhet, evt. hele landet hvis ikke gjøre sml, 'Rest' utgjør sammenligningsgruppa
+      RegDataLand <- RegData
+      NHoved <-length(indHoved) ######## Kan disse fjernes???????
+      NRest <- length(indRest)
+
+      for (teller in 1:(medSml+1)) {
+        #  Variablene kjøres for angitt indeks, dvs. to ganger hvis vi skal ha sammenligning med Resten.
+        RegData <- RegDataLand[switch(utvalg[teller], Hoved = indHoved, Rest=indRest), ]
+        PlotParams <- nraPrepVar(RegData, valgtVar)
+
+        #Generelt for alle figurer med sammensatte variable:
+        if (teller == 1) {
+          AntHoved <- PlotParams$AntVar
+          NHoved <- max(PlotParams$NVar, na.rm=T)
+          Andeler$Hoved <- 100*PlotParams$AntVar/PlotParams$NVar
+        }
+        if (teller == 2) {
+          AntRest <- PlotParams$AntVar
+          NRest <- max(PlotParams$NVar,na.rm=T)	#length(indRest)- Kan inneholde NA
+          Andeler$Rest <- 100*PlotParams$AntVar/PlotParams$NVar
+        }
+      } #end medSml (med sammenligning)
+    }   #end sjekk om figuren inneholder flere variable
+
+
+
+    ##-----------Figur---------------------------------------
+    tittel <- PlotParams$tittel; grtxt <- PlotParams$grtxt; grtxt2 <- PlotParams$grtxt2;
+    stabel <- PlotParams$stabel; subtxt <- PlotParams$subtxt; incl_N <- PlotParams$incl_N;
+    incl_pst <- PlotParams$incl_pst; retn <- PlotParams$retn; cexgr <- PlotParams$cexgr;
+    FigTypUt <- figtype(outfile=outfile, fargepalett=nraUtvalg$fargepalett, pointsizePDF=12);
+    antDes <- PlotParams$antDes
+  } else {
+    NHoved <- 0
+    NRest <- 0
   }
 
-  #FIGURER SATT SAMMEN AV FLERE VARIABLE, ULIKT TOTALUTVALG
-  if (flerevar == 1){
-    utvalg <- c('Hoved', 'Rest')	#Hoved vil angi enhet, evt. hele landet hvis ikke gjøre sml, 'Rest' utgjør sammenligningsgruppa
-    RegDataLand <- RegData
-    NHoved <-length(indHoved) ######## Kan disse fjernes???????
-    NRest <- length(indRest)
 
-    for (teller in 1:(medSml+1)) {
-      #  Variablene kjøres for angitt indeks, dvs. to ganger hvis vi skal ha sammenligning med Resten.
-      RegData <- RegDataLand[switch(utvalg[teller], Hoved = indHoved, Rest=indRest), ]
-      PlotParams <- nraPrepVar(RegData, valgtVar)
-
-      #Generelt for alle figurer med sammensatte variable:
-      if (teller == 1) {
-        AntHoved <- PlotParams$AntVar
-        NHoved <- max(PlotParams$NVar, na.rm=T)
-        Andeler$Hoved <- 100*PlotParams$AntVar/PlotParams$NVar
-      }
-      if (teller == 2) {
-        AntRest <- PlotParams$AntVar
-        NRest <- max(PlotParams$NVar,na.rm=T)	#length(indRest)- Kan inneholde NA
-        Andeler$Rest <- 100*PlotParams$AntVar/PlotParams$NVar
-      }
-    } #end medSml (med sammenligning)
-  }   #end sjekk om figuren inneholder flere variable
-
-
-
-  ##-----------Figur---------------------------------------
-  tittel <- PlotParams$tittel; grtxt <- PlotParams$grtxt; grtxt2 <- PlotParams$grtxt2;
-  stabel <- PlotParams$stabel; subtxt <- PlotParams$subtxt; incl_N <- PlotParams$incl_N;
-  incl_pst <- PlotParams$incl_pst; retn <- PlotParams$retn; cexgr <- PlotParams$cexgr;
-  FigTypUt <- figtype(outfile=outfile, fargepalett=nraUtvalg$fargepalett, pointsizePDF=12);
-  antDes <- PlotParams$antDes
-
-
-  if ( NHoved %in% 1:5 | 	(medSml ==1 & NRest<5)) {	#(valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) |
+  if ( NHoved < 5 | 	(medSml ==1 & NRest<5)) {	#(valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) |
     FigTypUt <- figtype(outfile)
     farger <- FigTypUt$farger
     plot.new()
-    title(tittel)	#, line=-6)
+    # title(tittel)	#, line=-6)
     legend('topleft',utvalgTxt, bty='n', cex=0.9, text.col=farger[1])
     text(0.5, 0.6, 'Færre enn 5 registreringer i egen- eller sammenlikningsgruppa', cex=1.2)
     if ( outfile != '') {dev.off()}
@@ -239,17 +243,18 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     if ( outfile != '') {dev.off()}
   }
 
-  #Beregninger som returneres fra funksjonen.
-  AndelerUt <- rbind(Andeler$Hoved, Andeler$Rest)
-  rownames(AndelerUt) <- c('Hoved', 'Rest')
-  AntallUt <- rbind(AntHoved, AntRest)
-  rownames(AntallUt) <- c('Hoved', 'Rest')
+  if (dim(RegData)[1] > 0) {
+    #Beregninger som returneres fra funksjonen.
+    AndelerUt <- rbind(Andeler$Hoved, Andeler$Rest)
+    rownames(AndelerUt) <- c('Hoved', 'Rest')
+    AntallUt <- rbind(AntHoved, AntRest)
+    rownames(AntallUt) <- c('Hoved', 'Rest')
 
-  UtData <- list(paste(toString(tittel),'.', sep=''), AndelerUt, AntallUt, grtxt )
-  names(UtData) <- c('Tittel', 'Andeler', 'Antall', 'GruppeTekst')
-  return(invisible(UtData))
+    UtData <- list(paste(toString(tittel),'.', sep=''), AndelerUt, AntallUt, grtxt )
+    names(UtData) <- c('Tittel', 'Andeler', 'Antall', 'GruppeTekst')
+    return(invisible(UtData))
 
-
+  }
 
 
 }

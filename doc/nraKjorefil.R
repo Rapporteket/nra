@@ -22,13 +22,13 @@ datoFra <- '2012-01-01'	 # min og max dato i utvalget vises alltid i figuren.
 datoTil <- '2016-12-31'
 enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 # valgtVar <- 'Etiologi'
-valgtVar <- 'TidlBeh'
-# valgtVar <- 'PasientAlder'
+# valgtVar <- 'TidlBeh'
+valgtVar <- 'PasientAlder'
 outfile <- ''
 preprosess<-T
 hentData <- F
-forlopstype1=''
-forlopstype2=''
+forlopstype1='1'
+forlopstype2='1'
 valgtShus <- c('')
 
 if (outfile == '') {x11()}

@@ -24,7 +24,8 @@ nraUtvalg <- function(RegData, datoFra, datoTil, valgtShus='', minald, maxald, e
   indMed <- indAld %i% indDato %i% indKj %i% indVarMed %i% indForlop1 %i% indForlop2
   RegData <- RegData[indMed,]
 
-  utvalgTxt <- c(paste('Dato: ',
+  if (dim(RegData)[1] > 0) {
+    utvalgTxt <- c(paste('Dato: ',
                        min(RegData$HovedDato, na.rm=T), ' til ', max(RegData$HovedDato, na.rm=T), sep='' ),
                  if ((minald>0) | (maxald<130)) {
                    paste('Pasienter fra ', min(RegData$PasientAlder, na.rm=T), ' til ', max(RegData$PasientAlder, na.rm=T), ' år', sep='')},
@@ -34,7 +35,9 @@ nraUtvalg <- function(RegData, datoFra, datoTil, valgtShus='', minald, maxald, e
                    match(as.numeric(forlopstype1), RegData$ForlopsType1Num)]), collapse=', '))},
                  if (forlopstype2[1] !='') {paste0('Underforløp: ', paste(as.character(RegData$ForlopsType2[
                    match(as.numeric(forlopstype2), RegData$ForlopsType2Num)]), collapse=', '))}
-  )
+    )} else {
+      utvalgTxt <- 'Ingen registreringer'
+  }
 
 
   UtData <- list(RegData=RegData, utvalgTxt=utvalgTxt, fargepalett=fargepalett)
