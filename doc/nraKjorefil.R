@@ -9,12 +9,8 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
 
 ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-04-22 08-17-00.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
-                             'ForlopsType2Num', 'ErMann')]
+                             'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2')]
 
-#
-# RegData <- RegData[ , -which(names(RegData) %in% c('AvdRESH', "Sykehusnavn", "ForlopsType1", 'ForlopsType1Num', 'ForlopsType2',
-#                                                    'ForlopsType2Num', 'KobletForlopsID', 'ErOppfolging', 'KryptertFnr', 'PasientKjonn',
-#                                                    'PasientAlder', 'HovedDato', 'BasisRegStatus'))]
 RegData <- merge(RegData, ForlopData, by = "ForlopsID")
 
 

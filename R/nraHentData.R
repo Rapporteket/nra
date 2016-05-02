@@ -45,6 +45,8 @@ nraHentRegData <- function() {
                   ForlopsOversikt.Sykehusnavn,
                   ForlopsOversikt.ForlopsType1Num,
                   ForlopsOversikt.ForlopsType2Num,
+                  ForlopsOversikt.ForlopsType1,
+                  ForlopsOversikt.ForlopsType2,
                   ForlopsOversikt.ErMann
                   FROM alleVarNum INNER JOIN ForlopsOversikt
                   ON alleVarNum.ForlopsID = ForlopsOversikt.ForlopsID")
