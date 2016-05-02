@@ -92,6 +92,9 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                             minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
                             forlopstype1=forlopstype1, forlopstype2=forlopstype2)
   RegData <- nraUtvalg$RegData
+  ###### DEBUG ############
+  print(dim(RegData))
+
   utvalgTxt <- nraUtvalg$utvalgTxt
 
 
