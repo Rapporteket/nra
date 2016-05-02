@@ -57,16 +57,10 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     RegData <- nraHentRegData()
   }
 
-  ###### DEBUG ############
-  print(dim(RegData))
-  print(valgtVar)
-  print(enhetsUtvalg)
-
   ## Hvis RegData ikke har blitt preprosessert
   if (preprosess){
     RegData <- nraPreprosess(RegData=RegData)
   }
-
 
   ## Gjør utvalg basert på brukervalg (LibUtvalg)
 
@@ -93,9 +87,6 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                             minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
                             forlopstype1=forlopstype1, forlopstype2=forlopstype2)
   RegData <- nraUtvalg$RegData
-  ###### DEBUG ############
-  print(dim(RegData))
-
   utvalgTxt <- nraUtvalg$utvalgTxt
 
 
@@ -151,9 +142,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     for (teller in 1:(medSml+1)) {
       #  Variablene kjøres for angitt indeks, dvs. to ganger hvis vi skal ha sammenligning med Resten.
       RegData <- RegDataLand[switch(utvalg[teller], Hoved = indHoved, Rest=indRest), ]
-      print(paste0('Flerevar ', dim(RegData)))  ###### DEBUG ############
       PlotParams <- nraPrepVar(RegData, valgtVar)
-
 
       #Generelt for alle figurer med sammensatte variable:
       if (teller == 1) {
