@@ -59,7 +59,8 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
   ###### DEBUG ############
   print(dim(RegData))
-  print(valgtShus)
+  print(valgtVar)
+  print(enhetsUtvalg)
 
   ## Hvis RegData ikke har blitt preprosessert
   if (preprosess){
@@ -150,7 +151,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     for (teller in 1:(medSml+1)) {
       #  Variablene kjøres for angitt indeks, dvs. to ganger hvis vi skal ha sammenligning med Resten.
       RegData <- RegDataLand[switch(utvalg[teller], Hoved = indHoved, Rest=indRest), ]
-      print(dim(RegData))  ###### DEBUG ############
+      print(paste0('Flerevar ', dim(RegData)))  ###### DEBUG ############
       PlotParams <- nraPrepVar(RegData, valgtVar)
 
 
