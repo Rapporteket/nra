@@ -84,11 +84,11 @@ nraPrepVar <- function(RegData, valgtVar)
 #     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
 #     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
     gr <- c(0:5, 9)
-    grtxt <- c('Ingen skade', 'Partiell defekt ytre sfinkter', 'Partiell ytre og fullveggsdefekt indre',
-               'Fullveggsdefekt ytre sfinkter', 'Fullveggsdefekt ytre og indre sfinkter', 'Fullveggsdefekt indre sfinkter',
+    grtxt <- c('Ingen skade', 'Partiell defekt ytre sfinkter', 'Partiell ytre og fullvegg indre',
+               'Fullveggsdefekt ytre sfinkter', 'Fullvegg ytre og indre sfinkter', 'Fullveggsdefekt indre sfinkter',
                'Ukjent resultat')
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
-    tittel <- 'Symptomvarighet'
+    tittel <- 'Vurdering av sfinkterskade'
   }
 
 
