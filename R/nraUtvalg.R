@@ -33,10 +33,10 @@ nraUtvalg <- function(RegData, datoFra, datoTil, valgtShus='', minald, maxald, e
                  if (length(valgtShus)>1) {paste0('Valgte RESH: ', paste(as.character(valgtShus), collapse=','))},
                  if (forlopstype1[1] !='') {paste0('Hovedforløp: ', paste(as.character(RegData$ForlopsType1[
                    match(as.numeric(forlopstype1), RegData$ForlopsType1Num)]), collapse=', '))},
-                 if (forlopstype2[1] !='') {paste0('Underforløp: ', paste(as.character(RegData$ForlopsType2[
+                 if (forlopstype2[1] !='') {paste0('SNM-type: ', paste(as.character(RegData$ForlopsType2[
                    match(as.numeric(forlopstype2), RegData$ForlopsType2Num)]), collapse=', '))}
     )} else {
-      utvalgTxt <- 'Ingen registreringer'
+      utvalgTxt <- 'Ingen registreringer for dette utvalget'
   }
 
 

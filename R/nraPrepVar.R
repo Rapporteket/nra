@@ -21,11 +21,22 @@ nraPrepVar <- function(RegData, valgtVar)
     RegData$Variabel <- RegData[ ,valgtVar]
     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
     tittel <- 'Aldersfordeling'
-    gr <- c(0, seq(45, 85, 10), 120)  #c(0,16,31,46,61,76,200)
+    gr <- c(0, seq(25, 85, 10), 120)  #c(0,16,31,46,61,76,200)
     RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
-    grtxt <- c('<45','45-54','55-64','65-74','75-84','85+')
+    # grtxt <- c('<45','45-54','55-64','65-74','75-84','85+')
     subtxt <- 'Aldersgrupper'
+    grtxt <- levels(RegData$VariabelGr)
+    grtxt[1] <- paste0('<', as.character(gr[2]))
+    grtxt[length(grtxt)] <- paste0('>', as.character(gr[length(gr)-1]))
   }
+
+#   RegData <- RegData[!is.na(RegData$Variabel), ]
+#   tittel <- c('Tid fra operasjon til død', '(Fordeling av de med registrert dødsdato)')
+#   RegData$Variabel <- as.numeric(RegData$Variabel)
+#   gr <- c(0, 10, 20, 30, 40, 100, 10000)
+#   RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
+#   grtxt <- levels(RegData$VariabelGr)
+#   grtxt[length(grtxt)] <- paste0('\u2265', as.character(gr[length(gr)-1])) # Større eller lik unicode symbol
 
 #   RegData$Variabel <- NA
 #   if (valgtVar == 'PasientAlder') {

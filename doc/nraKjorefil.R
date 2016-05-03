@@ -27,8 +27,8 @@ valgtVar <- 'PasientAlder'
 outfile <- ''
 preprosess<-T
 hentData <- F
-forlopstype1='1'
-forlopstype2='1'
+forlopstype1=''
+forlopstype2=''
 valgtShus <- c('')
 
 if (outfile == '') {x11()}
