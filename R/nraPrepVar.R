@@ -88,7 +88,7 @@ nraPrepVar <- function(RegData, valgtVar)
                'Fullveggsdefekt ytre sfinkter', 'Fullvegg ytre og indre sfinkter', 'Fullveggsdefekt indre sfinkter',
                'Ukjent resultat')
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
-    tittel <- 'Vurdering av sfinkterskade'
+    tittel <- 'Ultralydvurdering av sfinkterskade'
   }
 
 
