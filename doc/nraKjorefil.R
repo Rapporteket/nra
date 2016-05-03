@@ -5,7 +5,8 @@ RegData <- read.table('C:/SVN/jasper/nra/data/alleVarNum2016-04-22 08-17-00.txt'
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
-                       'KirurgiForRectumprolaps', 'Gracilisplastikk', 'Stomi', 'AnnetTidligereBeh', "SenterKortNavn", "Symtomvarighet")]
+                       'KirurgiForRectumprolaps', 'Gracilisplastikk', 'Stomi', 'AnnetTidligereBeh', "SenterKortNavn", "Symtomvarighet",
+                       "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter")]
 
 ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-04-22 08-17-00.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
@@ -22,8 +23,8 @@ datoFra <- '2012-01-01'	 # min og max dato i utvalget vises alltid i figuren.
 datoTil <- '2016-12-31'
 enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 # valgtVar <- 'Etiologi'
-# valgtVar <- 'TidlBeh'
-valgtVar <- 'PasientAlder'
+valgtVar <- 'Sfinktervurdering'
+# valgtVar <- 'PasientAlder'
 outfile <- ''
 preprosess<-T
 hentData <- F
@@ -47,6 +48,9 @@ tmp <- RegData[RegData$PatientID %in% as.numeric(names(sort(table(RegData$Patien
             decreasing = T))[1:15]) & RegData$ForlopsType1Num %in% 1:2, c("PatientID", "HovedDato", "TestSluttDato", "FyllDato1A", "FyllDato1B", "ForlopsType1", "ForlopsType2")]
 
 tmp[order(tmp$PatientID), ]
+
+
+tmp2 <- RegData[, c("Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter")]
 
 
 

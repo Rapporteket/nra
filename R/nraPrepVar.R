@@ -18,36 +18,18 @@ nraPrepVar <- function(RegData, valgtVar)
 
   RegData$Variabel <- NA
   if (valgtVar == 'PasientAlder') {
-    RegData$Variabel <- RegData[ ,valgtVar]
+    RegData$Variabel <- RegData[, valgtVar]
     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
+    RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
+    RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
     tittel <- 'Aldersfordeling'
-    gr <- c(0, seq(25, 85, 10), 120)  #c(0,16,31,46,61,76,200)
+    gr <- c(0, seq(25, 85, 10), 130)
     RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
-    # grtxt <- c('<45','45-54','55-64','65-74','75-84','85+')
     subtxt <- 'Aldersgrupper'
     grtxt <- levels(RegData$VariabelGr)
     grtxt[1] <- paste0('<', as.character(gr[2]))
     grtxt[length(grtxt)] <- paste0('>', as.character(gr[length(gr)-1]))
   }
-
-#   RegData <- RegData[!is.na(RegData$Variabel), ]
-#   tittel <- c('Tid fra operasjon til død', '(Fordeling av de med registrert dødsdato)')
-#   RegData$Variabel <- as.numeric(RegData$Variabel)
-#   gr <- c(0, 10, 20, 30, 40, 100, 10000)
-#   RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
-#   grtxt <- levels(RegData$VariabelGr)
-#   grtxt[length(grtxt)] <- paste0('\u2265', as.character(gr[length(gr)-1])) # Større eller lik unicode symbol
-
-#   RegData$Variabel <- NA
-#   if (valgtVar == 'PasientAlder') {
-#     RegData$Variabel <- RegData[ ,valgtVar]
-#     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
-#     tittel <- 'Aldersfordeling'
-#     gr <- c(0, seq(45, 85, 10), 120)  #c(0,16,31,46,61,76,200)
-#     RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
-#     grtxt <- c('<45','45-54','55-64','65-74','75-84','85+')
-#     subtxt <- 'Aldersgrupper'
-#   }
 
   if (valgtVar == 'Etiologi') {
     retn <- 'H'
@@ -68,8 +50,7 @@ nraPrepVar <- function(RegData, valgtVar)
 
   if (valgtVar == 'TidlBeh') {
     retn <- 'H'
-    # Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)])
-    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==0, ]
+    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
     N <- length(unique(RegData$PasientID))
 
     SamletPrPID <- aggregate(RegData[, c("Konservativ", "Irrigasjon", "Tibialisstimulering", "AnalInjection", "SNM", "Sfinkterplastikk",
@@ -84,7 +65,31 @@ nraPrepVar <- function(RegData, valgtVar)
   }
 
 
+  if (valgtVar == 'Symtomvarighet') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
+    RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
+    RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
+    gr <- 1:4
+    grtxt <- c('Mindre enn 1 år', 'Mellom 1 år og inntil 5 år', 'Mellom 5 år og inntil 10 år', 'Mer enn 10 år')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+    tittel <- 'Symptomvarighet'
+  }
 
+  if (valgtVar == 'Sfinktervurdering') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[RegData$Ultralyd %in% 1:2, ]
+#     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
+#     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
+    gr <- c(0:5, 9)
+    grtxt <- c('Ingen skade', 'Partiell defekt ytre sfinkter', 'Partiell ytre og fullveggsdefekt indre',
+               'Fullveggsdefekt ytre sfinkter', 'Fullveggsdefekt ytre og indre sfinkter', 'Fullveggsdefekt indre sfinkter',
+               'Ukjent resultat')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+    tittel <- 'Symptomvarighet'
+  }
 
 
 
