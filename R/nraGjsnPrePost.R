@@ -28,6 +28,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     RegData <- nraPreprosess(RegData=RegData)
   }
 
+  ## Fjerner reistreringer som mangler valgt variabel
   RegData$Variabel <- RegData[, valgtVar]
   RegData <- RegData[!is.na(RegData$Variabel), ]
 
@@ -51,12 +52,9 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   }
 
   ## Skill ut oppfølginer
-  Oppfolginger <- switch (as.character(Sammenlign),
-                          '0' = NULL,
-                          '1' = RegData[RegData$ForlopsType1Num == 3, ],
-                          '2' = RegData[RegData$ForlopsType1Num %in% 3:4, ]
-  )
-  # Oppfolginger <- RegData[RegData$ForlopsType1Num %in% 3:4, ]
+  Oppfolging1 <- RegData[RegData$ForlopsType1Num == 3, ]
+  Oppfolging2 <- RegData[RegData$ForlopsType1Num == 4, ]
+
   RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
 
   if (enhetsUtvalg == 2) {RegData <- 	RegData[which(RegData$AvdRESH == reshID),]}
@@ -68,11 +66,22 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   utvalgTxt <- nraUtvalg$utvalgTxt
 
 
-  if (Sammenlign %in% 1:2) {
-    Oppfolginger <- Oppfolginger[Oppfolginger$KobletForlopsID %in% RegData$ForlopsID, ]
-    RegData <- RegData[RegData$ForlopsID %in% Oppfolginger$KobletForlopsID, ]
+  if (Sammenlign == 0) {
+    RegData1 <- RegData[,c("Variabel", "SenterKortNavn")]
+    names(RegData)[names(RegData)=='Variabel'] <- 'VariabelPre'
   }
 
+  if (Sammenlign == 1) {
+    Oppfolging1 <- Oppfolging1[Oppfolging1$KobletForlopsID %in% RegData$ForlopsID, ]
+    RegData <- RegData[RegData$ForlopsID %in% Oppfolging1$KobletForlopsID, ]
+    RegData <- merge(RegData[,c("Variabel", "SenterKortNavn", "ForlopsID", "ForlopsType1Num")],
+                      Oppfolging1[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+                      suffixes = c('Pre', 'Post1'))
+  }
+
+
+  PrePost <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
+                           by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
 
 
 

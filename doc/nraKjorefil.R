@@ -42,7 +42,16 @@ tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFr
 
 
 
+###############  St. Marks osv...
 
+
+valgtVar <- 'StMarksTotalScore'
+Sammenlign <- 1
+
+
+
+
+###########
 
 
 tmp <- RegData[RegData$PatientID %in% as.numeric(names(sort(table(RegData$PatientID[!is.na(RegData$Symtomvarighet)], useNA = 'ifany'),
