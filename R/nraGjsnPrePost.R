@@ -82,7 +82,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   grtxt <- c(names(Ngr)[1:(length(Ngr)-1)], 'Nasjonalt')
   tittel <- switch (valgtVar,
     'StMarksTotalScore' = paste0('St. Marks score ', tittel2),
-    'GenQol' = c(paste0('Generell livskvalitet ', tittel2), 'Skala fra 0=Verst tenkelig til 10=Best tenkelig'),
+    'GenQol' = c(paste0('Generell livskvalitet ', tittel2), 'Skala fra 0=\'Verst tenkelig\' til 10=\'Best tenkelig\''),
     'QolSexualitet' = c(paste0('Påvirkning av seksualliv ', tittel2), 'Skala fra 0=\'I svært liten grad\' til 10=\'I svært stor grad\'')
   )
 

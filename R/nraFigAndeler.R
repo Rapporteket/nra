@@ -168,6 +168,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   } else {
     NHoved <- 0
     NRest <- 0
+    medSml <- 1
   }
 
 

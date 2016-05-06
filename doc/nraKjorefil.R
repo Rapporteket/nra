@@ -19,19 +19,19 @@ RegData <- merge(RegData, ForlopData, by = "ForlopsID")
 reshID <- 601225 #  #Må sendes med til funksjon
 minald <- 0  #alder, fra og med
 maxald <- 130	#alder, til og med
-erMann <- 99
+erMann <- 1
 datoFra <- '2012-01-01'	 # min og max dato i utvalget vises alltid i figuren.
 datoTil <- '2016-01-01'
-enhetsUtvalg <- 2 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
+enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 # valgtVar <- 'Etiologi'
 # valgtVar <- 'TidlBeh'
 # valgtVar <- 'Tilfredshet'
-valgtVar <- 'Sfinktervurdering'
-# valgtVar <- 'PasientAlder'
+# valgtVar <- 'Sfinktervurdering'
+valgtVar <- 'PasientAlder'
 outfile <- ''
 preprosess<-T
 hentData <- F
-forlopstype1=''
+forlopstype1='1'
 forlopstype2=''
 valgtShus <- c('')
 

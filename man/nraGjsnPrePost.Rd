@@ -6,9 +6,9 @@
 inkludert konfidensintervaller.}
 \usage{
 nraGjsnPrePost(RegData, valgtVar, datoFra = "2012-04-01",
-  datoTil = "2050-12-31", valgtShus = "", outfile = "",
-  preprosess = TRUE, minald = 0, maxald = 130, erMann = "", reshID,
-  hentData = F, forlopstype1 = "", forlopstype2 = "", Sammenlign = 0)
+  datoTil = "2050-12-31", outfile = "", preprosess = TRUE, minald = 0,
+  maxald = 130, erMann = "", reshID, hentData = F, forlopstype1 = "",
+  forlopstype2 = "", sammenlign = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -18,9 +18,6 @@ nraGjsnPrePost(RegData, valgtVar, datoFra = "2012-04-01",
 \item{datoFra}{Tidligste dato i utvalget (vises alltid i figuren).}
 
 \item{datoTil}{Seneste dato i utvalget (vises alltid i figuren).}
-
-\item{valgtShus}{Vektor med AvdResh over hvilke sykehus man genererer rapporten for.
-Denne overstyrer reshID og er bare tilgjengelig for SC-bruker.}
 
 \item{outfile}{Navn på fil figuren skrives til. Default: '' (Figur skrives
 til systemets default output device (som regel skjerm))}
@@ -59,7 +56,7 @@ TRUE: Ja}
 4: Eksplantasjon Et eksisterende implantat eksplanteres, ingen kobling til ev. opprinnelig forløp
 5: Test eksplantasjon -}
 
-\item{Sammenlign}{0: Nei - Lag figur kun for pre
+\item{sammenlign}{0: Nei - Lag figur kun for pre
 1: Ja, 1 års - lag figur med pre og 1-års oppfølging
 2: Ja, alle år - lag figur med pre, 1-års og 5-års oppfølging}
 }
