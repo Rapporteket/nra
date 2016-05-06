@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-nraPrepVar <- function(RegData, valgtVar)
+nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg)
 {
   stabel=FALSE; incl_N=FALSE; incl_pst=FALSE; retn= 'V'; tittel <- ''; inkl_konf=0; antDes=1;
   cexgr <- 1.0; grtxt <- ''; grtxt2 <- ''; subtxt <- ''; VarTxt <- ''; AntVar=NA; NVar=NA;
@@ -29,6 +29,19 @@ nraPrepVar <- function(RegData, valgtVar)
     grtxt <- levels(RegData$VariabelGr)
     grtxt[1] <- paste0('<', as.character(gr[2]))
     grtxt[length(grtxt)] <- paste0('>', as.character(gr[length(gr)-1]))
+  }
+
+
+  if (valgtVar == 'Tilfredshet') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$TilfredshetPost1
+    # RegData <- RegData[RegData$ForlopsType1Num %in% 3:4, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- 'Tilfredshet med behandlingstilbudet'
+    gr <- 0:10
+    grtxt <- c('0=Svært misfornøyd', as.character(1:9), '10=Svært fornøyd')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+    # subtxt <- 'Aldersgrupper'
   }
 
   if (valgtVar == 'Etiologi') {
@@ -92,11 +105,27 @@ nraPrepVar <- function(RegData, valgtVar)
   }
 
 
+  #Generere hovedgruppe og sammenlikningsgruppe
+  #Trenger indeksene før det genereres tall for figurer med flere variable med ulike utvalg
+
+  if (enhetsUtvalg %in% c(0,2)) {		#Ikke sammenlikning
+    medSml <- 0
+    indHoved <- 1:dim(RegData)[1]	#Tidligere redusert datasett
+    indRest <- NULL
+    smltxt <- NULL
+  } else {						#Skal gjøre sammenlikning
+    medSml <- 1
+    if (enhetsUtvalg == 1) {
+      indHoved <-which(as.numeric(RegData$AvdRESH)==reshID)
+      smltxt <- 'Landet forøvrig'
+      indRest <- which(as.numeric(RegData$AvdRESH) != reshID)
+    }
+  }
 
 
   PlotParams <- list(RegData=RegData, tittel=tittel, grtxt=grtxt, grtxt2=grtxt2, subtxt=subtxt,
                      incl_N=incl_N, incl_pst=incl_pst, retn=retn, cexgr=cexgr, VarTxt=VarTxt, inkl_konf=inkl_konf,
-                     AntVar=AntVar, NVar=NVar, antDes=antDes)
+                     AntVar=AntVar, NVar=NVar, antDes=antDes, medSml=medSml, indHoved=indHoved, indRest=indRest, smltxt=smltxt)
 
   return(invisible(PlotParams))
 }

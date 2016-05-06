@@ -1,15 +1,15 @@
 setwd('c:/GIT/nra/doc')
 rm(list = ls())
 
-RegData <- read.table('C:/SVN/jasper/nra/data/alleVarNum2016-04-22 08-17-00.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+RegData <- read.table('C:/SVN/jasper/nra/data/alleVarNum2016-05-06 09-40-45.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
                        'KirurgiForRectumprolaps', 'Gracilisplastikk', 'Stomi', 'AnnetTidligereBeh', "SenterKortNavn", "Symtomvarighet",
                        "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter", "GenQol",
-                       "StMarksTotalScore", "QolSexualitet", "KobletForlopsID")]
+                       "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet")]
 
-ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-04-22 08-17-00.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-05-06 09-40-45.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2')]
 
@@ -19,11 +19,13 @@ RegData <- merge(RegData, ForlopData, by = "ForlopsID")
 reshID <- 601225 #  #Må sendes med til funksjon
 minald <- 0  #alder, fra og med
 maxald <- 130	#alder, til og med
-erMann <- 0
+erMann <- 99
 datoFra <- '2012-01-01'	 # min og max dato i utvalget vises alltid i figuren.
-datoTil <- '2016-12-31'
-enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
+datoTil <- '2016-01-01'
+enhetsUtvalg <- 2 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 # valgtVar <- 'Etiologi'
+# valgtVar <- 'TidlBeh'
+# valgtVar <- 'Tilfredshet'
 valgtVar <- 'Sfinktervurdering'
 # valgtVar <- 'PasientAlder'
 outfile <- ''
@@ -40,15 +42,19 @@ tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFr
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 
 
-
-
 ###############  St. Marks osv...
 
 
 valgtVar <- 'StMarksTotalScore'
-Sammenlign <- 1
+# valgtVar <- 'GenQol'
+# valgtVar <- 'QolSexualitet'
+sammenlign <- 1
 
-
+if (outfile == '') {x11()}
+nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
+               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+               reshID=reshID, preprosess=preprosess, hentData=hentData,
+               forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign)
 
 
 ###########

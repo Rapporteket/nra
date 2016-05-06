@@ -80,6 +80,11 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     RegData$AvdRESH[RegData$AvdRESH %in% valgtShus] <- reshID
     shtxt <- 'Ditt utvalg'
   }
+    #############  UNDERSØK NÆRMERE !!!!!!!!!!!!!!!!!!!!!!!
+  if (valgtVar == 'Tilfredshet') {
+    RegData <- merge(RegData, RegData[,c("Tilfredshet", "KobletForlopsID")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+                     suffixes = c('', 'Post1'), all.x = TRUE)
+  }
 
   if (enhetsUtvalg == 2) {RegData <- 	RegData[which(RegData$AvdRESH == reshID),]}
 
@@ -88,23 +93,6 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                             forlopstype1=forlopstype1, forlopstype2=forlopstype2)
   RegData <- nraUtvalg$RegData
   utvalgTxt <- nraUtvalg$utvalgTxt
-
-
-  #Generere hovedgruppe og sammenlikningsgruppe
-  #Trenger indeksene før det genereres tall for figurer med flere variable med ulike utvalg
-
-  if (enhetsUtvalg %in% c(0,2)) {		#Ikke sammenlikning
-    medSml <- 0
-    indHoved <- 1:dim(RegData)[1]	#Tidligere redusert datasett
-    indRest <- NULL
-  } else {						#Skal gjøre sammenlikning
-    medSml <- 1
-    if (enhetsUtvalg == 1) {
-      indHoved <-which(as.numeric(RegData$AvdRESH)==reshID)
-      smltxt <- 'Landet forøvrig'
-      indRest <- which(as.numeric(RegData$AvdRESH) != reshID)
-    }
-  }
 
   #Gjør beregninger selv om det evt ikke skal vise figur ut. Trenger utdata.
   Andeler <- list(Hoved = 0, Rest =0)
@@ -119,8 +107,9 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
   if (dim(RegData)[1] > 0) {
     if (flerevar == 0 ) {
-      PlotParams <- nraPrepVar(RegData, valgtVar)
-      RegData <- PlotParams$RegData
+      PlotParams <- nraPrepVar(RegData, valgtVar, enhetsUtvalg)
+      RegData <- PlotParams$RegData; medSml <- PlotParams$medSml;
+      indHoved <- PlotParams$indHoved; indRest <- PlotParams$indRest;
       PlotParams$RegData <- NA
       AntHoved <- table(RegData$VariabelGr[indHoved])
       NHoved <- sum(AntHoved)
@@ -136,13 +125,23 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     if (flerevar == 1){
       utvalg <- c('Hoved', 'Rest')	#Hoved vil angi enhet, evt. hele landet hvis ikke gjøre sml, 'Rest' utgjør sammenligningsgruppa
       RegDataLand <- RegData
-      NHoved <-length(indHoved) ######## Kan disse fjernes???????
-      NRest <- length(indRest)
+
+      if (enhetsUtvalg %in% c(0,2)) {
+        indHoved <- 1:dim(RegData)[1]
+        indRest <- NULL
+        medSml <- 0
+      } else {						#Skal gjøre sammenlikning
+        medSml <- 1
+        indHoved <-which(as.numeric(RegData$AvdRESH)==reshID)
+        indRest <- which(as.numeric(RegData$AvdRESH) != reshID)
+      }
+      #       NHoved <-length(indHoved) ######## Kan disse fjernes???????
+#       NRest <- length(indRest)
 
       for (teller in 1:(medSml+1)) {
         #  Variablene kjøres for angitt indeks, dvs. to ganger hvis vi skal ha sammenligning med Resten.
         RegData <- RegDataLand[switch(utvalg[teller], Hoved = indHoved, Rest=indRest), ]
-        PlotParams <- nraPrepVar(RegData, valgtVar)
+        PlotParams <- nraPrepVar(RegData, valgtVar, enhetsUtvalg)
 
         #Generelt for alle figurer med sammensatte variable:
         if (teller == 1) {
@@ -165,7 +164,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     stabel <- PlotParams$stabel; subtxt <- PlotParams$subtxt; incl_N <- PlotParams$incl_N;
     incl_pst <- PlotParams$incl_pst; retn <- PlotParams$retn; cexgr <- PlotParams$cexgr;
     FigTypUt <- figtype(outfile=outfile, fargepalett=nraUtvalg$fargepalett, pointsizePDF=12);
-    antDes <- PlotParams$antDes
+    antDes <- PlotParams$antDes; smltxt <- PlotParams$smltxt;
   } else {
     NHoved <- 0
     NRest <- 0
