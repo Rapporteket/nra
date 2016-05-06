@@ -80,7 +80,6 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     RegData$AvdRESH[RegData$AvdRESH %in% valgtShus] <- reshID
     shtxt <- 'Ditt utvalg'
   }
-    #############  UNDERSØK NÆRMERE !!!!!!!!!!!!!!!!!!!!!!!
   if (valgtVar == 'Tilfredshet') {
     RegData <- merge(RegData, RegData[,c("Tilfredshet", "KobletForlopsID")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                      suffixes = c('', 'Post1'), all.x = TRUE)
