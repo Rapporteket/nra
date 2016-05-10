@@ -31,7 +31,7 @@ valgtVar <- 'PasientAlder'
 outfile <- ''
 preprosess<-T
 hentData <- F
-forlopstype1=''
+forlopstype1='2'
 forlopstype2=''
 valgtShus <- c('')
 

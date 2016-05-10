@@ -47,12 +47,16 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
   if (dim(RegData)[1]>4) {
     if (sammenlign == 0) {
-      RegData <- RegData[,c("Variabel", "SenterKortNavn")]
+      RegData <- RegData[,c("Variabel", "SenterKortNavn", "ForlopsID")]
       names(RegData)[names(RegData)=='Variabel'] <- 'VariabelPre'
       if (valgtVar=='QolSexualitet') {
         Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre==99])
         RegData <- RegData[RegData$VariabelPre!=99, ]
       }
+      nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
+                             datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+      utvalgTxt <- nraUtvalg$utvalgTxt
       Pre <- aggregate(RegData$VariabelPre, by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
       PlotMatrise <- as.matrix(t(Pre[,-1]))
       PlotMatrise <- cbind(PlotMatrise, mean(RegData[, c('VariabelPre')]))
@@ -72,6 +76,10 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
         RegData <- RegData[RegData$VariabelPre!=99, ]
         RegData <- RegData[RegData$VariabelPost1!=99, ]
       }
+      nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
+                             datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+      utvalgTxt <- nraUtvalg$utvalgTxt
       PrePost <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
                            by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
       PlotMatrise <- as.matrix(t(PrePost[,-1]))
@@ -119,7 +127,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
     PlotMatrise[ , Ngr < 5] <- 0
     grtxt2 <-  paste0('(N=', Ngr, ')')
-    grtxt2[Ngr<5] <- 'N<5'
+    grtxt2[Ngr<5] <- '(N<5)'
     pos <- barplot(PlotMatrise, beside=TRUE, las=txtretn, ylab=ytekst,
                    col=farger[1:(sammenlign+1)], border='white', ylim=c(0, ymax))
     mtext(at=colMeans(pos), grtxt, side=1, las=1, cex=cexgr, adj=0.5, line=0.5)
