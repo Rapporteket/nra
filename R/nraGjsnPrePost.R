@@ -90,11 +90,11 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
     grtxt <- c(names(Ngr)[1:(length(Ngr)-1)], 'Nasjonalt')
     tittel <- switch(valgtVar,
-                      'StMarksTotalScore' = paste0('St. Marks score ', tittel2),
-                      'GenQol' = c(paste0('Generell livskvalitet ', tittel2), 'Skala fra 0=\'Verst tenkelig\' til 10=\'Best tenkelig\''),
-                      'QolSexualitet' = c(paste0('Påvirkning av seksualliv ', tittel2),
-                                          'Skala fra 0=\'I svært liten grad\' til 10=\'I svært stor grad\'',
-                                          paste0('Spørsmålet uaktuelt i ', Nuaktuelt, ' forløp')),
+                     'StMarksTotalScore' = paste0('St. Marks score ', tittel2),
+                     'GenQol' = c(paste0('Generell livskvalitet ', tittel2), 'Skala fra 0=\'Verst tenkelig\' til 10=\'Best tenkelig\''),
+                     'QolSexualitet' = c(paste0('Påvirkning av seksualliv ', tittel2),
+                                         'Skala fra 0=\'I svært liten grad\' til 10=\'I svært stor grad\'',
+                                         paste0('Spørsmålet uaktuelt i ', Nuaktuelt, ' forløp')),
                      'Urinlekkasje' = paste0('Andel med urinlekkasje ', tittel2)
     )
 
@@ -126,6 +126,13 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     title(tittel, line=1, font.main=1)
     #Tekst som angir hvilket utvalg som er gjort
     mtext(utvalgTxt, side=3, las=1, cex=0.9, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
+
+    if (sammenlign > 0){
+      legend('top', c('Pre', 'Oppflg. 1 år', 'Oppflg. 5 år')[1:(sammenlign+1)],
+             border=c(fargeHoved,NA), col=farger[1:(sammenlign+1)], bty='n', pch=c(15,15), pt.cex=2,
+             lwd=3,	lty=NA, ncol=2, cex=cexleg)
+    }
+
 
     par('fig'=c(0, 1, 0, 1))
     if ( outfile != '') {dev.off()}
