@@ -45,6 +45,7 @@ nraHentRegData <- function() {
                   alleVarNum.StMarksTotalScore,
                   alleVarNum.QolSexualitet,
                   alleVarNum.Tilfredshet,
+                  alleVarNum.Urinlekkasje,
                   ForlopsOversikt.KobletForlopsID,
                   ForlopsOversikt.ForlopsID,
                   ForlopsOversikt.HovedDato,

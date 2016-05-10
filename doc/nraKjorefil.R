@@ -7,7 +7,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
                        'KirurgiForRectumprolaps', 'Gracilisplastikk', 'Stomi', 'AnnetTidligereBeh', "SenterKortNavn", "Symtomvarighet",
                        "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter", "GenQol",
-                       "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet")]
+                       "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje")]
 
 ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-05-06 09-40-45.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
@@ -19,7 +19,7 @@ RegData <- merge(RegData, ForlopData, by = "ForlopsID")
 reshID <- 601225 #  #Må sendes med til funksjon
 minald <- 0  #alder, fra og med
 maxald <- 130	#alder, til og med
-erMann <- 1
+erMann <- 99
 datoFra <- '2012-01-01'	 # min og max dato i utvalget vises alltid i figuren.
 datoTil <- '2016-01-01'
 enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
@@ -31,7 +31,7 @@ valgtVar <- 'PasientAlder'
 outfile <- ''
 preprosess<-T
 hentData <- F
-forlopstype1='1'
+forlopstype1=''
 forlopstype2=''
 valgtShus <- c('')
 
@@ -47,8 +47,9 @@ tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFr
 
 valgtVar <- 'StMarksTotalScore'
 # valgtVar <- 'GenQol'
-# valgtVar <- 'QolSexualitet'
-sammenlign <- 1
+valgtVar <- 'QolSexualitet'
+valgtVar <- 'Urinlekkasje'
+sammenlign <- 0
 
 if (outfile == '') {x11()}
 nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
@@ -58,6 +59,8 @@ nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=dato
 
 
 ###########
+
+# RegData[which(RegData$QolSexualitet==99), c('ForlopsID', 'PasientID', 'ForlopsType1', 'ForlopsType1Num', "HovedDato")]
 
 
 tmp <- RegData[RegData$PatientID %in% as.numeric(names(sort(table(RegData$PatientID[!is.na(RegData$Symtomvarighet)], useNA = 'ifany'),
