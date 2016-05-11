@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg)
+nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
 {
   stabel=FALSE; incl_N=FALSE; incl_pst=FALSE; retn= 'V'; tittel <- ''; inkl_konf=0; antDes=1;
   cexgr <- 1.0; grtxt <- ''; grtxt2 <- ''; subtxt <- ''; VarTxt <- ''; AntVar=NA; NVar=NA;

@@ -106,7 +106,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
   if (dim(RegData)[1] > 0) {
     if (flerevar == 0 ) {
-      PlotParams <- nraPrepVar(RegData, valgtVar, enhetsUtvalg)
+      PlotParams <- nraPrepVar(RegData, valgtVar, enhetsUtvalg, reshID=reshID)
       RegData <- PlotParams$RegData; medSml <- PlotParams$medSml;
       indHoved <- PlotParams$indHoved; indRest <- PlotParams$indRest;
       PlotParams$RegData <- NA
@@ -140,7 +140,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       for (teller in 1:(medSml+1)) {
         #  Variablene kjøres for angitt indeks, dvs. to ganger hvis vi skal ha sammenligning med Resten.
         RegData <- RegDataLand[switch(utvalg[teller], Hoved = indHoved, Rest=indRest), ]
-        PlotParams <- nraPrepVar(RegData, valgtVar, enhetsUtvalg)
+        PlotParams <- nraPrepVar(RegData, valgtVar, enhetsUtvalg, reshID=reshID)
 
         #Generelt for alle figurer med sammensatte variable:
         if (teller == 1) {
