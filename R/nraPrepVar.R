@@ -44,6 +44,43 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     # subtxt <- 'Aldersgrupper'
   }
 
+  if (valgtVar == 'Komplikasjon') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$Komplikasjon
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- 'Komplikasjoner SNM test innen 30 dager'
+    gr <- c(0,1,2,9)
+    grtxt <- c('Ingen', 'Sårinfeksjon mistenkt', 'Sårinfeksjon bekreftet','Annet')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+    # subtxt <- 'Aldersgrupper'
+  }
+
+  if (valgtVar == 'KomplikasjonT2') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$KomplikasjonT2
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- 'Komplikasjoner SNM prosedyre innen 30 dager'
+    gr <- c(0,1,2,9)
+    grtxt <- c('Ingen', 'Sårinfeksjon mistenkt', 'Sårinfeksjon bekreftet','Annet')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+    # subtxt <- 'Aldersgrupper'
+  }
+
+  if (valgtVar == 'KomplSNMtot') {
+    retn <- 'H'
+    RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==1 | RegData$KomplikasjonT2==1))] <- 1   # Velg bekreftet eller mistenkt
+    RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # sårinfeksjon fremfor annet
+    tittel <- 'Komplikasjoner SNM innen 30 dager - kombinert'
+    gr <- c(0,1,2,9)
+    grtxt <- c('Ingen', 'Sårinfeksjon mistenkt', 'Sårinfeksjon bekreftet', 'Annet')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
   if (valgtVar == 'Etiologi') {
     retn <- 'H'
     Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)])
@@ -76,6 +113,17 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
                "Rectopexi", "Kirurgi for Rektumprolaps", "Gracilisplastikk", "Stomi", "Annen")
     tittel <- 'Tidligere behandling'
   }
+
+  if (valgtVar == 'KomplSfinkter') {
+    retn <- 'H'
+    RegData <- RegData[RegData$ForlopsType1Num == 1, ]
+    N <- dim(RegData)[1]
+    AntVar <- colSums(RegData[, c("PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens")], na.rm = TRUE)
+    NVar<-rep(N, length(AntVar))
+    grtxt <- c("Totalt", "Blødning", "Sårinfeksjon", "Sårdehisens")
+    tittel <- 'Komplikasjoner ved sfinkterplastikk'
+  }
+
 
 
   if (valgtVar == 'Symtomvarighet') {
