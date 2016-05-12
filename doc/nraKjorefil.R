@@ -8,7 +8,9 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'KirurgiForRectumprolaps', 'Gracilisplastikk', 'Stomi', 'AnnetTidligereBeh', "SenterKortNavn", "Symtomvarighet",
                        "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter", "GenQol",
                        "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje", "Komplikasjon",
-                       "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens")]
+                       "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
+                       "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
+                       "AvfoeringerUnderTest", "LekkasjedagerUnder")]
 
 ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-05-06 09-40-45.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
@@ -32,7 +34,8 @@ valgtVar <- 'Etiologi'
 # valgtVar <- 'Komplikasjon'
 # valgtVar <- 'KomplikasjonT2'
 # valgtVar <- 'KomplSNMtot'
-valgtVar <- 'KomplSfinkter'
+# valgtVar <- 'KomplSfinkter'
+valgtVar <- 'SNMdagbok'
 outfile <- ''
 preprosess<-T
 hentData <- F
@@ -47,7 +50,7 @@ tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFr
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 
 
-###############  St. Marks osv...
+###############  St. Marks osv... ##################################
 
 
 valgtVar <- 'StMarksTotalScore'
@@ -61,6 +64,24 @@ nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=dato
                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                reshID=reshID, preprosess=preprosess, hentData=hentData,
                forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign)
+
+
+
+############# SNM-dagbok  ################################
+enhetsUtvalg <- 2
+valgtShus <- c('601225', '700116')
+if (outfile == '') {x11()}
+nraSNMdagbok(RegData=RegData, datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=enhetsUtvalg, valgtShus = valgtShus,
+             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+             erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+
+
+
+
+
+
+
+
 
 
 ###########
