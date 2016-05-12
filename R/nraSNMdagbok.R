@@ -90,7 +90,7 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
   subtxt <- ''
   tittel <- 'SNM-dagbok'
 
-  grtxt <- c('Inkontinensepisoder pr uke', 'Urgencyepisoder pr uke', 'Avføringsepisoder pr uke', 'Dager med lekkasje pr uke')
+  grtxt <- c('Inkontinensepisoder', 'Urgencyepisoder', 'Avføringsepisoder', 'Dager med lekkasje')
 
   #Hvis for få observasjoner..
   #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & enhetsUtvalg == 1)) {
@@ -126,7 +126,7 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
 
     pos <- barplot(PlotMatrise$Hoved[2:1,antGr:1], beside=TRUE, horiz=TRUE, main='', las=1,
                    col=farger[c(1,2)], border='white', font.main=1,  xlim=c(0,xmax), ylim=c(0.25, 3.3)*antGr,
-                   names.arg=rev(grtxt), cex.names=cexgr, xlab="Enhet angitt for hver enkelt variabel")
+                   names.arg=rev(grtxt), cex.names=cexgr, xlab="Hendelser pr uke")
 
     if (medSml == 1) {
       points(PlotMatrise$Rest[2:1,antGr:1], y=pos+0.1,  col=fargeRest,  cex=cexpt, pch=18) #c("p","b","o"),
