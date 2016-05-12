@@ -26,7 +26,7 @@ erMann <- 99
 datoFra <- '2012-01-01'	 # min og max dato i utvalget vises alltid i figuren.
 datoTil <- '2016-01-01'
 enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
-valgtVar <- 'Etiologi'
+# valgtVar <- 'Etiologi'
 # valgtVar <- 'TidlBeh'
 # valgtVar <- 'Tilfredshet'
 # valgtVar <- 'Sfinktervurdering'
@@ -41,7 +41,7 @@ preprosess<-T
 hentData <- F
 forlopstype1=''
 forlopstype2=''
-valgtShus <- c('')
+valgtShus <- c('601225', '700116')
 
 if (outfile == '') {x11()}
 tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,

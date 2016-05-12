@@ -90,7 +90,7 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
   subtxt <- ''
   tittel <- 'SNM-dagbok'
 
-  grtxt <- c('Inkontinensepisoder pr uke', 'Urgencyepisoder pr uke', 'Avføringsepisoder pr uke', 'Dager med lekkasje')
+  grtxt <- c('Inkontinensepisoder pr uke', 'Urgencyepisoder pr uke', 'Avføringsepisoder pr uke', 'Dager med lekkasje pr uke')
 
   #Hvis for få observasjoner..
   #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & enhetsUtvalg == 1)) {
