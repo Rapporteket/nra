@@ -20,6 +20,7 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
   ## Hvis RegData ikke har blitt preprosessert
   if (preprosess){
     RegData <- nraPreprosess(RegData=RegData)
+    print(dim(RegData))
   }
 
   RegData <- RegData[RegData$ForlopsType1Num == 2, ]
