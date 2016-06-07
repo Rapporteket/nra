@@ -83,8 +83,8 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
 
   if (valgtVar == 'Etiologi') {
     retn <- 'H'
-    Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)])
-    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==0, ]
+    Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)]) # Bør man sjekke om PasientID også finnes
+    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==0, ]                        # i RegData?
     N <- length(unique(union(Ukjente, unique(RegData$PasientID))))
 
     SamletPrPID <- aggregate(RegData[, c("AnnenBekkenKirurgi", 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom',
