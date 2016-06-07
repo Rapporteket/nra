@@ -122,12 +122,13 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxt, units='figure', cex=cexgr)*0.7))
     par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1+length(tittel)-1)))	#Har alltid datoutvalg med
 
-    farger <- FigTypUt$farger
-    ymax <- max(PlotMatrise, na.rm=T)*1.25
-
     PlotMatrise[ , Ngr < 5] <- 0
     grtxt2 <-  paste0('(N=', Ngr, ')')
     grtxt2[Ngr<5] <- '(N<5)'
+
+    farger <- FigTypUt$farger
+    ymax <- max(PlotMatrise, na.rm=T)*1.25
+
     pos <- barplot(PlotMatrise, beside=TRUE, las=txtretn, ylab=ytekst,
                    col=farger[1:(sammenlign+1)], border='white', ylim=c(0, ymax))
     mtext(at=colMeans(pos), grtxt, side=1, las=1, cex=cexgr, adj=0.5, line=0.5)
