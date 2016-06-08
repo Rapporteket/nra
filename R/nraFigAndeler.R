@@ -99,7 +99,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     RegData <- nraUtvalg$RegData
     utvalgTxt <- nraUtvalg$utvalgTxt
 
-    #Gjør beregninger selv om det evt ikke skal vise figur ut. Trenger utdata.
+    # Initialiserer nødvendige størrelser
     Andeler <- list(Hoved = 0, Rest =0)
     NRest <- 0
     AntRest <- 0
