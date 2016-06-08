@@ -140,26 +140,6 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
           indHoved <-which(as.numeric(RegData$AvdRESH)==reshID)
           indRest <- which(as.numeric(RegData$AvdRESH) != reshID)
         }
-        #       NHoved <-length(indHoved) ######## Kan disse fjernes???????
-        #       NRest <- length(indRest)
-
-#         for (teller in 1:(medSml+1)) {
-#           #  Variablene kjøres for angitt indeks, dvs. to ganger hvis vi skal ha sammenligning med Resten.
-#           RegData <- RegDataLand[switch(utvalg[teller], Hoved = indHoved, Rest=indRest), ]
-#           PlotParams <- nraPrepVar(RegData, valgtVar, enhetsUtvalg, reshID=reshID)
-#
-#           #Generelt for alle figurer med sammensatte variable:
-#           if (teller == 1) {
-#             AntHoved <- PlotParams$AntVar
-#             NHoved <- max(PlotParams$NVar, na.rm=T)
-#             Andeler$Hoved <- 100*PlotParams$AntVar/PlotParams$NVar
-#           }
-#           if (teller == 2) {
-#             AntRest <- PlotParams$AntVar
-#             NRest <- max(PlotParams$NVar,na.rm=T)	#length(indRest)- Kan inneholde NA
-#             Andeler$Rest <- 100*PlotParams$AntVar/PlotParams$NVar
-#           }
-#         } #end medSml (med sammenligning)
 
         PlotParams <- nraPrepVar(RegData[indHoved, ], valgtVar, enhetsUtvalg, reshID=reshID)
         AntHoved <- PlotParams$AntVar
@@ -171,6 +151,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
           AntRest <- PlotParams2$AntVar
           NRest <- max(PlotParams2$NVar,na.rm=T)	#length(indRest)- Kan inneholde NA
           Andeler$Rest <- 100*PlotParams2$AntVar/PlotParams2$NVar
+          rm(PlotParams2)
         }
 
       }   #end sjekk om figuren inneholder flere variable
