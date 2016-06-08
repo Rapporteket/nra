@@ -35,13 +35,14 @@ enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhe
 # valgtVar <- 'KomplikasjonT2'
 # valgtVar <- 'KomplSNMtot'
 # valgtVar <- 'KomplSfinkter'
-valgtVar <- 'SNMdagbok'
-outfile <- ''
+valgtVar <- 'Etiologi'
+# valgtVar <- 'SNMdagbok'
+outfile <- 'tmp2.pdf'
 preprosess<-T
 hentData <- F
 forlopstype1=''
 forlopstype2=''
-valgtShus <- c('601225', '700116')
+valgtShus <- '' #c('601225', '700116')
 
 if (outfile == '') {x11()}
 tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
