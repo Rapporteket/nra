@@ -31,7 +31,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   ## Fjerner reistreringer som mangler valgt variabel
   RegData$Variabel <- RegData[, valgtVar]
   RegData <- RegData[!is.na(RegData$Variabel), ]
-  if (valgtVar=='QolSexualitet') {RegData <- RegData[RegData$Variabel!=99, ]}
+  if (valgtVar=='Urinlekkasje') {RegData$Variabel <- 100*RegData$Variabel}
 
   ## Skill ut oppfølginger
   Oppfolging1 <- RegData[RegData$ForlopsType1Num == 3, ]
@@ -47,8 +47,16 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
   if (dim(RegData)[1]>4) {
     if (sammenlign == 0) {
-      RegData <- RegData[,c("Variabel", "SenterKortNavn")]
+      RegData <- RegData[,c("Variabel", "SenterKortNavn", "ForlopsID")]
       names(RegData)[names(RegData)=='Variabel'] <- 'VariabelPre'
+      if (valgtVar=='QolSexualitet') {
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre==99])
+        RegData <- RegData[RegData$VariabelPre!=99, ]
+      }
+      nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
+                             datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+      utvalgTxt <- nraUtvalg$utvalgTxt
       Pre <- aggregate(RegData$VariabelPre, by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
       PlotMatrise <- as.matrix(t(Pre[,-1]))
       PlotMatrise <- cbind(PlotMatrise, mean(RegData[, c('VariabelPre')]))
@@ -63,6 +71,15 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       RegData <- merge(RegData[,c("PasientID", "Variabel", "SenterKortNavn", "ForlopsID", "ForlopsType1Num")],
                        Oppfolging1[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                        suffixes = c('Pre', 'Post1'))
+      if (valgtVar=='QolSexualitet') {
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre==99 | RegData$VariabelPost1==99])
+        RegData <- RegData[RegData$VariabelPre!=99, ]
+        RegData <- RegData[RegData$VariabelPost1!=99, ]
+      }
+      nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
+                             datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+      utvalgTxt <- nraUtvalg$utvalgTxt
       PrePost <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
                            by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
       PlotMatrise <- as.matrix(t(PrePost[,-1]))
@@ -80,13 +97,21 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     ############## Lag figur  ###############################
 
     grtxt <- c(names(Ngr)[1:(length(Ngr)-1)], 'Nasjonalt')
-    tittel <- switch (valgtVar,
-                      'StMarksTotalScore' = paste0('St. Marks score ', tittel2),
-                      'GenQol' = c(paste0('Generell livskvalitet ', tittel2), 'Skala fra 0=\'Verst tenkelig\' til 10=\'Best tenkelig\''),
-                      'QolSexualitet' = c(paste0('Påvirkning av seksualliv ', tittel2), 'Skala fra 0=\'I svært liten grad\' til 10=\'I svært stor grad\'')
+    tittel <- switch(valgtVar,
+                     'StMarksTotalScore' = paste0('St. Marks score ', tittel2),
+                     'GenQol' = c(paste0('Generell livskvalitet ', tittel2), 'Skala fra 0=\'Verst tenkelig\' til 10=\'Best tenkelig\''),
+                     'QolSexualitet' = c(paste0('Påvirkning av seksualliv ', tittel2),
+                                         'Skala fra 0=\'I svært liten grad\' til 10=\'I svært stor grad\'',
+                                         paste0('Spørsmålet uaktuelt i ', Nuaktuelt, ' forløp')),
+                     'Urinlekkasje' = paste0('Andel med urinlekkasje ', tittel2)
     )
 
-    'St. Marks score før og etter (12mnd) operasjon'
+    ytekst <- switch(valgtVar,
+                     'StMarksTotalScore' = 'Gjennomsnittsscore',
+                     'GenQol' = 'Gjennomsnittsscore',
+                     'QolSexualitet' = 'Gjennomsnittsscore',
+                     'Urinlekkasje' = 'Andel i prosent'
+    )
     cexgr<-0.9
     cexleg <- 0.9	#Størrelse på legendtekst
     retn<-'V'
@@ -97,11 +122,14 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxt, units='figure', cex=cexgr)*0.7))
     par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1+length(tittel)-1)))	#Har alltid datoutvalg med
 
+    PlotMatrise[ , Ngr < 5] <- 0
+    grtxt2 <-  paste0('(N=', Ngr, ')')
+    grtxt2[Ngr<5] <- '(N<5)'
+
     farger <- FigTypUt$farger
     ymax <- max(PlotMatrise, na.rm=T)*1.25
 
-    grtxt2 <-  paste0('(N=', Ngr, ')')
-    pos <- barplot(PlotMatrise, beside=TRUE, las=txtretn, ylab="Gjennomsnittsscore",
+    pos <- barplot(PlotMatrise, beside=TRUE, las=txtretn, ylab=ytekst,
                    col=farger[1:(sammenlign+1)], border='white', ylim=c(0, ymax))
     mtext(at=colMeans(pos), grtxt, side=1, las=1, cex=cexgr, adj=0.5, line=0.5)
     mtext(at=colMeans(pos), grtxt2, side=1, las=1, cex=cexgr, adj=0.5, line=1.5)
@@ -109,6 +137,13 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     title(tittel, line=1, font.main=1)
     #Tekst som angir hvilket utvalg som er gjort
     mtext(utvalgTxt, side=3, las=1, cex=0.9, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
+
+    if (sammenlign > 0){
+      legend('top', c('Pre', 'Oppflg. 1 år', 'Oppflg. 5 år')[1:(sammenlign+1)],
+             border=c(fargeHoved,NA), col=farger[1:(sammenlign+1)], bty='n', pch=c(15,15), pt.cex=2,
+             lwd=3,	lty=NA, ncol=2, cex=cexleg)
+    }
+
 
     par('fig'=c(0, 1, 0, 1))
     if ( outfile != '') {dev.off()}

@@ -30,7 +30,7 @@ nraUtvalg <- function(RegData, datoFra, datoTil, valgtShus='', minald, maxald, e
                  if ((minald>0) | (maxald<130)) {
                    paste('Pasienter fra ', min(RegData$PasientAlder, na.rm=T), ' til ', max(RegData$PasientAlder, na.rm=T), ' år', sep='')},
                  if (erMann %in% 0:1) {paste('Kjønn: ', c('Kvinner', 'Menn')[erMann+1], sep='')},
-                 if (length(valgtShus)>1) {paste0('Valgte RESH: ', paste(as.character(valgtShus), collapse=','))},
+                 if (length(valgtShus)>1) {paste0('Avdeling: ', paste(unique(RegData$SenterKortNavn[RegData$AvdRESH==99]), collapse=', '))},
                  if (forlopstype1[1] !='') {paste0('Hovedforløp: ', paste(as.character(RegData$ForlopsType1[
                    match(as.numeric(forlopstype1), RegData$ForlopsType1Num)]), collapse=', '))},
                  if (forlopstype2[1] !='') {paste0('SNM-type: ', paste(as.character(RegData$ForlopsType2[

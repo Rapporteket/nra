@@ -4,7 +4,7 @@
 \alias{nraPrepVar}
 \title{Preparer variabler for plotting}
 \usage{
-nraPrepVar(RegData, valgtVar, enhetsUtvalg)
+nraPrepVar(RegData, valgtVar, enhetsUtvalg, reshID)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -15,6 +15,9 @@ nraPrepVar(RegData, valgtVar, enhetsUtvalg)
 0: Hele landet
 1: Egen enhet mot resten av landet (Default)
 2: Egen enhet}
+
+\item{reshID}{Parameter følger fra innlogging helseregister.no og angir
+hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
 }
 \value{
 PrepData En liste med plotrelevante størrelser
