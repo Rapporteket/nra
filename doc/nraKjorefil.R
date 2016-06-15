@@ -37,7 +37,7 @@ enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhe
 # valgtVar <- 'KomplSfinkter'
 valgtVar <- 'Etiologi'
 # valgtVar <- 'SNMdagbok'
-outfile <- 'tmp2.pdf'
+outfile <- ''
 preprosess<-T
 hentData <- F
 forlopstype1=''
