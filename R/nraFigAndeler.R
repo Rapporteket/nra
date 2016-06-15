@@ -128,8 +128,6 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
       #FIGURER SATT SAMMEN AV FLERE VARIABLE, ULIKT TOTALUTVALG
       if (flerevar == 1){
-        utvalg <- c('Hoved', 'Rest')	#Hoved vil angi enhet, evt. hele landet hvis ikke gjøre sml, 'Rest' utgjør sammenligningsgruppa
-        RegDataLand <- RegData
 
         if (enhetsUtvalg %in% c(0,2)) {
           indHoved <- 1:dim(RegData)[1]
