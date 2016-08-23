@@ -66,6 +66,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     }
 
     if (sammenlign == 1) {
+      RegData <- RegData[which(RegData$OppflgRegStatus %in% 1:2), ]
       Oppfolging1 <- Oppfolging1[Oppfolging1$KobletForlopsID %in% RegData$ForlopsID, ]
       RegData <- RegData[RegData$ForlopsID %in% Oppfolging1$KobletForlopsID, ]
       RegData <- merge(RegData[,c("PasientID", "Variabel", "SenterKortNavn", "ForlopsID", "ForlopsType1Num")],
@@ -90,7 +91,32 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     }
 
     if (sammenlign == 2) {
-      ## Må finne ut hvordan koblingen mellom ForlopsID og KobletForlopsID fungerer ved 5års-oppfølging
+      RegData <- RegData[which(RegData$OppflgRegStatus %in% 1:2), ]
+      Oppfolging2 <- Oppfolging2[Oppfolging2$KobletForlopsID %in% RegData$ForlopsID, ]
+      RegData <- RegData[RegData$ForlopsID %in% Oppfolging2$KobletForlopsID, ]
+      RegData <- merge(RegData[,c("PasientID", "Variabel", "SenterKortNavn", "ForlopsID", "ForlopsType1Num")],
+                       Oppfolging2[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+                       suffixes = c('Pre', 'Post5'))
+      Oppfolging1 <- Oppfolging1[Oppfolging1$KobletForlopsID %in% RegData$ForlopsID, ]
+      RegData <- RegData[RegData$ForlopsID %in% Oppfolging1$KobletForlopsID, ]
+      RegData <- merge(RegData, Oppfolging2[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID')
+
+      if (valgtVar=='QolSexualitet') {
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre==99 | RegData$VariabelPost5==99 | RegData$Variabel==99])
+        RegData <- RegData[RegData$VariabelPre!=99, ]
+        RegData <- RegData[RegData$VariabelPost1!=99, ]
+        RegData <- RegData[RegData$Variabel!=99, ]
+      }
+      nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
+                             datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+      utvalgTxt <- nraUtvalg$utvalgTxt
+      PrePost <- aggregate(RegData[, c('VariabelPre', 'Variabel', "VariabelPost5")],
+                           by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
+      PlotMatrise <- as.matrix(t(PrePost[,-1]))
+      PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('VariabelPre', 'Variabel', "VariabelPost1")]))
+      Ngr <- table(RegData$SenterKortNavn)  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
+      Ngr <- c(Ngr, sum(Ngr))
       tittel2 <- 'før og etter (1 og 5 år) operasjon'
     }
 
