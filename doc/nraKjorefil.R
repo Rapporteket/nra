@@ -1,7 +1,7 @@
 setwd('c:/GIT/nra/doc')
 rm(list = ls())
 
-RegData <- read.table('C:/SVN/jasper/nra/data/alleVarNum2016-08-22 13-33-24.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+RegData <- read.table('C:/SVN/jasper/nra/data/alleVarNum2016-08-31 08-38-30.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -10,13 +10,14 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje", "Komplikasjon",
                        "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
                        "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
-                       "AvfoeringerUnderTest", "LekkasjedagerUnder")]
+                       "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
+                       'ABD65', 'ABD652AT2','ABD60')]
 
-ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-08-22 13-33-23.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-08-31 08-38-29.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
-RegData <- merge(RegData, ForlopData, by = "ForlopsID")
+RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
 RegData <- nraPreprosess(RegData=RegData)
 
 reshID <- 700116 #  #Må sendes med til funksjon
@@ -55,7 +56,7 @@ tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFr
 
 
 valgtVar <- 'StMarksTotalScore'
-# valgtVar <- 'GenQol'
+valgtVar <- 'GenQol'
 valgtVar <- 'QolSexualitet'
 valgtVar <- 'Urinlekkasje'
 sammenlign <- 1
@@ -64,7 +65,7 @@ if (outfile == '') {x11()}
 nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                reshID=reshID, preprosess=preprosess, hentData=hentData,
-               forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign)
+               forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign, inkl_konf = 1)
 
 
 

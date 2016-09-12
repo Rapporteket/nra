@@ -15,8 +15,11 @@
 nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='2050-12-31',
                            outfile = '', preprosess=TRUE, minald=0, maxald=130,
                            erMann='', reshID, hentData=F, forlopstype1='', forlopstype2='',
-                           sammenlign=0)
+                           sammenlign=0, inkl_konf=0)
 {
+  if (valgtVar %in% c('StMarksTotalScore', 'GenQol', 'QolSexualitet')) {
+    inkl_konf <- 1
+  }
 
   ## Hvis spørring skjer fra R på server. ######################
   if(hentData){
@@ -58,6 +61,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                              forlopstype1=forlopstype1, forlopstype2=forlopstype2)
       utvalgTxt <- nraUtvalg$utvalgTxt
       Pre <- aggregate(RegData$VariabelPre, by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
+      PreKI <-
       PlotMatrise <- as.matrix(t(Pre[,-1]))
       PlotMatrise <- cbind(PlotMatrise, mean(RegData[, c('VariabelPre')]))
       Ngr <- table(RegData$SenterKortNavn)  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
@@ -83,10 +87,14 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       utvalgTxt <- nraUtvalg$utvalgTxt
       PrePost <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
                            by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
+      PrePostSD <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
+                            by=list(RegData$SenterKortNavn), sd, na.rm = TRUE)
+      PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), apply(RegData[, c('VariabelPre', "VariabelPost1")], 2, sd, na.rm=T))
       PlotMatrise <- as.matrix(t(PrePost[,-1]))
       PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('VariabelPre', "VariabelPost1")]))
       Ngr <- table(RegData$SenterKortNavn)  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
       Ngr <- c(Ngr, sum(Ngr))
+
       tittel2 <- 'før og etter (12mnd) operasjon'
     }
 
@@ -113,6 +121,9 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       utvalgTxt <- nraUtvalg$utvalgTxt
       PrePost <- aggregate(RegData[, c('VariabelPre', 'Variabel', "VariabelPost5")],
                            by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
+      PrePostSD <- aggregate(RegData[, c('VariabelPre', 'Variabel', "VariabelPost5")],
+                             by=list(RegData$SenterKortNavn), sd, na.rm = TRUE)
+      PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), apply(RegData[, c('VariabelPre', 'Variabel', "VariabelPost5")], 2, sd, na.rm=T))
       PlotMatrise <- as.matrix(t(PrePost[,-1]))
       PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('VariabelPre', 'Variabel', "VariabelPost1")]))
       Ngr <- table(RegData$SenterKortNavn)  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
@@ -155,6 +166,19 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     farger <- FigTypUt$farger
     ymax <- max(PlotMatrise, na.rm=T)*1.25
 
+    if(inkl_konf==1) {
+      N_matr <- t(matrix(Ngr, nrow=length(Ngr), ncol=sammenlign+1))
+      KIned <- PlotMatrise - qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
+      KIopp <- PlotMatrise + qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
+      KIned <- PlotMatrise - qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
+      KIopp <- PlotMatrise + qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
+
+      KIned[ , Ngr < 5] <- 0
+      KIopp[ , Ngr < 5] <- 0
+      ymax <- max(KIopp, na.rm=T)*1.25
+    }
+
+
     pos <- barplot(PlotMatrise, beside=TRUE, las=txtretn, ylab=ytekst,
                    col=farger[1:(sammenlign+1)], border='white', ylim=c(0, ymax))
     mtext(at=colMeans(pos), grtxt, side=1, las=1, cex=cexgr, adj=0.5, line=0.5)
@@ -168,6 +192,10 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       legend('top', c('Pre', 'Oppflg. 1 år', 'Oppflg. 5 år')[1:(sammenlign+1)],
              border=c(fargeHoved,NA), col=farger[1:(sammenlign+1)], bty='n', pch=c(15,15), pt.cex=2,
              lwd=3,	lty=NA, ncol=2, cex=cexleg)
+    }
+
+    if(inkl_konf==1) {
+      arrows(pos[ , Ngr > 4], KIned[ , Ngr > 4], pos[ , Ngr > 4], KIopp[ , Ngr > 4], code=3, angle=90, lwd=1.5, col=farger[3], length=0.05)
     }
 
 
