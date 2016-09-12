@@ -61,7 +61,9 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                              forlopstype1=forlopstype1, forlopstype2=forlopstype2)
       utvalgTxt <- nraUtvalg$utvalgTxt
       Pre <- aggregate(RegData$VariabelPre, by=list(RegData$SenterKortNavn), mean, na.rm = TRUE)
-      PreKI <-
+      PrePostSD <- aggregate(RegData[, c('VariabelPre')],
+                               by=list(RegData$SenterKortNavn), sd, na.rm = TRUE)
+      PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), sd(RegData[, c('VariabelPre')], na.rm=T))
       PlotMatrise <- as.matrix(t(Pre[,-1]))
       PlotMatrise <- cbind(PlotMatrise, mean(RegData[, c('VariabelPre')]))
       Ngr <- table(RegData$SenterKortNavn)  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise

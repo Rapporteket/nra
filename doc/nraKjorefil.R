@@ -60,7 +60,7 @@ valgtVar <- 'StMarksTotalScore'
 valgtVar <- 'GenQol'
 valgtVar <- 'QolSexualitet'
 valgtVar <- 'Urinlekkasje'
-sammenlign <- 1
+sammenlign <- 0
 
 if (outfile == '') {x11()}
 nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
