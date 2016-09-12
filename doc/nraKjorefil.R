@@ -65,7 +65,7 @@ if (outfile == '') {x11()}
 nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                reshID=reshID, preprosess=preprosess, hentData=hentData,
-               forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign, inkl_konf = 1)
+               forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign)
 
 
 
