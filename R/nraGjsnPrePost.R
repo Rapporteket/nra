@@ -166,6 +166,10 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     farger <- FigTypUt$farger
     ymax <- max(PlotMatrise, na.rm=T)*1.25
 
+    soyleTxt <- PlotMatrise
+    soyleTxt[ , Ngr < 5] <- NA
+    soyleTxt <- sprintf('%.1f', soyleTxt)
+
     if(inkl_konf==1) {
       N_matr <- t(matrix(Ngr, nrow=length(Ngr), ncol=sammenlign+1))
       KIned <- PlotMatrise - qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
@@ -183,6 +187,8 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                    col=farger[1:(sammenlign+1)], border='white', ylim=c(0, ymax))
     mtext(at=colMeans(pos), grtxt, side=1, las=1, cex=cexgr, adj=0.5, line=0.5)
     mtext(at=colMeans(pos), grtxt2, side=1, las=1, cex=cexgr, adj=0.5, line=1.5)
+    # text(x=pos, y=PlotMatrise, sprintf('%.1f', PlotMatrise), pos=1, cex=cexgr, col=farger[4])
+    text(x=pos, y=0, soyleTxt, pos=3, cex=cexgr, col=farger[4])
 
     title(tittel, line=1, font.main=1)
     #Tekst som angir hvilket utvalg som er gjort

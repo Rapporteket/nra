@@ -52,7 +52,8 @@ tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFr
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 
 
-###############  St. Marks osv... ##################################
+###############  St. Marks osv... ########################
+##########
 
 
 valgtVar <- 'StMarksTotalScore'
