@@ -22,7 +22,8 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
-    tittel <- 'Aldersfordeling'
+    tittel <- c(paste0('Aldersfordeling. Gjsn=', sprintf("%.1f", mean(RegData$Variabel, na.rm = T)), ', median=', round(median(RegData$Variabel, na.rm = T),1),'.'),
+                paste0('Minimum=', round(min(RegData$Variabel, na.rm = T),1), ', maksimum=', round(max(RegData$Variabel, na.rm = T),1)),'.')
     gr <- c(0, seq(25, 85, 10), 130)
     RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
     subtxt <- 'Aldersgrupper'
@@ -38,8 +39,8 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     # RegData <- RegData[RegData$ForlopsType1Num %in% 3:4, ]
     RegData <- RegData[!is.na(RegData$Variabel), ]
     tittel <- 'Tilfredshet med behandlingstilbudet'
-    gr <- 0:10
-    grtxt <- c('0=Svært misfornøyd', as.character(1:9), '10=Svært fornøyd')
+    gr <- rev(0:10)
+    grtxt <- rev(c('0=Svært misfornøyd', as.character(1:9), '10=Svært fornøyd'))
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
     # subtxt <- 'Aldersgrupper'
   }
@@ -141,13 +142,13 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
   if (valgtVar == 'Sfinktervurdering') {
     retn <- 'H'
     RegData$Variabel <- RegData[, valgtVar]
-    RegData <- RegData[RegData$Ultralyd %in% 1:2, ]
+    RegData <- RegData[which(RegData$Ultralyd %in% 0:2), ]
 #     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
 #     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
-    gr <- c(0:5, 9)
+    gr <- c(0:5, 9, 99)
     grtxt <- c('Ingen skade', 'Partiell defekt ytre sfinkter', 'Partiell ytre og fullvegg indre',
                'Fullveggsdefekt ytre sfinkter', 'Fullvegg ytre og indre sfinkter', 'Fullveggsdefekt indre sfinkter',
-               'Ukjent resultat')
+               'Ukjent resultat', 'Ultralyd ikke utført')
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
     tittel <- 'Ultralydvurdering av sfinkterskade'
   }

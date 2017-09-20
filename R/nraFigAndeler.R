@@ -185,6 +185,11 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       NutvTxt <- length(utvalgTxt)
       antDesTxt <- paste('%.', antDes, 'f', sep='')
       grtxtpst <- paste(rev(grtxt), ' (', rev(sprintf(antDesTxt, Andeler$Hoved)), '%)', sep='')
+      if (flerevar==1) {
+        n_txt <- paste0('(n=', rev(AntHoved), ')')
+      } else {
+        n_txt <- paste0('(n=', rev(round(Andeler$Hoved*NHoved/100)), ')')
+      }
       vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxtpst, units='figure', cex=cexgr)*0.75))
       par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))	#Har alltid datoutvalg med
 
@@ -201,6 +206,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
         pos <- barplot(rev(as.numeric(Andeler$Hoved)), horiz=TRUE, beside=TRUE, las=1, xlab="Andel pasienter (%)", #main=tittel,
                        col=fargeHoved, border='white', font.main=1, xlim=c(0, xmax), ylim=c(0.05,1.4)*antGr)	#
         if (NHoved>0) {mtext(at=pos+0.05, text=grtxtpst, side=2, las=1, cex=cexgr, adj=1, line=0.25)}
+        text(x=rev(as.numeric(Andeler$Hoved)), y=pos+0.05, labels = n_txt, pos=4, xpd = NA)
 
         if (medSml == 1) {
           points(as.numeric(rev(Andeler$Rest)), pos, col=fargeRest,  cex=2, pch=18) #c("p","b","o"),

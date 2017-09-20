@@ -1,0 +1,270 @@
+\documentclass[norsk,a4paper]{article} % ,twoside
+\usepackage[norsk]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{subfig}
+\usepackage{pdfpages}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage[a4paper]{geometry}
+
+
+\title{Figurer og tabeller til årsrapport for NRA 2016}
+\author{NRA}
+
+\renewcommand\thempfootnote{\fnsymbol{mpfootnote}}
+\def\labelitemi{$\bullet$}
+\def\labelitemii{--}
+\def\labelitemiii{$\ast$}
+\def\labelitemiv{$\cdot$}
+
+%setter grå skrift fremfort sort
+\usepackage{xcolor}
+\usepackage{graphicx}
+\pagestyle{myheadings}
+% \definecolor{SKDE}{rgb}{0,0.32,0.61}
+\definecolor{lysblaa}{rgb}{0.27,0.51,0.71}
+% \definecolor{moerkblaa}{rgb}{0.0,0.0,0.47}
+% \definecolor{lysgraa}{rgb}{0.8,0.8,0.8}
+% \definecolor{middelsgraa}{rgb}{0.5,0.5,0.5}
+\definecolor{moerkgraa}{rgb}{0.25,0.25,0.25}
+\color{moerkgraa}
+% \color{lysblaa}
+
+<<'initOpts',include=FALSE>>=
+knitr::opts_chunk$set(warnings=FALSE,echo=FALSE)
+knitr::opts_knit$set(root.dir = './')
+@
+
+\begin{document}
+
+<<LastData, include=FALSE, cache=FALSE>>=
+library(nra)
+rm(list = ls())
+hentData <- F
+
+RegData <- read.table('C:/SVN/jasper/nra/data/alleVarNum2017-09-14 12-29-44.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
+                       'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
+                       'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
+                       'KirurgiForRectumprolaps', 'Gracilisplastikk', 'Stomi', 'AnnetTidligereBeh', "SenterKortNavn", "Symtomvarighet",
+                       "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter", "GenQol",
+                       "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje", "Komplikasjon",
+                       "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
+                       "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
+                       "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
+                       'ABD65', 'ABD652AT2','ABD60')]
+
+ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2017-09-14 12-29-44.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
+                             'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
+
+RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
+RegData <- nraPreprosess(RegData=RegData)
+
+reshID <- 700116 #  #Må sendes med til funksjon
+minald <- 0  #alder, fra og med
+maxald <- 130	#alder, til og med
+erMann <- 99
+datoFra <- '2016-01-01'	 # min og max dato i utvalget vises alltid i figuren.
+datoTil <- '2016-12-31'
+enhetsUtvalg <- 0 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
+# valgtVar <- 'Etiologi'
+# valgtVar <- 'TidlBeh'
+# valgtVar <- 'Tilfredshet'
+# valgtVar <- 'Sfinktervurdering'
+# valgtVar <- 'PasientAlder'
+# valgtVar <- 'Komplikasjon'
+# valgtVar <- 'KomplikasjonT2'
+# valgtVar <- 'KomplSNMtot'
+# valgtVar <- 'KomplSfinkter'
+# valgtVar <- 'Etiologi'
+# valgtVar <- 'SNMdagbok'
+# valgtVar <- 'Symtomvarighet'
+preprosess<-F
+hentData <- F
+forlopstype1=''
+forlopstype2=''
+valgtShus <- '' #c('601225', '700116')
+
+figstr <- 0.61
+tmp <- Sys.setlocale(category = "LC_ALL", locale = "nb_NO.UTF-8")
+@
+
+%%%%% Forside
+
+\color{moerkgraa}
+\thispagestyle{empty}
+
+\maketitle
+%
+% \tableofcontents
+% \newpage
+\thispagestyle{empty}
+\listoffigures
+% \newpage
+% \thispagestyle{empty}
+\listoftables
+
+\clearpage
+
+\newpage
+
+<<'Fig:Diagnoser', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
+
+varNavn <- c('PasientAlder', 'KomplSNMtot', 'TidlBeh', 'Symtomvarighet', 'Sfinktervurdering')
+
+for (p in 1:length(varNavn)){
+  outfile=paste0(varNavn[p], '.pdf')
+  nraFigAndeler(RegData=RegData, valgtVar=varNavn[p], datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
+
+valgtVar <- 'TidlBeh'
+
+outfile <- 'TidlBeh_sfinkt.pdf'
+nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+
+outfile <- 'TidlBeh_snm.pdf'
+nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+
+datoFra <- '2015-01-01'
+outfile <- 'Tilfredshet.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+
+
+
+@
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[1], '.pdf')}}
+\caption{Aldersfordeling}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[2], '.pdf')}}
+\caption{Komplikasjoner}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[3], '.pdf')}}
+\caption{Tidligere behandling}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_sfinkt.pdf}
+\caption{Tidligere behandling, sfinkterplastikk}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_snm.pdf}
+\caption{Tidligere behandling, snm}
+\end{figure}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[4], '.pdf')}}
+\caption{Symtomvarighet}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[5], '.pdf')}}
+\caption{Sfinktervurdering}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Tilfredshet.pdf}
+\caption{Tilfredshet}
+\end{figure}
+
+%
+% <<'Belysning', results='asis', echo=FALSE>>=
+%
+% BasisReg <- RegData[, c("Gangfunksjon", "KognitivSvikt", "Fysioterapi", "Smertestillende", "Undergruppe",
+%                         "DiagICD10", "AlderVreg", "PasientID", "ForlopsID", "HovedDato")]  # , "PsykiskHelsetjeneste" ingen registreringer før 2017
+% BasisReg$Gr <- NA
+% BasisReg$Gr[which(BasisReg$Undergruppe == 20)] <- 1
+% BasisReg$Gr[which(BasisReg$Undergruppe == 4)] <- 2
+% BasisReg$Gr[which(BasisReg$DiagICD10 == 'G60.0')] <- 3
+% BasisReg <- BasisReg[which(BasisReg$Gr %in% 1:3), ]
+% # BasisReg$Gr <- factor(BasisReg$Gr, levels = 1:3, labels = c('Dystrophia myotonica 1', 'Limb-girdle muskeldystrofi', 'CMT'))
+% BasisReg$Gr <- factor(BasisReg$Gr, levels = 1:3, labels = c('DM1', 'LGMD', 'CMT'))
+% BasisReg <- BasisReg[which(BasisReg$AlderVreg >= 20 & BasisReg$AlderVreg <= 55), ]
+% BasisReg <- BasisReg[order(BasisReg$HovedDato, decreasing = TRUE), ]
+% BasisReg <- BasisReg[match(unique(BasisReg$PasientID), BasisReg$PasientID), ]
+%
+% aux1 <- as.data.frame(addmargins(table(BasisReg$Gr, BasisReg$Gangfunksjon, useNA = 'ifany'), 2))
+% aux1 <- tidyr::spread(aux1, Var2, Freq)
+% aux1$AndelGaar <- aux1$`1`/(aux1$Sum - aux1$`9`)*100
+% aux1$AndelRuller <- aux1$`3`/aux1$Sum*100
+% aux1$AndelGaaKjent <- (aux1$Sum-aux1$`9`)/aux1$Sum*100
+% N <- aux1$Sum
+% aux1 <- t(aux1[, c(1, 7:9)])
+%
+% aux2 <- as.data.frame(addmargins(table(BasisReg$Gr, BasisReg$KognitivSvikt, useNA = 'ifany'), 2))
+% aux2 <- tidyr::spread(aux2, Var2, Freq)
+% aux2$AndelKogn <- aux2$`1`/(aux2$Sum - aux2$`9`)*100
+% aux2$AndelKognKjent <- (aux2$Sum-aux2$`9`)/aux2$Sum*100
+% aux2 <- t(aux2[, 6:7])
+%
+% aux3 <- as.data.frame(addmargins(table(BasisReg$Gr, BasisReg$Fysioterapi, useNA = 'ifany'), 2))
+% aux3 <- tidyr::spread(aux3, Var2, Freq)
+% aux3$AndelFysio <- aux3$`1`/(aux3$Sum - aux3$`9`)*100
+% aux3$AndelManglerFysio <- aux3$`0`/(aux3$`0` + aux3$`1`)*100
+% aux3$AndelFysioKjent <- (aux3$Sum-aux3$`9`)/aux3$Sum*100
+% aux3 <- t(aux3[, 7:9])
+%
+% aux4 <- as.data.frame(addmargins(table(BasisReg$Gr, BasisReg$Smertestillende, useNA = 'ifany'), 2))
+% aux4 <- tidyr::spread(aux4, Var2, Freq)
+% aux4$AndelSmertestl <- aux4$`1`/aux4$Sum*100
+% aux4 <- t(aux4[, 5])
+%
+% SamleTabell <- rbind(aux1,aux2,aux3,aux4)
+% row.names(SamleTabell)[dim(SamleTabell)[1]] <- 'AndelSmertestillende'
+%
+% colnames(SamleTabell) <- paste0(SamleTabell[1,], ' (N=', N, ')')
+% SamleTabell <- as.data.frame(SamleTabell[-1, ])
+% SamleTabell[, 1] <- round(as.numeric(as.character(SamleTabell[, 1])), 1)
+% SamleTabell[, 2] <- round(as.numeric(as.character(SamleTabell[, 2])), 1)
+% SamleTabell[, 3] <- round(as.numeric(as.character(SamleTabell[, 3])), 1)
+%
+% SamleTabell[1, ] <- paste0(SamleTabell[1, ], ' %', ' (', SamleTabell[3, ], ' %)')
+% SamleTabell[2, ] <- paste0(SamleTabell[2, ], ' %', ' (', SamleTabell[3, ], ' %)')
+% SamleTabell[4, ] <- paste0(SamleTabell[4, ], ' %', ' (', SamleTabell[5, ], ' %)')
+% SamleTabell[6, ] <- paste0(SamleTabell[6, ], ' %', ' (', SamleTabell[8, ], ' %)')
+% SamleTabell[7, ] <- paste0(SamleTabell[7, ], ' %', ' (', SamleTabell[8, ], ' %)')
+% SamleTabell[9, ] <- paste0(SamleTabell[9, ], ' %', ' (100 %)')
+% SamleTabell <- SamleTabell[c(-3,-5,-8), ]
+%
+% row.names(SamleTabell) <- c('Andel som går uten hjelpemidler', 'Andel med rullestol',
+%                             'Andel med kognitiv svikt', 'Andel som har fysio',
+%                             'Andel som mangler fysio, men har behov',
+%                             'Andel som bruker smertestillende')
+%
+% # sprintf("%.1f", AndelHovedGjsn)
+%
+% print(xtable::xtable(SamleTabell, digits=0, align=c('l', rep('r', ncol(SamleTabell))), caption='Ukjent er ikke med i nevneren ved beregning av andeler. Tall i parantes angir andelen kjent.'), include.rownames = T)
+%
+% @
+
+
+\end{document}

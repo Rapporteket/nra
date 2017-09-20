@@ -35,6 +35,7 @@ nraPreprosess <- function(RegData)
                               RegData$FullveggsdefektYtreSfinkter==0 &
                               RegData$FullveggsdefektIndreSfinkter %in% 1:2] <- 5
   RegData$Sfinktervurdering[RegData$Ultralyd==2] <- 9
+  RegData$Sfinktervurdering[RegData$Ultralyd==0] <- 99
 
 
   return(invisible(RegData))

@@ -24,9 +24,9 @@ reshID <- 700116 #  #Må sendes med til funksjon
 minald <- 0  #alder, fra og med
 maxald <- 130	#alder, til og med
 erMann <- 99
-datoFra <- '2012-01-01'	 # min og max dato i utvalget vises alltid i figuren.
-datoTil <- '2099-01-01'
-enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
+datoFra <- '2015-01-01'	 # min og max dato i utvalget vises alltid i figuren.
+datoTil <- '2015-12-31'
+enhetsUtvalg <- 0 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 # valgtVar <- 'Etiologi'
 # valgtVar <- 'TidlBeh'
 # valgtVar <- 'Tilfredshet'
@@ -34,11 +34,13 @@ enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhe
 # valgtVar <- 'PasientAlder'
 # valgtVar <- 'Komplikasjon'
 # valgtVar <- 'KomplikasjonT2'
-# valgtVar <- 'KomplSNMtot'
+valgtVar <- 'KomplSNMtot'
 # valgtVar <- 'KomplSfinkter'
-valgtVar <- 'Etiologi'
+# valgtVar <- 'Etiologi'
 # valgtVar <- 'SNMdagbok'
+# valgtVar <- 'Symtomvarighet'
 outfile <- ''
+outfile <- paste0(valgtVar, '.pdf')
 preprosess<-F
 hentData <- F
 forlopstype1=''
