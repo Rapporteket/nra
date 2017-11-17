@@ -28,4 +28,3 @@ Denne funksjonen grupperer og klargjør variabler for andelsplot
 \details{
 Her kan detaljer skrives
 }
-

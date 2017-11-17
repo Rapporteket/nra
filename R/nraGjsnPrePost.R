@@ -66,7 +66,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), sd(RegData[, c('VariabelPre')], na.rm=T))
       PlotMatrise <- as.matrix(t(Pre[,-1]))
       PlotMatrise <- cbind(PlotMatrise, mean(RegData[, c('VariabelPre')]))
-      Ngr <- table(RegData$SenterKortNavn)  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
+      Ngr <- table(as.character(RegData$SenterKortNavn))  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
       Ngr <- c(Ngr, sum(Ngr))
       tittel2 <- 'før operasjon'
     }
@@ -94,8 +94,10 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), apply(RegData[, c('VariabelPre', "VariabelPost1")], 2, sd, na.rm=T))
       PlotMatrise <- as.matrix(t(PrePost[,-1]))
       PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('VariabelPre', "VariabelPost1")]))
-      Ngr <- table(RegData$SenterKortNavn)  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
+      Ngr <- table(as.character(RegData$SenterKortNavn)) ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
       Ngr <- c(Ngr, sum(Ngr))
+
+
 
       tittel2 <- 'før og etter (12mnd) operasjon'
     }
@@ -128,7 +130,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), apply(RegData[, c('VariabelPre', 'Variabel', "VariabelPost5")], 2, sd, na.rm=T))
       PlotMatrise <- as.matrix(t(PrePost[,-1]))
       PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('VariabelPre', 'Variabel', "VariabelPost1")]))
-      Ngr <- table(RegData$SenterKortNavn)  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
+      Ngr <- table(as.character(RegData$SenterKortNavn))  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
       Ngr <- c(Ngr, sum(Ngr))
       tittel2 <- 'før og etter (1 og 5 år) operasjon'
     }
