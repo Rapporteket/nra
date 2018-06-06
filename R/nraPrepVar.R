@@ -27,8 +27,6 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
                 paste0('Minimum=', round(min(RegData$Variabel, na.rm = T),1), ', maksimum=', round(max(RegData$Variabel, na.rm = T),1)),'.')
     gr <- c(0, seq(25, 85, 10), 130)
     RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
-    print(RegData$Variabel)
-    print(as.numeric(RegData$Variabel))
     subtxt <- 'Aldersgrupper'
     grtxt <- levels(RegData$VariabelGr)
     grtxt[1] <- paste0('<', as.character(gr[2]))
