@@ -1,7 +1,7 @@
 setwd('c:/GIT/nra/doc')
 rm(list = ls())
 
-RegData <- read.table('C:/SVN/jasper/nra/data/alleVarNum2016-08-31 08-38-30.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+RegData <- read.table('I:/nra/alleVarNum2018-06-06 12-32-02.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -13,34 +13,34 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
                        'ABD65', 'ABD652AT2','ABD60')]
 
-ForlopData <- read.table('C:/SVN/jasper/nra/data/ForlopsOversikt2016-08-31 08-38-29.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2018-06-06 12-32-00.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
 RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
 RegData <- nraPreprosess(RegData=RegData)
 
-reshID <- 700116 #  #Må sendes med til funksjon
+reshID <- 601225 #  #Må sendes med til funksjon
 minald <- 0  #alder, fra og med
 maxald <- 130	#alder, til og med
 erMann <- 99
-datoFra <- '2015-01-01'	 # min og max dato i utvalget vises alltid i figuren.
-datoTil <- '2015-12-31'
-enhetsUtvalg <- 0 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
+datoFra <- '2012-01-01'	 # min og max dato i utvalget vises alltid i figuren.
+datoTil <- '2018-12-31'
+enhetsUtvalg <- 1 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 # valgtVar <- 'Etiologi'
 # valgtVar <- 'TidlBeh'
 # valgtVar <- 'Tilfredshet'
 # valgtVar <- 'Sfinktervurdering'
-# valgtVar <- 'PasientAlder'
+valgtVar <- 'PasientAlder'
 # valgtVar <- 'Komplikasjon'
 # valgtVar <- 'KomplikasjonT2'
-valgtVar <- 'KomplSNMtot'
+# valgtVar <- 'KomplSNMtot'
 # valgtVar <- 'KomplSfinkter'
 # valgtVar <- 'Etiologi'
 # valgtVar <- 'SNMdagbok'
 # valgtVar <- 'Symtomvarighet'
 outfile <- ''
-outfile <- paste0(valgtVar, '.pdf')
+# outfile <- paste0(valgtVar, '.pdf')
 preprosess<-F
 hentData <- F
 forlopstype1=''
@@ -52,7 +52,6 @@ tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFr
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-
 
 ###############  St. Marks osv... ########################
 ##########

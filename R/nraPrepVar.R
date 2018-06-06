@@ -19,6 +19,7 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
   RegData$Variabel <- NA
   if (valgtVar == 'PasientAlder') {
     RegData$Variabel <- RegData[, valgtVar]
+    print(str(RegData$Variabel))
     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
