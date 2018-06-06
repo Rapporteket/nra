@@ -19,7 +19,6 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
   RegData$Variabel <- NA
   if (valgtVar == 'PasientAlder') {
     RegData$Variabel <- RegData[, valgtVar]
-    print(str(RegData$Variabel))
     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
@@ -27,6 +26,7 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
                 paste0('Minimum=', round(min(RegData$Variabel, na.rm = T),1), ', maksimum=', round(max(RegData$Variabel, na.rm = T),1)),'.')
     gr <- c(0, seq(25, 85, 10), 130)
     RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
+    print(table(RegData$VariabelGr))
     subtxt <- 'Aldersgrupper'
     grtxt <- levels(RegData$VariabelGr)
     grtxt[1] <- paste0('<', as.character(gr[2]))
