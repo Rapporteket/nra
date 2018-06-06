@@ -6,7 +6,7 @@
 #' @return En figur med gjennomsnitt før operasjon, etter 1 år og etter 5 år
 #' @export
 
-nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', valgtShus='',
+nraSNMdagbokPst <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', valgtShus='',
                            outfile = '', preprosess=TRUE, minald=0, maxald=130, enhetsUtvalg=0,
                            erMann='', reshID, hentData=F, forlopstype1='', forlopstype2='')
 
@@ -81,6 +81,22 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
     Nrest <- length(indRest)
   }
 
+
+  Pre <- RegData[indHoved, c("InkontinensFoerTest", "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer")]
+  Post <- RegData[indHoved, c("InkontinensUnderTest", "UrgencyUnderTest", "AvfoeringerUnderTest", "LekkasjedagerUnder")]
+
+  PstEndr <- (Pre-Post)/Pre*100
+  PstEndr[is.nan(PstEndr[,1]), 1] <- 0
+  PstEndr[is.nan(PstEndr[,2]), 2] <- 0
+  PstEndr[is.nan(PstEndr[,3]), 3] <- 0
+  PstEndr[is.nan(PstEndr[,4]), 4] <- 0
+
+  # terskel <- t(matrix(c(70,50,50,50), 4,dim(PstEndr)[1]))
+  AndelMaaloppnaaelse <- c(mean(PstEndr$InkontinensFoerTest > 50), mean(PstEndr$InkontinensFoerTest >75))*100
+
+  # IndikatorTekst1 <- paste0('Mål: ', terskel[1,], ' % forbedring')
+  # IndikatorTekst2 <- paste0('Andel måloppnåelse: ', round(AndelMaaloppnaaelse,1), ' %')
+
   ##### Plot ####################
 
   cexgr <- 0.9
@@ -89,9 +105,9 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
   grtxt <- ''
   grtxt2 <- ''
   subtxt <- ''
-  tittel <- 'SNM-dagbok'
+  tittel <- c('SNM-dagbok, andel med prosentvis reduksjon', 'i lekkasjeepisoder større enn definert mål.')
 
-  grtxt <- c('Inkontinensepisoder', 'Urgencyepisoder', 'Avføringsepisoder', 'Dager med lekkasje')
+  grtxt <- c('>50 % reduksjon', '>75 % reduksjon')
 
   #Hvis for få observasjoner..
   #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & enhetsUtvalg == 1)) {
@@ -99,7 +115,7 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
     FigTypUt <- figtype(outfile)
     farger <- FigTypUt$farger
     plot.new()
-    title(main='SNM-dagbok')
+    title(main=c('SNM-dagbok, andel med prosentvis reduksjon', 'i lekkasjeepisoder større enn definert mål.'))
     legend('topleft',utvalgTxt, bty='n', cex=0.9, text.col=farger[1])
     text(0.5, 0.65, 'Færre enn 10 registreringer i hoved-', cex=1.2)
     text(0.55, 0.6, 'eller sammenlikningsgruppe', cex=1.2)
@@ -123,13 +139,16 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
 
 
     ymax <- 2*antGr*1.6
-    xmax <- max(c(PlotMatrise$Hoved, PlotMatrise$Rest),na.rm=T)*1.25
+    xmax <- max(AndelMaaloppnaaelse)*1.25
 
-    pos <- barplot(PlotMatrise$Hoved[2:1,antGr:1], beside=TRUE, horiz=TRUE, main='', las=1,
-                   col=farger[c(1,2)], border='white', font.main=1,  xlim=c(0,xmax), ylim=c(0.25, 3.3)*antGr,
-                   names.arg=rev(grtxt), cex.names=cexgr, xlab="Gjsn. antall pr uke")
-    text(rev(PlotMatrise$Hoved[1,])+.1, pos[2,], rev(round(PlotMatrise$Hoved[1,],1)), cex=.8, adj = 0, xpd=T)
-    text(rev(PlotMatrise$Hoved[2,])+.1, pos[1,], rev(round(PlotMatrise$Hoved[2,],1)), cex=.8, adj = 0, xpd=T)
+    pos <- barplot(rev(AndelMaaloppnaaelse), horiz=TRUE, main='', las=1,
+                   col=farger[c(1)], border='white', font.main=1,  xlim=c(0,xmax), ylim=c(0, 2.5),
+                   names.arg=rev(grtxt), cex.names=cexgr, xlab="Andel måloppnåelse (%)")
+
+    text(rev(AndelMaaloppnaaelse)+.5, pos, round(rev(AndelMaaloppnaaelse),1), cex=cexgr, adj = 0, xpd=T)
+
+    # text(rev(apply(PlotMatrise$Hoved, 2, max))+.1, pos[2,], rev(IndikatorTekst1), cex=.8, adj = 0, xpd=T)
+    # text(rev(apply(PlotMatrise$Hoved, 2, max))+.1, pos[1,], rev(IndikatorTekst2), cex=.8, adj = 0, xpd=T)
 
     if (medSml == 1) {
       points(PlotMatrise$Rest[2:1,antGr:1], y=pos+0.1,  col=fargeRest,  cex=cexpt, pch=18) #c("p","b","o"),
@@ -137,12 +156,12 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
              text.width = c(0.2,0.2,0.21)*xmax, bty='n', pch=c(15,15,18), pt.cex=cexpt, #lty=c(NA,NA,NA),
              col=farger[c(2,1,3)], border=farger[c(2,1,3)], ncol=3, cex=cexleg)
     } else {
-      legend('top', c('Før test', 'Under test',paste('N=',NHoved,sep='')), bty='n',
-             fill=farger[c(2,1,NA)], border=NA, ncol=3, cex=cexleg)
+      legend('top', paste('N=',NHoved,sep=''), bty='n',
+             fill=farger[1], border=NA, ncol=1, cex=cexleg)
     }
 
     title(tittel, font.main=1)	#line=0.5,
-    title(shtxt, font.main=1, line=0.5)
+    # title(shtxt, font.main=1, line=0.5)
     #Tekst som angir hvilket utvalg som er gjort
 #     avst <- 0.8
 #     utvpos <- 3+length(tittel)-1	#Startlinje for teksten

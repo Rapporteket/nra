@@ -17,4 +17,3 @@ Data En list med det filtrerte datasettet og sykehusnavnet som tilsvarer reshID
 Denne funksjonen definerer en del nye (sammensatte) variabler relevante for rapporter i NRA
 og rensker opp i andre.
 }
-

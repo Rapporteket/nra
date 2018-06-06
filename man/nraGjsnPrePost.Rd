@@ -8,7 +8,7 @@ inkludert konfidensintervaller.}
 nraGjsnPrePost(RegData, valgtVar, datoFra = "2012-04-01",
   datoTil = "2050-12-31", outfile = "", preprosess = TRUE, minald = 0,
   maxald = 130, erMann = "", reshID, hentData = F, forlopstype1 = "",
-  forlopstype2 = "", sammenlign = 0)
+  forlopstype2 = "", sammenlign = 0, inkl_konf = 0)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -66,4 +66,3 @@ En figur med gjennomsnitt før operasjon, etter 1 år og etter 5 år
 \description{
 Gjelder St. Marks, Generell livskvalitet og Seksualitet
 }
-
