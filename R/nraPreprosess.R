@@ -11,8 +11,8 @@
 nraPreprosess <- function(RegData)
 {
   # RegData <- RegData[RegData$BasisRegStatus==1,]
-  RegData$HovedDato <- as.POSIXlt(RegData$HovedDato, format="%Y-%m-%d")
-  RegData$Aar <- RegData$HovedDato$year+1900
+  RegData$HovedDato <- as.POSIXct(RegData$HovedDato, format="%Y-%m-%d")
+  RegData$Aar <- as.numeric(format(RegData$HovedDato, format="%Y"))
 
 
   RegData$Sfinktervurdering <- NA

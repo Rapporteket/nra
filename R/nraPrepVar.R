@@ -120,9 +120,10 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     retn <- 'H'
     RegData <- RegData[RegData$ForlopsType1Num == 1, ]
     N <- dim(RegData)[1]
-    AntVar <- colSums(RegData[, c("PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens")], na.rm = TRUE)
+    RegData$ikkepostopkompl <- !(RegData$PostopKomplikasjoner)
+    AntVar <- colSums(RegData[, c("ikkepostopkompl", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens")], na.rm = TRUE)
     NVar<-rep(N, length(AntVar))
-    grtxt <- c("Totalt", "Blødning", "Sårinfeksjon", "Sårdehisens")
+    grtxt <- c("Ingen", "Totalt", "Blødning", "Sårinfeksjon", "Sårdehisens")
     tittel <- 'Komplikasjoner ved sfinkterplastikk'
   }
 

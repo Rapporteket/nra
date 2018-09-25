@@ -16,7 +16,7 @@ nraUtvalg <- function(RegData, datoFra, datoTil, valgtShus='', minald, maxald, e
   Ninn <- dim(RegData)[1]
   indVarMed <- 1:Ninn
   indAld <- which(RegData$PasientAlder >= minald & RegData$PasientAlder <= maxald)
-  indDato <- which(RegData$HovedDato >= as.POSIXlt(datoFra) & RegData$HovedDato <= as.POSIXlt(datoTil))
+  indDato <- which(RegData$HovedDato >= datoFra & RegData$HovedDato <= datoTil)
   indKj <- if (erMann %in% 0:1) {which(RegData$ErMann == erMann)} else {indKj <- 1:Ninn}
   indForlop1 <- if (forlopstype1[1] != '') {which(RegData$ForlopsType1Num %in% as.numeric(forlopstype1))} else {indForlop1 <- 1:Ninn}
   indForlop2 <- if (forlopstype2[1] != '') {which(RegData$ForlopsType2Num %in% as.numeric(forlopstype2))} else {indForlop2 <- 1:Ninn}
@@ -29,7 +29,8 @@ nraUtvalg <- function(RegData, datoFra, datoTil, valgtShus='', minald, maxald, e
                  if ((minald>0) | (maxald<130)) {
                    paste('Pasienter fra ', min(RegData$PasientAlder, na.rm=T), ' til ', max(RegData$PasientAlder, na.rm=T), ' år', sep='')},
                  if (erMann %in% 0:1) {paste('Kjønn: ', c('Kvinner', 'Menn')[erMann+1], sep='')},
-                 if (length(valgtShus)>1) {paste0('Avdeling: ', paste(unique(RegData$SenterKortNavn[RegData$AvdRESH==99]), collapse=', '))},
+                 if (valgtShus[1] != '') {paste0('Avdeling: ', paste(unique(RegData$SenterKortNavn[RegData$AvdRESH %in% valgtShus]),
+                                                                      collapse=', '))},
                  if (forlopstype1[1] !='') {paste0('Hovedforløp: ', paste(as.character(RegData$ForlopsType1[
                    match(as.numeric(forlopstype1), RegData$ForlopsType1Num)]), collapse=', '))},
                  if (forlopstype2[1] !='') {paste0('SNM-type: ', paste(as.character(RegData$ForlopsType2[
