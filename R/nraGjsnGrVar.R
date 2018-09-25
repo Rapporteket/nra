@@ -50,10 +50,10 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
                                             N = n(),
                                             gj.sn = mean(Variabel)) %>% ungroup()
 
-  Tabell <- bind_rows(Tabell, tibble(grvar='Totalt', summert=sum(Tabell$summert),
+  Tabell <- bind_rows(Tabell, tibble(grvar='Nasjonalt', summert=sum(Tabell$summert),
                                      N=sum(Tabell$N), gj.sn = sum(Tabell$summert)/sum(Tabell$N)))
   if (egen_mot_landet) {
-    ind_med <- which(Tabell$grvar %in% c(egetShus, 'Totalt'))
+    ind_med <- which(Tabell$grvar %in% c(egetShus, 'Nasjonalt'))
     Tabell <- Tabell[ind_med, ]
   }
   Tabell$grvar <- paste0(Tabell$grvar, ' (', Tabell$N, ')')
@@ -78,7 +78,7 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
   FigTypUt <- rapbase::figtype(outfile='', width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
   farger <- FigTypUt$farger
   soyleFarger <- rep(farger[3], dim(Tabell)[1])
-  soyleFarger[which(substr(Tabell$grvar, 1, 6)=='Totalt')] <- farger[4]
+  soyleFarger[which(substr(Tabell$grvar, 1, 6)=='Nasjon')] <- farger[4]
   windows(width = width, height = height)
 
   oldpar_mar <- par()$mar

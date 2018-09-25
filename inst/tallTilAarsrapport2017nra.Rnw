@@ -9,7 +9,7 @@
 \usepackage[a4paper]{geometry}
 
 
-\title{Figurer og tabeller til årsrapport for NRA 2016}
+\title{Figurer og tabeller til årsrapport for NRA 2017}
 \author{NRA}
 
 \renewcommand\thempfootnote{\fnsymbol{mpfootnote}}
@@ -43,7 +43,7 @@ library(nra)
 rm(list = ls())
 hentData <- F
 
-RegData <- read.table('I:/nra/alleVarNum2018-06-06 12-32-02.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+RegData <- read.table('I:/nra/alleVarNum2018-09-25 08-28-59.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -53,14 +53,16 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
                        "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
                        "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
-                       'ABD65', 'ABD652AT2','ABD60')]
+                       'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
+                       "WexLivsstilsendring", "WexnerTotalScore")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2018-06-06 12-32-00.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2018-09-25 08-28-59.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
 RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
 RegData <- nraPreprosess(RegData=RegData)
+RegData$SenterKortNavn <- iconv(RegData$SenterKortNavn, from = 'UTF-8', to = '')
 
 reshID <- 700116 #  #Må sendes med til funksjon
 minald <- 0  #alder, fra og med
@@ -98,78 +100,186 @@ tmp <- Sys.setlocale(category = "LC_ALL", locale = "nb_NO.UTF-8")
 
 \newpage
 
-<<'Fig:Diagnoser', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
+<<'Fig:Indikator', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
 
-varNavn <- c('PasientAlder', 'KomplSNMtot', 'TidlBeh', 'Symtomvarighet', 'Sfinktervurdering')
+valgtVar='StMarksMindreEnn9'
+outfile='StMarksMindreEnn9.pdf'
+width=600
+height=600
+decreasing=F
+terskel=5
+minstekrav = NA
+maal = 30
+xtekst ='Andel %'
+til100 = F
+skriftStr=1.3
+pktStr=1.5
+datoFra='2016-01-01'
+datoTil='2017-12-31'
 
-for (p in 1:length(varNavn)){
-  outfile=paste0(varNavn[p], '.pdf')
-  nraFigAndeler(RegData=RegData, valgtVar=varNavn[p], datoFra=datoFra, datoTil=datoTil,
-              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-}
+indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                                   forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+outfile <- 'WexnerMindreEnn9.pdf'
+indikatorFigRaterGrVar(RegData=RegData, valgtVar='WexnerMindreEnn9', outfile=outfile, width=width, height=height,
+                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                                   forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 
-valgtVar <- 'Sfinktervurdering'
-outfile <- 'Sfinktervurdering_snm.pdf'
-nraFigAndeler(RegData=RegData, valgtVar=varNavn[p], datoFra=datoFra, datoTil=datoTil,
-              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+valgtVar='StMarksMindreEnn12'
+outfile='StMarksMindreEnn12.pdf'
+maal = 50
+indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                                   forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 
-
-valgtVar <- 'TidlBeh'
-outfile <- 'TidlBeh_sfinkt.pdf'
-nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
-              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
-
-outfile <- 'TidlBeh_snm.pdf'
-nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
-              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
-
-outfile <- 'snmDagbok.pdf'
-nraSNMdagbok(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-             erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-
-outfile <- 'snmDagbok.pdf'
-nraSNMdagbok(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-             erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-
-# outfile <- 'snmDagbokPst.pdf'
-# nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-#              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-#              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-
-outfile <- 'snmDagbokPst_pos.pdf'
-nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-             erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=2)
+valgtVar='WexnerMindreEnn12'
+outfile='WexnerMindreEnn12.pdf'
+indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                                   forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 
 
-datoFra <- '2015-01-01'
-outfile <- 'Tilfredshet.pdf'
+valgtVar='StMarksMindreEnn9'
+outfile='StMarksMindreEnn9_snm.pdf'
+indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                                   forlopstype1=2, forlopstype2=forlopstype2)
 
-nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
-              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+valgtVar='StMarksMindreEnn12'
+outfile='StMarksMindreEnn12_snm.pdf'
+indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                                   forlopstype1=2, forlopstype2=forlopstype2)
 
+
+@
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksMindreEnn9.pdf}
+\caption{Andel St. Marks mindre enn 9}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksMindreEnn9_snm.pdf}
+\caption{Andel St. Marks mindre enn 9, forløp snm}
+\end{figure}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksMindreEnn12.pdf}
+\caption{Andel St. Marks mindre enn 12}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksMindreEnn12_snm.pdf}
+\caption{Andel St. Marks mindre enn 12, forløp snm}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{WexnerMindreEnn9.pdf}
+\caption{Andel Wexner mindre enn 9}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{WexnerMindreEnn12.pdf}
+\caption{Andel Wexner mindre enn 12}
+\end{figure}
+
+<<'Fig:Før og etter', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
 outfile <- 'StMarksTotalScore.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
                            sammenlign=1, inkl_konf=1)
 
-outfile <- 'GenQol.pdf'
-nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
+outfile <- 'StMarksTotalScore_aar.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1, valgtShus='')
+
+outfile <- 'StMarksTotalScore_aar_sfinkt.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1, valgtShus='')
+
+outfile <- 'StMarksTotalScore_aar_snm.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1, valgtShus='')
+
+outfile <- 'StMarksTotalScore_aar_unn.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1, valgtShus=601225)
+
+outfile <- 'StMarksTotalScore_aar_stolav.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1, valgtShus=107440)
+
+outfile <- 'StMarksTotalScore_aar_innlandet.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1, valgtShus=111138)
+
+outfile <- 'StMarksTotalScore_aar_bergen.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1, valgtShus=700922)
+outfile <- 'StMarksTotalScore_aar_ahus.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1, valgtShus=108162)
+outfile <- 'StMarksTotalScore_aar_ostfold.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1, valgtShus=700116)
+
+
+
+outfile <- 'WexnerTotalScore.pdf'
+nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1)
+
+outfile <- 'StMarksTotalScore_sfinkt.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1)
+
+outfile <- 'StMarksTotalScore_SNM.pdf'
+nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
                            sammenlign=1, inkl_konf=1)
 
 outfile <- 'QolSexualitet.pdf'
@@ -178,88 +288,116 @@ nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra=datoFra, datoTil=datoT
                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
                            sammenlign=1, inkl_konf=1)
 
-outfile <- 'Urinlekkasje.pdf'
+outfile <- 'Urinlekkasje_sfinkt.pdf'
 nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
                            sammenlign=1, inkl_konf=0)
 
+outfile <- 'Urinlekkasje_snm.pdf'
+nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=0)
 
+outfile <- 'GenQol.pdf'
+nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                           sammenlign=1, inkl_konf=1)
+outfile <- 'Tilfredshet_gr.pdf'
+nraGjsnGrVar(RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, decreasing=decreasing,
+                           erMann=erMann, hentData=hentData, forlopstype1='', forlopstype2='', terskel=5,
+                           inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt')
 
+outfile <- 'Tilfredshet.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 @
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[1], '.pdf')}}
-\caption{Aldersfordeling}
-\end{figure}
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[2], '.pdf')}}
-\caption{Komplikasjoner}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[3], '.pdf')}}
-\caption{Tidligere behandling}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_sfinkt.pdf}
-\caption{Tidligere behandling, sfinkterplastikk}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_snm.pdf}
-\caption{Tidligere behandling, snm}
-\end{figure}
-
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[4], '.pdf')}}
-\caption{Symtomvarighet}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[5], '.pdf')}}
-\caption{Sfinktervurdering}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{Sfinktervurdering_snm.pdf}
-\caption{Sfinktervurdering SNM}
-\end{figure}
-
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{Tilfredshet.pdf}
-\caption{Tilfredshet}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{snmDagbok.pdf}
-\caption{SNM-dagbok}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{snmDagbokPst_pos.pdf}
-\caption{SNM-dagbok, andel som når målene blant de med positiv test}
-\end{figure}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore.pdf}
-\caption{St. Marks score før og etter}
+\caption{St. Marks før og etter}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_aar.pdf}
+\caption{St. Marks før og etter, per år}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_aar_unn.pdf}
+\caption{St. Marks før og etter, per år}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_aar_sfinkt.pdf}
+\caption{St. Marks før og etter, per år, sfinkterplastikk}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_aar_snm.pdf}
+\caption{St. Marks før og etter, per år, snm}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_aar_stolav.pdf}
+\caption{St. Marks før og etter, per år}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_aar_innlandet.pdf}
+\caption{St. Marks før og etter, per år}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_aar_bergen.pdf}
+\caption{St. Marks før og etter, per år}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_aar_ahus.pdf}
+\caption{St. Marks før og etter, per år}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_aar_ostfold.pdf}
+\caption{St. Marks før og etter, per år}
+\end{figure}
+
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{WexnerTotalScore.pdf}
+\caption{Wexner før og etter}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_sfinkt.pdf}
+\caption{St. Marks før og etter, sfinkter}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_SNM.pdf}
+\caption{St. Marks før og etter, SNM}
 \end{figure}
 
 \begin{figure}[ht]
@@ -276,10 +414,334 @@ nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTi
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\Sexpr{figstr}\textwidth]{Urinlekkasje.pdf}
-\caption{Andel med urinlekkasje}
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Urinlekkasje_sfinkt.pdf}
+\caption{Andel med urinlekkasje, sfinkterplastikk}
 \end{figure}
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Urinlekkasje_snm.pdf}
+\caption{Andel med urinlekkasje, SNM}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Tilfredshet_gr.pdf}
+\caption{Gjennomsnittlig tilfredshet med behandling, 0=Svært misfornøyd, 10=svært fornøyd}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Tilfredshet.pdf}
+\caption{Tilfredshet med behandling}
+\end{figure}
+
+<<'Fig:Ymse', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
+datoFra <- '2017-01-01'
+varNavn <- c('PasientAlder', 'KomplSNMtot', 'TidlBeh', 'Symtomvarighet', 'Sfinktervurdering')
+
+
+outfile='PasientAlder.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='PasientAlder', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+
+outfile='Kompl_sfinkt.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='KomplSfinkter', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+
+outfile='KomplSNMtot.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='KomplSNMtot', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+
+outfile='TidlBeh_sfinkt.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+
+outfile='TidlBeh_snm.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+
+outfile='Symtomvarighet_sfinkt.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+
+outfile='Symtomvarighet_snm.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+
+outfile='Sfinktervurdering.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+
+outfile <- 'snmDagbok.pdf'
+nraSNMdagbok(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
+             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+             erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+
+outfile <- 'snmDagbokPst_pos.pdf'
+nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
+             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+             erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=2)
+@
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{PasientAlder.pdf}
+\caption{Aldersfordeling}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Kompl_sfinkt.pdf}
+\caption{Komplikasjoner ved sfinkterplastikk}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{KomplSNMtot.pdf}
+\caption{Komplikasjoner ved SNM}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_sfinkt.pdf}
+\caption{Tidligere behandling, sfinkterplastikk}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_snm.pdf}
+\caption{Tidligere behandling, snm}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Symtomvarighet_sfinkt.pdf}
+\caption{Symptomvarighet, sfinkterplastikk}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Symtomvarighet_snm.pdf}
+\caption{Symptomvarighet, snm}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Sfinktervurdering.pdf}
+\caption{Ultralydvurdering av sfinkterskade}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{snmDagbok.pdf}
+\caption{SNM-dagbok}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{snmDagbokPst_pos.pdf}
+\caption{SNM-dagbok, andel måloppnåelse}
+\end{figure}
+%
+% <<'Fig:Diagnoser', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
+%
+% varNavn <- c('PasientAlder', 'KomplSNMtot', 'TidlBeh', 'Symtomvarighet', 'Sfinktervurdering')
+%
+% for (p in 1:length(varNavn)){
+%   outfile=paste0(varNavn[p], '.pdf')
+%   nraFigAndeler(RegData=RegData, valgtVar=varNavn[p], datoFra=datoFra, datoTil=datoTil,
+%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+%               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+% }
+%
+% valgtVar <- 'Sfinktervurdering'
+% outfile <- 'Sfinktervurdering_snm.pdf'
+% nraFigAndeler(RegData=RegData, valgtVar=varNavn[p], datoFra=datoFra, datoTil=datoTil,
+%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+%               valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+%
+%
+% valgtVar <- 'TidlBeh'
+% outfile <- 'TidlBeh_sfinkt.pdf'
+% nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
+%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+%               valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+%
+% outfile <- 'TidlBeh_snm.pdf'
+% nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
+%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+%               valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+%
+% outfile <- 'snmDagbok.pdf'
+% nraSNMdagbok(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
+%              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+%              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+%
+% outfile <- 'snmDagbok.pdf'
+% nraSNMdagbok(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
+%              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+%              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+%
+% # outfile <- 'snmDagbokPst.pdf'
+% # nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
+% #              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+% #              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+%
+% outfile <- 'snmDagbokPst_pos.pdf'
+% nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
+%              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+%              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=2)
+%
+%
+% datoFra <- '2015-01-01'
+% outfile <- 'Tilfredshet.pdf'
+%
+% nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+%               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+%
+% outfile <- 'StMarksTotalScore.pdf'
+% nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
+%                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+%                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+%                            sammenlign=1, inkl_konf=1)
+%
+% outfile <- 'GenQol.pdf'
+% nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
+%                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+%                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+%                            sammenlign=1, inkl_konf=1)
+%
+% outfile <- 'QolSexualitet.pdf'
+% nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra=datoFra, datoTil=datoTil,
+%                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+%                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+%                            sammenlign=1, inkl_konf=1)
+%
+% outfile <- 'Urinlekkasje.pdf'
+% nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+%                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+%                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+%                            sammenlign=1, inkl_konf=0)
+%
+%
+%
+% @
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[1], '.pdf')}}
+% \caption{Aldersfordeling}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[2], '.pdf')}}
+% \caption{Komplikasjoner}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[3], '.pdf')}}
+% \caption{Tidligere behandling}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_sfinkt.pdf}
+% \caption{Tidligere behandling, sfinkterplastikk}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_snm.pdf}
+% \caption{Tidligere behandling, snm}
+% \end{figure}
+%
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[4], '.pdf')}}
+% \caption{Symtomvarighet}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[5], '.pdf')}}
+% \caption{Sfinktervurdering}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{Sfinktervurdering_snm.pdf}
+% \caption{Sfinktervurdering SNM}
+% \end{figure}
+%
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{Tilfredshet.pdf}
+% \caption{Tilfredshet}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{snmDagbok.pdf}
+% \caption{SNM-dagbok}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{snmDagbokPst_pos.pdf}
+% \caption{SNM-dagbok, andel som når målene blant de med positiv test}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore.pdf}
+% \caption{St. Marks score før og etter}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{GenQol.pdf}
+% \caption{Generell livskvalitet}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{QolSexualitet.pdf}
+% \caption{Påvirkning seksualliv}
+% \end{figure}
+%
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{Urinlekkasje.pdf}
+% \caption{Andel med urinlekkasje}
+% \end{figure}
+%
 
 
 
