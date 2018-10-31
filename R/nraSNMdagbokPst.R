@@ -92,7 +92,7 @@ nraSNMdagbokPst <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31',
   PstEndr[is.nan(PstEndr[,4]), 4] <- 0
 
   # terskel <- t(matrix(c(70,50,50,50), 4,dim(PstEndr)[1]))
-  AndelMaaloppnaaelse <- c(mean(PstEndr$InkontinensFoerTest > 50), mean(PstEndr$InkontinensFoerTest >75))*100
+  AndelMaaloppnaaelse <- c(mean(PstEndr$InkontinensFoerTest >= 50), mean(PstEndr$InkontinensFoerTest >=75))*100
 
   # IndikatorTekst1 <- paste0('Mål: ', terskel[1,], ' % forbedring')
   # IndikatorTekst2 <- paste0('Andel måloppnåelse: ', round(AndelMaaloppnaaelse,1), ' %')
@@ -105,9 +105,9 @@ nraSNMdagbokPst <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31',
   grtxt <- ''
   grtxt2 <- ''
   subtxt <- ''
-  tittel <- c('SNM-dagbok, andel med prosentvis reduksjon', 'i lekkasjeepisoder større enn definert mål.')
+  tittel <- c('SNM-dagbok, andel med prosentvis reduksjon', 'i lekkasjeepisoder større eller lik definert mål.')
 
-  grtxt <- c('>50 % reduksjon', '>75 % reduksjon')
+  grtxt <- c('>=50 % reduksjon', '>=75 % reduksjon')
 
   #Hvis for få observasjoner..
   #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & enhetsUtvalg == 1)) {
@@ -115,7 +115,7 @@ nraSNMdagbokPst <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31',
     FigTypUt <- figtype(outfile)
     farger <- FigTypUt$farger
     plot.new()
-    title(main=c('SNM-dagbok, andel med prosentvis reduksjon', 'i lekkasjeepisoder større enn definert mål.'))
+    title(main=c('SNM-dagbok, andel med prosentvis reduksjon', 'i lekkasjeepisoder større eller lik definert mål.'))
     legend('topleft',utvalgTxt, bty='n', cex=0.9, text.col=farger[1])
     text(0.5, 0.65, 'Færre enn 10 registreringer i hoved-', cex=1.2)
     text(0.55, 0.6, 'eller sammenlikningsgruppe', cex=1.2)

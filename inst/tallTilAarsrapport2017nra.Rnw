@@ -76,6 +76,8 @@ hentData <- F
 forlopstype1=''
 forlopstype2=''
 valgtShus <- '' #c('601225', '700116')
+utformat <- 'wmf'
+
 
 figstr <- 0.61
 tmp <- Sys.setlocale(category = "LC_ALL", locale = "nb_NO.UTF-8")
@@ -117,52 +119,135 @@ pktStr=1.5
 datoFra='2016-01-01'
 datoTil='2017-12-31'
 
-indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
-                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
-                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
-                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
-                                   forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+RegDataStr9 <- rbind(RegData[which(RegData$StMarksTotalScore>=9 & RegData$ForlopsType1Num %in% 1:2), ],
+      RegData[which(RegData$ForlopsType1Num == 3),])
+RegDataStr12 <- rbind(RegData[which(RegData$StMarksTotalScore>=12 & RegData$ForlopsType1Num %in% 1:2), ],
+      RegData[which(RegData$ForlopsType1Num == 3),])
+
+indikatorFigRaterGrVar(RegData=RegDataStr9, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar(RegData=RegDataStr9, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                         decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                         til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                         hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                         forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
+
 outfile <- 'WexnerMindreEnn9.pdf'
 indikatorFigRaterGrVar(RegData=RegData, valgtVar='WexnerMindreEnn9', outfile=outfile, width=width, height=height,
-                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
-                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
-                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
-                                   forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar(RegData=RegData, valgtVar='WexnerMindreEnn9', outfile=outfile, width=width, height=height,
+                         decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                         til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                         hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                         forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 valgtVar='StMarksMindreEnn12'
 outfile='StMarksMindreEnn12.pdf'
 maal = 50
-indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
-                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
-                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
-                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
-                                   forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+indikatorFigRaterGrVar(RegData=RegDataStr12, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar(RegData=RegDataStr12, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                         decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                         til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                         hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                         forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 
 valgtVar='WexnerMindreEnn12'
 outfile='WexnerMindreEnn12.pdf'
 indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
-                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
-                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
-                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
-                                   forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                         decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                         til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                         hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                         forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 
 valgtVar='StMarksMindreEnn9'
 outfile='StMarksMindreEnn9_snm.pdf'
-indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
-                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
-                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
-                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
-                                   forlopstype1=2, forlopstype2=forlopstype2)
+indikatorFigRaterGrVar(RegData=RegDataStr9, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=2, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar(RegData=RegDataStr9, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                         decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                         til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                         hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                         forlopstype1=2, forlopstype2=forlopstype2)
+}
+valgtVar='StMarksMindreEnn9'
+outfile='StMarksMindreEnn9_sfinkt.pdf'
+indikatorFigRaterGrVar(RegData=RegDataStr9, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar(RegData=RegDataStr9, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                         decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                         til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                         hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                         forlopstype1=1, forlopstype2=forlopstype2)
+}
+
 
 valgtVar='StMarksMindreEnn12'
 outfile='StMarksMindreEnn12_snm.pdf'
-indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
-                                   decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
-                                   til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
-                                   hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
-                                   forlopstype1=2, forlopstype2=forlopstype2)
+indikatorFigRaterGrVar(RegData=RegDataStr12, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=2, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar(RegData=RegDataStr12, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                         decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                         til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                         hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                         forlopstype1=2, forlopstype2=forlopstype2)
+}
 
+valgtVar='StMarksMindreEnn12'
+outfile='StMarksMindreEnn12_sfinkt.pdf'
+indikatorFigRaterGrVar(RegData=RegDataStr12, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar(RegData=RegDataStr12, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                         decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                         til100 = til100, skriftStr=1.3, pktStr=1.5, datoFra=datoFra, datoTil=datoTil,
+                         hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                         forlopstype1=1, forlopstype2=forlopstype2)
+}
 
 @
 
@@ -206,116 +291,394 @@ indikatorFigRaterGrVar(RegData=RegData, valgtVar=valgtVar, outfile=outfile, widt
 <<'Fig:Før og etter', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
 outfile <- 'StMarksTotalScore.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
 
 outfile <- 'StMarksTotalScore_aar.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1, valgtShus='')
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1, valgtShus='')
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1, valgtShus='')
+}
 
 outfile <- 'StMarksTotalScore_aar_sfinkt.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1, valgtShus='')
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1, valgtShus='')
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1, valgtShus='')
+}
 
 outfile <- 'StMarksTotalScore_aar_snm.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1, valgtShus='')
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1, valgtShus='')
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1, valgtShus='')
+}
 
 outfile <- 'StMarksTotalScore_aar_unn.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1, valgtShus=601225)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1, valgtShus=601225)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1, valgtShus=601225)
+}
 
 outfile <- 'StMarksTotalScore_aar_stolav.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1, valgtShus=107440)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1, valgtShus=107440)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1, valgtShus=107440)
+}
 
 outfile <- 'StMarksTotalScore_aar_innlandet.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1, valgtShus=111138)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1, valgtShus=111138)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1, valgtShus=111138)
+}
 
 outfile <- 'StMarksTotalScore_aar_bergen.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1, valgtShus=700922)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1, valgtShus=700922)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1, valgtShus=700922)
+}
 outfile <- 'StMarksTotalScore_aar_ahus.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1, valgtShus=108162)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1, valgtShus=108162)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1, valgtShus=108162)
+}
 outfile <- 'StMarksTotalScore_aar_ostfold.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1, valgtShus=700116)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1, valgtShus=700116)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1, valgtShus=700116)
+}
 
 
 
 outfile <- 'WexnerTotalScore.pdf'
 nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
 
 outfile <- 'StMarksTotalScore_sfinkt.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
 
 outfile <- 'StMarksTotalScore_SNM.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
 
 outfile <- 'QolSexualitet.pdf'
 nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra=datoFra, datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+outfile <- 'QolSexualitet_sfinkt_2013-2017.pdf'
+nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra='2013-01-01', datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+outfile <- 'QolSexualitet_snm_2013-2017.pdf'
+nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra='2013-01-01', datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+
+
+outfile <- 'QolSexualitet_sfinkt.pdf'
+nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra=datoFra, datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+
+outfile <- 'QolSexualitet_snm.pdf'
+nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra=datoFra, datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+
 
 outfile <- 'Urinlekkasje_sfinkt.pdf'
 nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=0)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=0)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=0)
+}
 
 outfile <- 'Urinlekkasje_snm.pdf'
 nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=0)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=0)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=0)
+}
+
+outfile <- 'Urinlekkasje_aar.pdf'
+nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=0, valgtShus='')
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=0, valgtShus='')
+}
+
+outfile <- 'Urinlekkasje_aar_sfinkt.pdf'
+nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=0, valgtShus='')
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=0, valgtShus='')
+}
+
+outfile <- 'Urinlekkasje_aar_snm.pdf'
+nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=0, valgtShus='')
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = 'Aar',
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=0, valgtShus='')
+}
 
 outfile <- 'GenQol.pdf'
 nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                           erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-                           sammenlign=1, inkl_konf=1)
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+outfile <- 'GenQol_sfinkt.pdf'
+nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+
+outfile <- 'GenQol_sfinkt_2013_2017.pdf'
+nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra='2013-01-01', datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+
+outfile <- 'GenQol_snm_2013_2017.pdf'
+nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra='2013-01-01', datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra='2013-01-01', datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+
+
+outfile <- 'GenQol_snm.pdf'
+nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 sammenlign=1, inkl_konf=1)
+}
+
+
 outfile <- 'Tilfredshet_gr.pdf'
 nraGjsnGrVar(RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
-                           outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, decreasing=decreasing,
-                           erMann=erMann, hentData=hentData, forlopstype1='', forlopstype2='', terskel=5,
-                           inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt')
+             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, decreasing=decreasing,
+             erMann=erMann, hentData=hentData, forlopstype1='', forlopstype2='', terskel=5,
+             inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt')
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnGrVar(RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, decreasing=decreasing,
+               erMann=erMann, hentData=hentData, forlopstype1='', forlopstype2='', terskel=5,
+               inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt')
+}
 
 outfile <- 'Tilfredshet.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 @
 
 
@@ -446,58 +809,181 @@ nraFigAndeler(RegData=RegData, valgtVar='PasientAlder', datoFra=datoFra, datoTil
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='PasientAlder', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 
 outfile='Kompl_sfinkt.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='KomplSfinkter', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='KomplSfinkter', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 
 outfile='KomplSNMtot.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='KomplSNMtot', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='KomplSNMtot', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 
 outfile='TidlBeh_sfinkt.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+}
 
 outfile='TidlBeh_snm.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+}
+
+outfile='TidlBeh.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
+
 
 outfile='Symtomvarighet_sfinkt.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+}
 
 outfile='Symtomvarighet_snm.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+}
+
+outfile='Symtomvarighet.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 
 outfile='Sfinktervurdering.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
+
+outfile='Sfinktervurdering_sfinkt.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+}
+
+outfile='Sfinktervurdering_snm.pdf'
+nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+}
+
+
 
 outfile <- 'snmDagbok.pdf'
 nraSNMdagbok(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraSNMdagbok(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 
 outfile <- 'snmDagbokPst_pos.pdf'
 nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-             erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=2)
+                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
+                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=2)
+}
 @
 
 \begin{figure}[ht]
@@ -559,191 +1045,40 @@ nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
 \includegraphics[width=\Sexpr{figstr}\textwidth]{snmDagbokPst_pos.pdf}
 \caption{SNM-dagbok, andel måloppnåelse}
 \end{figure}
-%
-% <<'Fig:Diagnoser', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
-%
-% varNavn <- c('PasientAlder', 'KomplSNMtot', 'TidlBeh', 'Symtomvarighet', 'Sfinktervurdering')
-%
-% for (p in 1:length(varNavn)){
-%   outfile=paste0(varNavn[p], '.pdf')
-%   nraFigAndeler(RegData=RegData, valgtVar=varNavn[p], datoFra=datoFra, datoTil=datoTil,
-%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-%               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-% }
-%
-% valgtVar <- 'Sfinktervurdering'
-% outfile <- 'Sfinktervurdering_snm.pdf'
-% nraFigAndeler(RegData=RegData, valgtVar=varNavn[p], datoFra=datoFra, datoTil=datoTil,
-%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-%               valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
-%
-%
-% valgtVar <- 'TidlBeh'
-% outfile <- 'TidlBeh_sfinkt.pdf'
-% nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
-%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-%               valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
-%
-% outfile <- 'TidlBeh_snm.pdf'
-% nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
-%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-%               valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
-%
-% outfile <- 'snmDagbok.pdf'
-% nraSNMdagbok(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-%              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-%              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-%
-% outfile <- 'snmDagbok.pdf'
-% nraSNMdagbok(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-%              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-%              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-%
-% # outfile <- 'snmDagbokPst.pdf'
-% # nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-% #              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-% #              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-%
-% outfile <- 'snmDagbokPst_pos.pdf'
-% nraSNMdagbokPst(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-%              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-%              erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=2)
-%
-%
-% datoFra <- '2015-01-01'
-% outfile <- 'Tilfredshet.pdf'
-%
-% nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
-%               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-%               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-%               valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
-%
-% outfile <- 'StMarksTotalScore.pdf'
-% nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
-%                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-%                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-%                            sammenlign=1, inkl_konf=1)
-%
-% outfile <- 'GenQol.pdf'
-% nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
-%                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-%                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-%                            sammenlign=1, inkl_konf=1)
-%
-% outfile <- 'QolSexualitet.pdf'
-% nraGjsnPrePost(RegData, valgtVar='QolSexualitet', datoFra=datoFra, datoTil=datoTil,
-%                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-%                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-%                            sammenlign=1, inkl_konf=1)
-%
-% outfile <- 'Urinlekkasje.pdf'
-% nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
-%                            outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-%                            erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2,
-%                            sammenlign=1, inkl_konf=0)
-%
-%
-%
-% @
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[1], '.pdf')}}
-% \caption{Aldersfordeling}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[2], '.pdf')}}
-% \caption{Komplikasjoner}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[3], '.pdf')}}
-% \caption{Tidligere behandling}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_sfinkt.pdf}
-% \caption{Tidligere behandling, sfinkterplastikk}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{TidlBeh_snm.pdf}
-% \caption{Tidligere behandling, snm}
-% \end{figure}
-%
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[4], '.pdf')}}
-% \caption{Symtomvarighet}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(varNavn[5], '.pdf')}}
-% \caption{Sfinktervurdering}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{Sfinktervurdering_snm.pdf}
-% \caption{Sfinktervurdering SNM}
-% \end{figure}
-%
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{Tilfredshet.pdf}
-% \caption{Tilfredshet}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{snmDagbok.pdf}
-% \caption{SNM-dagbok}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{snmDagbokPst_pos.pdf}
-% \caption{SNM-dagbok, andel som når målene blant de med positiv test}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore.pdf}
-% \caption{St. Marks score før og etter}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{GenQol.pdf}
-% \caption{Generell livskvalitet}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{QolSexualitet.pdf}
-% \caption{Påvirkning seksualliv}
-% \end{figure}
-%
-% \begin{figure}[ht]
-% \centering
-% \includegraphics[width=\Sexpr{figstr}\textwidth]{Urinlekkasje.pdf}
-% \caption{Andel med urinlekkasje}
-% \end{figure}
-%
+
+<<'snmdagbok', results='asis', echo=FALSE>>=
+datoFra <- '2017-01-01'
+
+RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+RegData <- RegData[!is.na(RegData$UrgencyFoerTest), ]
+nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
+                         minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
+                         forlopstype1=forlopstype1, forlopstype2=2)
+  RegData <- nraUtvalg$RegData
+  utvalgTxt <- nraUtvalg$utvalgTxt
+
+Pre <- RegData[, c("InkontinensFoerTest", "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer")]
+Post <- RegData[, c("InkontinensUnderTest", "UrgencyUnderTest", "AvfoeringerUnderTest", "LekkasjedagerUnder")]
+
+PstEndr <- (Pre-Post)/Pre*100
+PstEndr[is.nan(PstEndr[,1]), 1] <- 0
+PstEndr[is.nan(PstEndr[,2]), 2] <- 0
+PstEndr[is.nan(PstEndr[,3]), 3] <- 0
+PstEndr[is.nan(PstEndr[,4]), 4] <- 0
+
+aux <- PstEndr[which(PstEndr$InkontinensFoerTest >= 50), ]
+aux2 <- PstEndr[which(PstEndr$InkontinensFoerTest < 50), ]
+MaalIkkeNaadd <- data.frame(Pre=Pre$InkontinensFoerTest[which(PstEndr$InkontinensFoerTest < 50)],
+           Test=Post$InkontinensUnderTest[which(PstEndr$InkontinensFoerTest < 50)],
+           PstEndr=round(PstEndr$InkontinensFoerTest[which(PstEndr$InkontinensFoerTest < 50)], 1))
+
+# terskel <- t(matrix(c(70,50,50,50), 4,dim(PstEndr)[1]))
+AndelMaaloppnaaelse <- c(mean(PstEndr$InkontinensFoerTest >= 50), mean(PstEndr$InkontinensFoerTest >=75))*100
+AndelMaaloppnaaelse2 <- c(mean(aux$InkontinensFoerTest >= 50), mean(aux$InkontinensFoerTest >=75))*100
 
 
+# AndelMaaloppnaaelse3 <- c(mean(PstEndr$LekkasjedagerFoer > 50), mean(PstEndr$LekkasjedagerFoer >75))*100
+@
 
 
 \end{document}
