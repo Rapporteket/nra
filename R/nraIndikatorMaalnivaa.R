@@ -185,10 +185,4 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   if (outfile != '') {savePlot(outfile, type=substr(outfile, nchar(outfile)-2, nchar(outfile)))}
 
 
-
-
-
-
-
-
 }

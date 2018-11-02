@@ -4,8 +4,8 @@
 \alias{nraUtvalg}
 \title{Funksjon som gjør utvalg av dataene, returnerer det reduserte datasettet og utvalgsteksten.}
 \usage{
-nraUtvalg(RegData, datoFra, datoTil, valgtShus = "", minald, maxald, erMann,
-  forlopstype1, forlopstype2, fargepalett = "BlaaRapp")
+nraUtvalg(RegData, datoFra, datoTil, valgtShus = "", minald, maxald,
+  erMann, forlopstype1, forlopstype2, fargepalett = "BlaaRapp")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}

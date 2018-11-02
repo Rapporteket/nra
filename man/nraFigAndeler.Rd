@@ -7,7 +7,8 @@
 nraFigAndeler(RegData, valgtVar, datoFra = "2012-04-01",
   datoTil = "2050-12-31", valgtShus = "", outfile = "",
   preprosess = TRUE, minald = 0, maxald = 130, erMann = "", reshID,
-  enhetsUtvalg = 0, hentData = F, forlopstype1 = "", forlopstype2 = "")
+  enhetsUtvalg = 0, hentData = F, forlopstype1 = "",
+  forlopstype2 = "")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
