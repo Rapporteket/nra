@@ -15,7 +15,7 @@
 nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='2050-12-31',
                            outfile = '', preprosess=TRUE, minald=0, maxald=130, grvar='SenterKortNavn',
                            erMann='', reshID, hentData=F, forlopstype1='', forlopstype2='',
-                           sammenlign=0, inkl_konf=0, egen_mot_landet=F, valgtShus='')
+                           sammenlign=0, inkl_konf=0, egen_mot_landet=F, valgtShus='', graa='')
 {
   egetShus <- RegData$SenterKortNavn[match(reshID, RegData$AvdRESH)]
   RegData$Grvar <- RegData[, grvar]
@@ -202,10 +202,11 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       Ngr <- Ngr[ind_med]
       soyleTxt <- soyleTxt[c(2*ind_med[1]-1, 2*ind_med[1], 2*ind_med[2]-1, 2*ind_med[2])]
     }
-
+soylefarger <- matrix(farger[1:(sammenlign+1)], nrow = sammenlign+1, ncol = length(grtxt))
+soylefarger[, which(grtxt %in% graa)] <- c('gray40', 'gray70', 'gray80')[1:(sammenlign+1)]
 
     pos <- barplot(PlotMatrise, beside=TRUE, las=txtretn, ylab=ytekst,
-                   col=farger[1:(sammenlign+1)], border='white', ylim=c(0, ymax))
+                   col=soylefarger, border='white', ylim=c(0, ymax))
     mtext(at=colMeans(pos), grtxt, side=1, las=1, cex=cexgr, adj=0.5, line=0.5)
     mtext(at=colMeans(pos), grtxt2, side=1, las=1, cex=cexgr, adj=0.5, line=1.5)
     # text(x=pos, y=PlotMatrise, sprintf('%.1f', PlotMatrise), pos=1, cex=cexgr, col=farger[4])

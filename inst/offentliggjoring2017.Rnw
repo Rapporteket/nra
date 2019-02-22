@@ -78,7 +78,7 @@ forlopstype1=''
 forlopstype2=''
 valgtShus <- '' #c('601225', '700116')
 figfolder <- knitr::opts_chunk$get("fig.path")
-utformat <- 'wmf'
+utformat <- 'png'
 
 
 figstr <- 0.61
@@ -104,7 +104,7 @@ tmp <- Sys.setlocale(category = "LC_ALL", locale = "nb_NO.UTF-8")
 
 \newpage
 
-<<'Fig:Før og etter', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
+<<'Fig:For og etter', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
 width=600
 height=600
 decreasing=F
@@ -122,13 +122,13 @@ outfile=paste0(figfolder,  'Urinlekkasje_snm.pdf')
 nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
-               sammenlign=1, inkl_konf=0)
+               sammenlign=1, inkl_konf=0, graa = 'Helse Ber')
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
-                 sammenlign=1, inkl_konf=0)
+                 sammenlign=1, inkl_konf=0, graa = 'Helse Ber')
 }
 
 
@@ -136,13 +136,13 @@ outfile=paste0(figfolder,  'GenQol_snm.pdf')
 nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
-               sammenlign=1, inkl_konf=1)
+               sammenlign=1, inkl_konf=1, graa = c('Helse Ber'))
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
-                 sammenlign=1, inkl_konf=1)
+                 sammenlign=1, inkl_konf=1, graa = c('Helse Ber'))
 }
 
 
@@ -150,22 +150,52 @@ outfile=paste0(figfolder,  'Tilfredshet_gr.pdf')
 nraGjsnGrVar(RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
              outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, decreasing=decreasing,
              erMann=erMann, hentData=hentData, forlopstype1='', forlopstype2='', terskel=5,
-             inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt')
+             inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt', graa = 'Helse Ber')
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraGjsnGrVar(RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, decreasing=decreasing,
                erMann=erMann, hentData=hentData, forlopstype1='', forlopstype2='', terskel=5,
-               inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt')
+               inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt', graa = 'Helse Ber')
 }
 
+outfile=paste0(figfolder,  'indikatorerSNM.pdf')
+nraIndikatorSNM(outfile = outfile)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraIndikatorSNM(outfile = outfile)
+}
+
+outfile=paste0(figfolder,  'indikatorerSfinkt.pdf')
+nraIndikatorSfinkter(outfile = outfile)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraIndikatorSfinkter(outfile = outfile)
+}
+
+
+
 @
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(figfolder, 'indikatorerSNM.pdf')}}
+\caption{Kvalitetsindikatorer med målnivå, snm}
+\end{figure}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(figfolder, 'indikatorerSfinkt.pdf')}}
+\caption{Kvalitetsindikatorer med målnivå, sfinkter}
+\end{figure}
+
 
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{paste0(figfolder, 'GenQol_snm.pdf')}}
-\caption{Generell livskvalitet}
+\caption{Generell livskvalitet, SNM}
 \end{figure}
 
 

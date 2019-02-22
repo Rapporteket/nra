@@ -9,7 +9,7 @@ nraGjsnGrVar(RegData, valgtVar = "Tilfredshet", datoFra = "2012-04-01",
   minald = 0, maxald = 130, decreasing = F, egen_mot_landet = F,
   erMann = "", hentData = F, forlopstype1 = "", forlopstype2 = "",
   terskel = 0, reshID = 0, inkl_konf = 0, grvar = "SenterKortNavn",
-  width = 600, height = 600, xtekst = "Gjennomsnitt")
+  width = 600, height = 600, xtekst = "Gjennomsnitt", graa = "")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}

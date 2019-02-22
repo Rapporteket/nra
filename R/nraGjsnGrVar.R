@@ -7,9 +7,10 @@
 #' @export
 
 nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', datoTil='2050-12-31',
-                           outfile = '', preprosess=TRUE, minald=0, maxald=130, decreasing=F, egen_mot_landet=F,
-                           erMann='', hentData=F, forlopstype1='', forlopstype2='', terskel=0, reshID=0,
-                           inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt')
+                         outfile = '', preprosess=TRUE, minald=0, maxald=130, decreasing=F, egen_mot_landet=F,
+                         erMann='', hentData=F, forlopstype1='', forlopstype2='', terskel=0, reshID=0,
+                         inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt',
+                         graa = '')
 {
 
   egetShus <- RegData$SenterKortNavn[match(reshID, RegData$AvdRESH)]
@@ -47,8 +48,8 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
 
 
   Tabell <- RegData %>% group_by(grvar) %>% summarise(summert = sum(Variabel),
-                                            N = n(),
-                                            gj.sn = mean(Variabel)) %>% ungroup()
+                                                      N = n(),
+                                                      gj.sn = mean(Variabel)) %>% ungroup()
 
   Tabell <- bind_rows(Tabell, tibble(grvar='Nasjonalt', summert=sum(Tabell$summert),
                                      N=sum(Tabell$N), gj.sn = sum(Tabell$summert)/sum(Tabell$N)))
@@ -56,6 +57,7 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
     ind_med <- which(Tabell$grvar %in% c(egetShus, 'Nasjonalt'))
     Tabell <- Tabell[ind_med, ]
   }
+  Tabell$grvar_ren <- Tabell$grvar
   Tabell$grvar <- paste0(Tabell$grvar, ' (', Tabell$N, ')')
 
   Tabell$gj.sn[Tabell$N < terskel] <- NA
@@ -73,12 +75,13 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
   col_txt[is.na(Tabell$gj.sn)] <- paste0('N<', terskel)
   col_txt <- c(col_txt, NA)
 
-  Tabell <- bind_rows(Tabell, tibble(grvar='(N)', summert=NA, N=NA, gj.sn=NA))
+  Tabell <- bind_rows(Tabell, tibble(grvar='(N)', summert=NA, N=NA, gj.sn=NA, grvar_ren=NA))
 
   FigTypUt <- rapbase::figtype(outfile='', width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
   farger <- FigTypUt$farger
   soyleFarger <- rep(farger[3], dim(Tabell)[1])
   soyleFarger[which(substr(Tabell$grvar, 1, 6)=='Nasjon')] <- farger[4]
+  soyleFarger[which(Tabell$grvar_ren %in% graa)] <- 'gray88'
   windows(width = width, height = height)
 
   oldpar_mar <- par()$mar
@@ -101,7 +104,7 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
                    names.arg=rep('',dim(Tabell)[1]),
                    horiz=T, axes=F, space=c(0,0.3),
                    col=soyleFarger, border=NA, xlab = xtekst)#,
-                   # ylim = c(0,dim(Tabell)[1]*1.4)) # '#96BBE7'
+  # ylim = c(0,dim(Tabell)[1]*1.4)) # '#96BBE7'
   ypos <- as.vector(ypos)
 
   axis(1,cex.axis=0.9)
@@ -116,7 +119,7 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
   par('fig'= oldpar_fig)
   if (outfile != '') {savePlot(outfile, type=substr(outfile, nchar(outfile)-2, nchar(outfile)))}
 
-  }
+}
 
 
 
