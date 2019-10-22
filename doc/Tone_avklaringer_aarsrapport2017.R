@@ -1,11 +1,12 @@
 library(nra)
 library(tidyverse)
+setwd('C:/GIT/nra/doc/')
 rm(list = ls())
 hentData <- F
 
 # Data til presentasjon høstmøte ######################################
 
-RegData <- read.table('I:/nra/alleVarNum2018-10-22 09-56-18.txt', header=TRUE, sep=";", encoding = 'UFT-8', stringsAsFactors = F)
+RegData <- read.table('I:/nra/alleVarNum2019-02-22 12-14-30.txt', header=TRUE, sep=";", encoding = 'UFT-8', stringsAsFactors = F)
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -18,7 +19,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                        "WexLivsstilsendring", "WexnerTotalScore", "HovedForlopDato")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2018-10-22 09-56-19.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2019-02-22 12-14-29.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -51,7 +52,7 @@ stmarks$SenterKortNavn[stmarks$AvdRESH!=601225] <- 'Nasjonalt (minus UNN)'
 
 stmarks$endring <- stmarks$StMarksTotalScorePre - stmarks$StMarksTotalScorePost
 stmarks$periode <- NA
-stmarks$periode[stmarks$Operasjonsdato >= '2016-01-01' & stmarks$Operasjonsdato <= '2017-12-31'] <- 2
+stmarks$periode[stmarks$Operasjonsdato >= '2016-01-01'] <- 2
 stmarks$periode[stmarks$Operasjonsdato >= '2013-01-01' & stmarks$Operasjonsdato <= '2015-12-31'] <- 1
 stmarks <- stmarks[stmarks$periode %in% 1:2, ]
 # stmarks$periode[stmarks$Operasjonsdato >= '2018-01-01'] <- 3
@@ -84,6 +85,14 @@ Rest_ny_vs_Rest_gml <- stmarks[stmarks$SenterKortNavn!='UNN', ] %>% group_by(per
             sd.endr = sd(endring),
             N = n())
 
+gml_vs_ny_alle <- stmarks %>% group_by(periode) %>% summarise(gj.sn.for = mean(StMarksTotalScorePre),
+                            gj.sn.etter = mean(StMarksTotalScorePost),
+                            sd.for = sd(StMarksTotalScorePre),
+                            sd.etter = sd(StMarksTotalScorePost),
+                            endr = mean(endring),
+                            sd.endr = sd(endring),
+                            N = n())
+
 # Nasjonal_gml
 
 
@@ -92,7 +101,14 @@ samlet <- rbind(UNNny_vs_Rest_ny[c(2,1), c("gj.sn.for", "gj.sn.etter", "sd.for",
                 UNNny_vs_UNNgml[c(1), c("gj.sn.for", "gj.sn.etter", "sd.for", "sd.etter", "endr", "sd.endr", "N")],
                 Rest_ny_vs_Rest_gml[c(1), c("gj.sn.for", "gj.sn.etter", "sd.for", "sd.etter", "endr", "sd.endr", "N")])
 
+samlet2 <- rbind(UNNny_vs_Rest_ny[c(2,1), c("gj.sn.for", "gj.sn.etter", "sd.for", "sd.etter", "endr", "sd.endr", "N")],
+                 UNNny_vs_UNNgml[c(1), c("gj.sn.for", "gj.sn.etter", "sd.for", "sd.etter", "endr", "sd.endr", "N")],
+                 Rest_ny_vs_Rest_gml[c(1), c("gj.sn.for", "gj.sn.etter", "sd.for", "sd.etter", "endr", "sd.endr", "N")],
+                 gml_vs_ny_alle[c(2,1), c("gj.sn.for", "gj.sn.etter", "sd.for", "sd.etter", "endr", "sd.endr", "N")])
+
 samlet$id <- c('Unn ny prosedyre', 'Resten ny prosedyre', 'UNN gammel prosedyre', 'Resten gammel prosedyre')
+samlet2$id <- c('Unn ny prosedyre', 'Resten ny prosedyre', 'UNN gammel prosedyre', 'Resten gammel prosedyre',
+                'Ny prosedyre (samlet)', 'Gammel prosedyre (samlet)')
 samlet <- samlet[, c(8,1:7)]
 samlet$KIned <- samlet$endr - qt(.975, samlet$N-1)*samlet$sd.endr/sqrt(samlet$N)
 samlet$KIopp <- samlet$endr + qt(.975, samlet$N-1)*samlet$sd.endr/sqrt(samlet$N)
@@ -102,10 +118,20 @@ write.csv2(samlet, 'oppsummering_tone.csv', row.names = F)
 
 samlet$id <- wrap.it(samlet$id, 20)
 
+samlet2 <- samlet2[, c(8,1:7)]
+samlet2$KIned <- samlet2$endr - qt(.975, samlet2$N-1)*samlet2$sd.endr/sqrt(samlet2$N)
+samlet2$KIopp <- samlet2$endr + qt(.975, samlet2$N-1)*samlet2$sd.endr/sqrt(samlet2$N)
+samlet2$id <- paste0(samlet2$id, ' (N=', samlet2$N, ')')
+write.csv2(samlet2, 'oppsummering_tone_v2.csv', row.names = F)
+
+write.csv2(samlet, 'oppsummering_tone.csv', row.names = F)
+
+samlet$id <- wrap.it(samlet$id, 20)
+
 samlet <- samlet[4:1, ]
 
 # x11()
-outfile <- 'pres_resultat_tone_22102018.pdf'
+outfile <- 'pres_resultat_tone_22022019.pdf'
 FigTypUt <- figtype(outfile, fargepalett='BlaaOff')
 
 # vmarg <- max(0, strwidth(samlet$id, units='figure', cex=1)*0.75)

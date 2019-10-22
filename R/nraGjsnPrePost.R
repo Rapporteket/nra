@@ -38,7 +38,9 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   ## Fjerner registreringer som mangler valgt variabel
   RegData$Variabel <- RegData[, valgtVar]
   RegData <- RegData[!is.na(RegData$Variabel), ]
-  if (valgtVar=='Urinlekkasje') {RegData$Variabel <- 100*RegData$Variabel}
+  if (valgtVar=='Urinlekkasje') {
+    RegData <- RegData[RegData$Urinlekkasje != 9, ]
+    RegData$Variabel <- 100*RegData$Variabel}
 
   ## Skill ut oppfølginger
   Oppfolging1 <- RegData[RegData$ForlopsType1Num == 3, ]
@@ -108,32 +110,33 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
     if (sammenlign == 2) {
       RegData <- RegData[which(RegData$OppflgRegStatus %in% 1:2), ]
-      Oppfolging2 <- Oppfolging2[Oppfolging2$KobletForlopsID %in% RegData$ForlopsID, ]
-      RegData <- RegData[RegData$ForlopsID %in% Oppfolging2$KobletForlopsID, ]
-      RegData <- merge(RegData[,c("PasientID", "Variabel", "Grvar", "ForlopsID", "ForlopsType1Num")],
-                       Oppfolging2[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
-                       suffixes = c('Pre', 'Post5'))
       Oppfolging1 <- Oppfolging1[Oppfolging1$KobletForlopsID %in% RegData$ForlopsID, ]
       RegData <- RegData[RegData$ForlopsID %in% Oppfolging1$KobletForlopsID, ]
-      RegData <- merge(RegData, Oppfolging2[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID')
-
+      RegData <- merge(RegData[,c("PasientID", "Variabel", "Grvar", "ForlopsID", "ForlopsType1Num")],
+                       Oppfolging1[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+                       suffixes = c('', 'Post1'))
+      Oppfolging2 <- Oppfolging2[Oppfolging2$KobletForlopsID %in% RegData$ForlopsID, ]
+      RegData <- RegData[RegData$ForlopsID %in% Oppfolging2$KobletForlopsID, ]
+      RegData <- merge(RegData[,c("PasientID", "Variabel", "VariabelPost1", "Grvar", "ForlopsID", "ForlopsType1Num")],
+                       Oppfolging2[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+                       suffixes = c('', 'Post5'))
       if (valgtVar=='QolSexualitet') {
-        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre==99 | RegData$VariabelPost5==99 | RegData$Variabel==99])
-        RegData <- RegData[RegData$VariabelPre!=99, ]
-        RegData <- RegData[RegData$VariabelPost1!=99, ]
+        Nuaktuelt <- length(RegData$Variabel[RegData$Variabel==99 | RegData$VariabelPost5==99 | RegData$Variabel==99])
         RegData <- RegData[RegData$Variabel!=99, ]
+        RegData <- RegData[RegData$VariabelPost1!=99, ]
+        RegData <- RegData[RegData$VariabelPost5!=99, ]
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
                              forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus)
       utvalgTxt <- nraUtvalg$utvalgTxt
-      PrePost <- aggregate(RegData[, c('VariabelPre', 'Variabel', "VariabelPost5")],
+      PrePost <- aggregate(RegData[, c('Variabel', 'VariabelPost1', "VariabelPost5")],
                            by=list(RegData$Grvar), mean, na.rm = TRUE)
-      PrePostSD <- aggregate(RegData[, c('VariabelPre', 'Variabel', "VariabelPost5")],
+      PrePostSD <- aggregate(RegData[, c('Variabel', 'VariabelPost1', "VariabelPost5")],
                              by=list(RegData$Grvar), sd, na.rm = TRUE)
-      PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), apply(RegData[, c('VariabelPre', 'Variabel', "VariabelPost5")], 2, sd, na.rm=T))
+      PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), apply(RegData[, c('Variabel', 'VariabelPost1', "VariabelPost5")], 2, sd, na.rm=T))
       PlotMatrise <- as.matrix(t(PrePost[,-1]))
-      PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('VariabelPre', 'Variabel', "VariabelPost1")]))
+      PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('Variabel', 'VariabelPost1', "VariabelPost5")]))
       Ngr <- table(as.character(RegData$Grvar))  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
       Ngr <- c(Ngr, sum(Ngr))
       tittel2 <- 'før og etter (1 og 5 år) operasjon'
@@ -180,15 +183,16 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     soyleTxt[ , Ngr < 5] <- NA
     soyleTxt <- sprintf('%.1f', soyleTxt)
 
-    if(inkl_konf==1) {
-      N_matr <- t(matrix(Ngr, nrow=length(Ngr), ncol=sammenlign+1))
-      KIned <- PlotMatrise - qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
-      KIopp <- PlotMatrise + qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
-      KIned <- PlotMatrise - qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
-      KIopp <- PlotMatrise + qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
 
-      KIned[ , Ngr < 5] <- 0
-      KIopp[ , Ngr < 5] <- 0
+    N_matr <- t(matrix(Ngr, nrow=length(Ngr), ncol=sammenlign+1))
+    KIned <- PlotMatrise - qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
+    KIopp <- PlotMatrise + qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
+    KIned <- PlotMatrise - qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
+    KIopp <- PlotMatrise + qt(.975, N_matr-1)*PrePostSD/sqrt(N_matr)
+
+    KIned[ , Ngr < 5] <- 0
+    KIopp[ , Ngr < 5] <- 0
+    if(inkl_konf==1) {
       ymax <- max(KIopp, na.rm=T)*1.25
     }
 
@@ -223,12 +227,14 @@ soylefarger[, which(grtxt %in% graa)] <- c('gray40', 'gray70', 'gray80')[1:(samm
     }
 
     if(inkl_konf==1) {
-      arrows(pos[ , Ngr > 4], KIned[ , Ngr > 4], pos[ , Ngr > 4], KIopp[ , Ngr > 4], code=3, angle=90, lwd=1.5, col=farger[3], length=0.05)
+      arrows(pos[ , Ngr > 4], KIned[ , Ngr > 4], pos[ , Ngr > 4], KIopp[ , Ngr > 4], code=3, angle=90, lwd=1.5, col='gray', length=0.05)
     }
 
 
     par('fig'=c(0, 1, 0, 1))
     if ( outfile != '') {dev.off()}
+
+    utdata <- list(PlotMatrise=PlotMatrise, KIned=KIned, KIopp=KIopp, utvalgTxt=utvalgTxt, tittel=tittel, grtxt=grtxt, grtxt2=grtxt2, Ngr=Ngr)
 
   } else {
     FigTypUt <- figtype(outfile)
@@ -237,7 +243,10 @@ soylefarger[, which(grtxt %in% graa)] <- c('gray40', 'gray70', 'gray80')[1:(samm
     legend('topleft',utvalgTxt, bty='n', cex=0.9, text.col=farger[1])
     text(0.5, 0.6, 'Færre enn 5 registreringer', cex=1.2)
     if ( outfile != '') {dev.off()}
+
+    utdata <- NA
   }
 
+  return(invisible(utdata))
 
 }

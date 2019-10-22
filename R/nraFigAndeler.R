@@ -165,6 +165,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       FigTypUt <- figtype(outfile=outfile, fargepalett=nraUtvalg$fargepalett, pointsizePDF=12);
       antDes <- PlotParams$antDes; smltxt <- PlotParams$smltxt;
     } else {
+      FigTypUt <- figtype(outfile, fargepalett=nraUtvalg$fargepalett, pointsizePDF=12)
       NHoved <- 0
       NRest <- 0
       medSml <- 1
@@ -172,7 +173,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
 
     if ( NHoved < 5 | 	(medSml ==1 & NRest<5)) {	#(valgtVar=='Underkat' & all(hovedkat != c(1,2,5,7))) |
-      FigTypUt <- figtype(outfile)
+      # FigTypUt <- figtype(outfile)
       farger <- FigTypUt$farger
       plot.new()
       # title(tittel)	#, line=-6)

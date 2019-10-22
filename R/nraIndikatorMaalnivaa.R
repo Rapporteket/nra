@@ -16,7 +16,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
                                    decreasing=F, terskel=0, minstekrav = NA, maal = NA, xtekst ='Andel %',
                                    til100 = F, skriftStr=1.3, pktStr=1.5, datoFra='2016-01-01', datoTil='2050-12-31',
                                    hentData=F, preprosess=T, minald=0, maxald=130, erMann='',
-                                   forlopstype1='', forlopstype2='')
+                                   forlopstype1='', forlopstype2='', sammenlign=1)
   {
 
   ## Hvis spørring skjer fra R på server. ######################
@@ -30,45 +30,63 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   }
 
   if (valgtVar=='StMarksMindreEnn9') {
-    tittel <- 'Andel med St. Marks mindre enn 9 etter 1 år'
+    tittel <- 'Andel med St. Marks 9 eller mindre'
     maal <- 30
     RegData$Indikator <- NA
-    RegData$Indikator[which(RegData$StMarksTotalScore<9)] <- 1
-    RegData$Indikator[which(RegData$StMarksTotalScore>=9)] <- 0
+    RegData$Indikator[which(RegData$StMarksTotalScore<=9)] <- 1
+    RegData$Indikator[which(RegData$StMarksTotalScore>9)] <- 0
   }
 
   if (valgtVar=='StMarksMindreEnn12') {
-    tittel <- 'Andel med St. Marks mindre enn 12 etter 1 år'
+    tittel <- 'Andel med St. Marks 12 eller mindre'
     maal <- 50
     RegData$Indikator <- NA
-    RegData$Indikator[which(RegData$StMarksTotalScore<12)] <- 1
-    RegData$Indikator[which(RegData$StMarksTotalScore>=12)] <- 0
+    RegData$Indikator[which(RegData$StMarksTotalScore<=12)] <- 1
+    RegData$Indikator[which(RegData$StMarksTotalScore>12)] <- 0
   }
 
   if (valgtVar=='WexnerMindreEnn9') {
-    tittel <- 'Andel med Wexner mindre enn 9 etter 1 år'
+    tittel <- 'Andel med Wexner 9 eller mindre'
     maal <- 30
     RegData$Indikator <- NA
-    RegData$Indikator[which(RegData$WexnerTotalScore<9)] <- 1
-    RegData$Indikator[which(RegData$WexnerTotalScore>=9)] <- 0
+    RegData$Indikator[which(RegData$WexnerTotalScore<=9)] <- 1
+    RegData$Indikator[which(RegData$WexnerTotalScore>9)] <- 0
   }
 
   if (valgtVar=='WexnerMindreEnn12') {
-    tittel <- 'Andel med Wexner mindre enn 12 etter 1 år'
+    tittel <- 'Andel med Wexner 12 eller mindre'
     maal <- 50
     RegData$Indikator <- NA
-    RegData$Indikator[which(RegData$WexnerTotalScore<12)] <- 1
-    RegData$Indikator[which(RegData$WexnerTotalScore>=12)] <- 0
+    RegData$Indikator[which(RegData$WexnerTotalScore<=12)] <- 1
+    RegData$Indikator[which(RegData$WexnerTotalScore>12)] <- 0
+  }
+
+  if (valgtVar=='blitt_kontinent') {
+    tittel <- 'Andel urininkontinente før operasjon som er kontinente'
+    maal <- NA
+    RegData$Indikator <- NA
+    RegData$Indikator[which(RegData$Urinlekkasje==0)] <- 1 # Ikke urininkontinent
+    RegData$Indikator[which(RegData$Urinlekkasje==1)] <- 0
+    RegData <- RegData[!is.na(RegData$Indikator), ]
+    RegData <- RegData[-which(RegData$ForlopsType1Num %in% 1:2 & RegData$Urinlekkasje == 0), ] # fjern de som ikke er urininkontinent ved inklusjon
   }
 
   ## Skill ut oppfølginger
-  Oppfolging1 <- RegData[RegData$ForlopsType1Num == 3, ] # 1-årsoppfølging
-  Oppfolging1 <- Oppfolging1[!is.na(Oppfolging1$Indikator), ]
+  if (sammenlign==1) {
+    Oppfolging <- RegData[RegData$ForlopsType1Num == 3, ] # 1-årsoppfølging
+    tittel <- paste0(tittel, ' etter 1 år')
+  }
+  if (sammenlign==2) {
+    Oppfolging <- RegData[RegData$ForlopsType1Num == 4, ] # 5-årsoppfølging
+    tittel <- paste0(tittel, ' etter 5 år')
+  }
+  Oppfolging <- Oppfolging[!is.na(Oppfolging$Indikator), ]
   RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ] # Sfinkter og SNM basisregistreringer
-  Oppfolging1 <- Oppfolging1[Oppfolging1$KobletForlopsID %in% RegData$ForlopsID, ] # Bare inkluder oppfølginger der det finnes basisreg
-  RegData <- RegData[RegData$ForlopsID %in% Oppfolging1$KobletForlopsID, ]
+  Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegData$ForlopsID, ] # Bare inkluder oppfølginger der det finnes basisreg
+  RegData <- RegData[RegData$ForlopsID %in% Oppfolging$KobletForlopsID, ] # Bare inkluder basisreg der det finnes oppfølginger
+
   # RegData <- merge(RegData[,c("PasientID", "Variabel", "SenterKortNavn", "ForlopsID", "ForlopsType1Num")],
-  #                  Oppfolging1[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+  #                  Oppfolging[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
   #                  suffixes = c('Pre', 'Post1'))
   # Oppfolging2 <- RegData[RegData$ForlopsType1Num == 4, ]
   #
@@ -80,9 +98,9 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
                          forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 
   RegData <- nraUtvalg$RegData
-  Oppfolging1 <- Oppfolging1[Oppfolging1$KobletForlopsID %in% RegData$ForlopsID, ]
+  Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegData$ForlopsID, ]
 
-  andeler <- Oppfolging1 %>% group_by(SenterKortNavn) %>% summarise(n = sum(Indikator),
+  andeler <- Oppfolging %>% group_by(SenterKortNavn) %>% summarise(n = sum(Indikator),
                                                          N = n())
   andeler$Andel <- andeler$n/andeler$N*100
   andeler <- rbind(andeler, tibble(SenterKortNavn = 'Nasjonalt', n=sum(andeler$n), N=sum(andeler$N), Andel=sum(andeler$n)/sum(andeler$N)*100))
@@ -114,6 +132,17 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
 
   cexgr <- skriftStr
 
+  #Hvis for få observasjoner..
+  if (max(!is.na(andeler$Andel))==0) {
+    #-----------Figur---------------------------------------
+    # NutvTxt <- length(utvalgTxt)
+    # par('fig'=c(0, 1, 0, 1-0.02*(NutvTxt-1)))  #Har alltid datoutvalg med
+    plot.new()
+    text(0.5, 0.6, 'Færre enn 5 registreringer alle grupper', cex=cexgr)
+
+
+  } else {
+
   if (til100) {xmax <- 100
   } else {
     xmax <- max(c(andeler$Andel, maal), na.rm = T)*1.1
@@ -122,7 +151,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
     # }
   }
 
-  vmarg <- max(0, strwidth(andeler$SenterKortNavn, units='figure', cex=cexgr)*0.9)
+  vmarg <- max(0, strwidth(andeler$SenterKortNavn, units='figure', cex=1.2*cexgr)*0.9)
   # par('fig'=c(vmarg, 1, 0, 1))
   NutvTxt <- length(nraUtvalg$utvalgTxt)
   par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1)))
@@ -130,12 +159,12 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
 
   ypos <- barplot( t(andeler$Andel), beside=T, las=1,
                    # main = tittel,
-                   font.main=1, cex.main=1.3,
+                   font.main=1, cex.main=cexgr, cex.lab=0.8*cexgr,
                    # xlim=c(0,max(andeler, na.rm = T)*1.1),
-                   xlim=c(0,xmax),
+                   xlim=c(0,xmax), xlab = 'Andel (%)',
                    names.arg=rep('',dim(andeler)[1]),
                    horiz=T, axes=F, space=c(0,0.3),
-                   col=soyleFarger, border=NA, xlab = xtekst,
+                   col=soyleFarger, border=NA,
                    ylim = c(0,dim(andeler)[1]*1.4)) # '#96BBE7'
   ypos <- as.vector(ypos)
 
@@ -149,10 +178,10 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
     #          horiz=T, axes=F, space=c(0,0.3),
     #          col=soyleFarger, border=NA, xlab = 'Andel %', add=TRUE)
     par(xpd=TRUE)
-    text(x=maal, y=max(ypos)+diff(ypos)[1]/2, labels = paste0('Mål=',maal,'%'), pos = 4, cex=0.7)
+    text(x=maal, y=max(ypos)+diff(ypos)[1]/2, labels = paste0('Mål=',maal,'%'), pos = 4, cex=0.7*cexgr)
     par(xpd=FALSE)
   }
-  axis(1,cex.axis=0.9)
+  axis(1,cex.axis=0.8*cexgr)
   mtext(andeler$SenterKortNavn, side=2, line=0.2, las=1, at=ypos, col=1, cex=cexgr)
   # mtext( c(N[,1], 2013), side=4, line=2.5, las=1, at=c(ypos, max(ypos)+diff(ypos)[1]), col=1, cex=cexgr, adj = 1)
   # mtext( c(N[,2], 2014), side=4, line=5.5, las=1, at=c(ypos, max(ypos)+diff(ypos)[1]), col=1, cex=cexgr, adj = 1)
@@ -161,7 +190,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
    # mtext( 'N', side=4, line=5.5, las=1, at=max(ypos)+1.8*diff(ypos)[1], col=1, cex=cexgr, adj = 1)
   # points(y=ypos, x=andeler[,1],cex=pktStr) #'#4D4D4D'
   # points(y=ypos, x=andeler[,2],cex=pktStr,pch= 19)
-  text(x=0, y=ypos, labels = pst_txt, cex=0.8,pos=4)
+  text(x=0, y=ypos, labels = pst_txt, cex=cexgr*0.9,pos=4)
   # par(xpd=TRUE)
   # legend('top', inset=c(vmarg,-.03), cex=0.9, bty='n', # bg='white', box.col='white',
   #        lwd=c(NA,NA,NA), pch=c(1,19,15), pt.cex=c(1.2,1.2,1.8), col=c('black','black',farger[3]),
@@ -174,13 +203,14 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
 
 
 
-  title(tittel, line=1, font.main=1, cex.main = 1.6)
+  title(tittel, line=1, font.main=1, cex.main = 1*cexgr)
   #Tekst som angir hvilket utvalg som er gjort
-  mtext(nraUtvalg$utvalgTxt, side=3, las=1, cex.main=1.4, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
+  mtext(nraUtvalg$utvalgTxt, side=3, las=1, cex=0.6*cexgr, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
 
 
   # par('mar'= oldpar_mar)
   par('fig'= oldpar_fig)
+  }
 
   if (outfile != '') {savePlot(outfile, type=substr(outfile, nchar(outfile)-2, nchar(outfile)))}
 
