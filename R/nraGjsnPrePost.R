@@ -167,7 +167,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     retn<-'V'
     txtretn<-1
 
-    FigTypUt <- figtype(outfile, fargepalett='BlaaOff')
+    FigTypUt <- rapFigurer::figtype(outfile, fargepalett='BlaaOff')
     NutvTxt <- length(utvalgTxt)
     vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxt, units='figure', cex=cexgr)*0.7))
     par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1+length(tittel)-1)))	#Har alltid datoutvalg med
@@ -237,7 +237,7 @@ soylefarger[, which(grtxt %in% graa)] <- c('gray40', 'gray70', 'gray80')[1:(samm
     utdata <- list(PlotMatrise=PlotMatrise, KIned=KIned, KIopp=KIopp, utvalgTxt=utvalgTxt, tittel=tittel, grtxt=grtxt, grtxt2=grtxt2, Ngr=Ngr)
 
   } else {
-    FigTypUt <- figtype(outfile)
+    FigTypUt <- rapFigurer::figtype(outfile)
     farger <- FigTypUt$farger
     plot.new()
     legend('topleft',utvalgTxt, bty='n', cex=0.9, text.col=farger[1])

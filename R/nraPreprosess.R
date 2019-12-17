@@ -13,6 +13,7 @@ nraPreprosess <- function(RegData)
   # RegData <- RegData[RegData$BasisRegStatus==1,]
   RegData$HovedDato <- as.POSIXct(RegData$HovedDato, format="%Y-%m-%d")
   RegData$Aar <- as.numeric(format(RegData$HovedDato, format="%Y"))
+  RegData$SenterKortNavn <- trimws(RegData$SenterKortNavn)
 
 
   RegData$Sfinktervurdering <- NA

@@ -10,7 +10,7 @@ indikatorFigRaterGrVar(RegData, valgtVar = "StMarksMindreEnn9",
   til100 = F, skriftStr = 1.3, pktStr = 1.5,
   datoFra = "2016-01-01", datoTil = "2050-12-31", hentData = F,
   preprosess = T, minald = 0, maxald = 130, erMann = "",
-  forlopstype1 = "", forlopstype2 = "")
+  forlopstype1 = "", forlopstype2 = "", sammenlign = 1)
 }
 \arguments{
 \item{outfile}{Angir filnavn og format på figuren som returneres,}
