@@ -29,6 +29,7 @@ logoWidget <- tags$script(shiny::HTML(logoCode))
 source(system.file("shinyApps/nra/R/lastshinydata.R", package = "nra"), encoding = 'UTF-8')
 source(system.file("shinyApps/nra/R/BrValg.R", package = "nra"), encoding = 'UTF-8')
 source(system.file("shinyApps/nra/R/modul_fordelingsfig.R", package = "nra"), encoding = 'UTF-8')
+source(system.file("shinyApps/nra/R/modul_gjsn_prepost.R", package = "nra"), encoding = 'UTF-8')
 
 RegData <- lastshinydata()
 BrValg <- BrValg(RegData=RegData)
@@ -44,6 +45,9 @@ ui <- tagList(
 
   tabPanel("Fordelingsfigurer",
            fordelingsfig_UI(id = "fordelingsfig_id", BrValg = BrValg)
+  ),
+  tabPanel("Gjennomsnitt/andeler før og etter operasjon",
+           gjsn_prepost_UI(id = "gjsn_prepost_id")
   )
 )
 )
@@ -66,7 +70,7 @@ server <- function(input, output, session) {
 
 
   callModule(fordelingsfig, "fordelingsfig_id", reshID = reshID, RegData = RegData)
-
+  callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData)
 
    #Navbarwidget
    output$appUserName <- renderText(rapbase::getUserFullName(session))

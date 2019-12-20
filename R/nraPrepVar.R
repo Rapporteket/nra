@@ -24,7 +24,7 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
     tittel <- c(paste0('Aldersfordeling. Gjsn=', sprintf("%.1f", mean(RegData$Variabel, na.rm = T)), ', median=', round(median(RegData$Variabel, na.rm = T),1),'.'),
-                paste0('Minimum=', round(min(RegData$Variabel, na.rm = T),1), ', maksimum=', round(max(RegData$Variabel, na.rm = T),1)),'.')
+                paste0('Minimum=', round(min(RegData$Variabel, na.rm = T),1), ', maksimum=', round(max(RegData$Variabel, na.rm = T),1),'.'))
     gr <- c(0, seq(25, 85, 10), 130)
     RegData$VariabelGr <- cut(RegData$Variabel, breaks=gr, include.lowest=TRUE, right=FALSE)
     subtxt <- 'Aldersgrupper'

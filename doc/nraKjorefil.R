@@ -1,7 +1,7 @@
 setwd('c:/GIT/nra/doc')
 rm(list = ls())
 
-RegData <- read.table('I:/nra/alleVarNum2018-06-06 12-32-02.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+RegData <- read.table('I:/nra/alleVarNum2019-09-23 09-00-05.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -13,7 +13,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
                        'ABD65', 'ABD652AT2','ABD60')]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2018-06-06 12-32-00.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2019-09-23 09-00-04.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -43,8 +43,8 @@ outfile <- ''
 # outfile <- paste0(valgtVar, '.pdf')
 preprosess<-F
 hentData <- F
-forlopstype1=''
-forlopstype2=''
+forlopstype1=99
+forlopstype2=99
 valgtShus <- '' #c('601225', '700116')
 
 if (outfile == '') {x11()}
@@ -61,10 +61,10 @@ valgtVar <- 'StMarksTotalScore'
 valgtVar <- 'GenQol'
 valgtVar <- 'QolSexualitet'
 valgtVar <- 'Urinlekkasje'
-sammenlign <- 0
+sammenlign <- 2
 
 if (outfile == '') {x11()}
-nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
+utdata <- nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                reshID=reshID, preprosess=preprosess, hentData=hentData,
                forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign)

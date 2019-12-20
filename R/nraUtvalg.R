@@ -7,8 +7,8 @@
 #'
 #' @export
 
-nraUtvalg <- function(RegData, datoFra, datoTil, valgtShus='', minald, maxald, erMann,
-                             forlopstype1, forlopstype2, fargepalett='BlaaRapp')
+nraUtvalg <- function(RegData, datoFra, datoTil, valgtShus='', minald=0, maxald=130, erMann=99,
+                             forlopstype1=99, forlopstype2=99, fargepalett='BlaaRapp')
 {
   # Definerer intersect-operator
   "%i%" <- intersect

@@ -49,7 +49,7 @@
 
 nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='2050-12-31',
                            valgtShus='', outfile = '', preprosess=TRUE, minald=0, maxald=130,
-                           erMann='', reshID, enhetsUtvalg=0, hentData=F, forlopstype1='', forlopstype2='')
+                           erMann=99, reshID, enhetsUtvalg=0, hentData=F, forlopstype1=99, forlopstype2=99)
 {
   if (valgtVar == 'SNMdagbok') {
     nraSNMdagbok(RegData=RegData, datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=enhetsUtvalg, valgtShus = valgtShus,
@@ -119,7 +119,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
         AntHoved <- table(RegData$VariabelGr[indHoved])
         NHoved <- sum(AntHoved)
         Andeler$Hoved <- 100*AntHoved/NHoved
-        tabelldata <- data.frame('AntHoved'=AntHoved, 'NHoved'=NHoved)
+        tabelldata <- data.frame('AntHoved'=as.numeric(AntHoved), 'NHoved'=NHoved)
         if (medSml==1) {
           AntRest <- table(RegData$VariabelGr[indRest])
           NRest <- sum(AntRest)	#length(indRest)- Kan inneholde NA
@@ -213,7 +213,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
         pos <- barplot(rev(as.numeric(Andeler$Hoved)), horiz=TRUE, beside=TRUE, las=1, xlab="Andel pasienter (%)", #main=tittel,
                        col=fargeHoved, border='white', font.main=1, xlim=c(0, xmax), ylim=c(0.05,1.4)*antGr)	#
         if (NHoved>0) {mtext(at=pos+0.05, text=grtxtpst, side=2, las=1, cex=cexgr, adj=1, line=0.25)}
-        text(x=rev(as.numeric(Andeler$Hoved)), y=pos+0.05, labels = n_txt, pos=4, xpd = NA)
+        # text(x=rev(as.numeric(Andeler$Hoved)), y=pos+0.05, labels = n_txt, pos=4, xpd = NA)
 
         if (medSml == 1) {
           points(as.numeric(rev(Andeler$Rest)), pos, col=fargeRest,  cex=2, pch=18) #c("p","b","o"),
@@ -263,7 +263,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       rownames(AntallUt) <- c('Hoved', 'Rest')
 
       # UtData <- list('Tittel'=paste(toString(tittel),'.', sep=''), 'Andeler'=AndelerUt, 'Antall'=AntallUt, grtxt=grtxt, utvalgTxt=utvalgTxt)
-      UtData <- list('Tittel'=paste(toString(tittel),'.', sep=''), TabellData=tabelldata, grtxt=grtxt, utvalgTxt=utvalgTxt)
+      UtData <- list('tittel'=tittel, TabellData=tabelldata, grtxt=grtxt, utvalgTxt=utvalgTxt)
       return(invisible(UtData))
 
     }
