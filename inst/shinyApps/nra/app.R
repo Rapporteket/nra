@@ -30,6 +30,7 @@ source(system.file("shinyApps/nra/R/lastshinydata.R", package = "nra"), encoding
 source(system.file("shinyApps/nra/R/BrValg.R", package = "nra"), encoding = 'UTF-8')
 source(system.file("shinyApps/nra/R/modul_fordelingsfig.R", package = "nra"), encoding = 'UTF-8')
 source(system.file("shinyApps/nra/R/modul_gjsn_prepost.R", package = "nra"), encoding = 'UTF-8')
+source(system.file("shinyApps/nra/R/modul_datadump.R", package = "nra"), encoding = 'UTF-8')
 
 RegData <- lastshinydata()
 BrValg <- BrValg(RegData=RegData)
@@ -48,6 +49,9 @@ ui <- tagList(
   ),
   tabPanel("Gjennomsnitt/andeler før og etter operasjon",
            gjsn_prepost_UI(id = "gjsn_prepost_id")
+  ),
+  tabPanel("Datadump",
+           datadump_UI(id = "datadump_id")
   )
 )
 )
@@ -71,6 +75,7 @@ server <- function(input, output, session) {
 
   callModule(fordelingsfig, "fordelingsfig_id", reshID = reshID, RegData = RegData)
   callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData)
+  callModule(datadump, "gjsn_prepost_id", reshID = reshID, userRole = userRole, hvd_session = session)
 
    #Navbarwidget
    output$appUserName <- renderText(rapbase::getUserFullName(session))

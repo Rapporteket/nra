@@ -80,3 +80,23 @@ nraHentRegData <- function() {
 
   return(RegData)
 }
+
+#' Fetch chosen table for NRA
+#'
+#' Provides NRA data from staging
+#'
+#' @inheritParams nraFigAndeler
+#'
+#' @return RegData data frame
+#' @export
+nraHentTabell <- function(tabnavn) {
+
+  registryName <- "nra"
+  dbType <- "mysql"
+
+  query <- paste0("SELECT * FROM ", tabnavn)
+
+  RegData <- rapbase::LoadRegData(registryName, query, dbType)
+
+  return(RegData)
+}

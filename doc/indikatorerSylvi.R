@@ -1,7 +1,7 @@
 library(nra)
 rm(list = ls())
 
-RegData <- read.table('I:/nra/alleVarNum2019-09-23 09-00-05.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/alleVarNum2020-01-07 09-52-48.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -14,7 +14,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                        "WexLivsstilsendring", "WexnerTotalScore")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2019-09-23 09-00-04.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2020-01-07 09-52-46.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -34,8 +34,8 @@ datoTil <- '2018-12-31'
 enhetsUtvalg <- 0 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 preprosess<-F
 hentData <- F
-forlopstype1=''
-forlopstype2=''
+forlopstype1=99
+forlopstype2=99
 valgtShus <- '' #c('601225', '700116')
 utformat <- 'wmf'
 

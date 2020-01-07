@@ -59,8 +59,8 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       RegData <- RegData[,c("Variabel", "Grvar", "ForlopsID")]
       names(RegData)[names(RegData)=='Variabel'] <- 'VariabelPre'
       if (valgtVar=='QolSexualitet') {
-        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre==99])
-        RegData <- RegData[RegData$VariabelPre!=99, ]
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre %in% c(98,99)])
+        RegData <- RegData[!(RegData$VariabelPre %in% c(98,99)), ]
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
@@ -85,9 +85,9 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                        Oppfolging1[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                        suffixes = c('Pre', 'Post1'))
       if (valgtVar=='QolSexualitet') {
-        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre==99 | RegData$VariabelPost1==99])
-        RegData <- RegData[RegData$VariabelPre!=99, ]
-        RegData <- RegData[RegData$VariabelPost1!=99, ]
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre %in% c(98,99) | RegData$VariabelPost1 %in% c(98,99)])
+        RegData <- RegData[!(RegData$VariabelPre  %in% c(98,99)), ]
+        RegData <- RegData[!(RegData$VariabelPost1 %in% c(98,99)), ]
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
@@ -121,10 +121,13 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                        Oppfolging2[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                        suffixes = c('', 'Post5'))
       if (valgtVar=='QolSexualitet') {
-        Nuaktuelt <- length(RegData$Variabel[RegData$Variabel==99 | RegData$VariabelPost5==99 | RegData$Variabel==99])
-        RegData <- RegData[RegData$Variabel!=99, ]
-        RegData <- RegData[RegData$VariabelPost1!=99, ]
-        RegData <- RegData[RegData$VariabelPost5!=99, ]
+        Nuaktuelt <- length(RegData$Variabel[RegData$Variabel %in% c(98,99) | RegData$VariabelPost5 %in% c(98,99) | RegData$Variabel %in% c(98,99)])
+        RegData <- RegData[!(RegData$Variabel %in% c(98,99)), ]
+        RegData <- RegData[!(RegData$VariabelPost1 %in% c(98,99)), ]
+        RegData <- RegData[!(RegData$VariabelPost5 %in% c(98,99)), ]
+        # RegData <- RegData[RegData$Variabel!=99, ]
+        # RegData <- RegData[RegData$VariabelPost1!=99, ]
+        # RegData <- RegData[RegData$VariabelPost5!=99, ]
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
