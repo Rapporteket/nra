@@ -65,8 +65,8 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
     },
     content = function(file){
       RegData <- nraHentTabell(input$dumptype)
-      dumpdata <- RegData[RegData$HovedDato >= input$datovalg[1] &
-                            RegData$HovedDato <= input$datovalg[2], ]
+      dumpdata <- RegData[as.Date(RegData$HovedDato) >= input$datovalg[1] &
+                            as.Date(RegData$HovedDato) <= input$datovalg[2], ]
       if (userRole != 'SC') {
         dumpdata <- dumpdata[dumpdata$AvdRESH == reshID, ]
       }
