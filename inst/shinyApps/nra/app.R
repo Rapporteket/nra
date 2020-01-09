@@ -32,7 +32,10 @@ source(system.file("shinyApps/nra/R/modul_fordelingsfig.R", package = "nra"), en
 source(system.file("shinyApps/nra/R/modul_gjsn_prepost.R", package = "nra"), encoding = 'UTF-8')
 source(system.file("shinyApps/nra/R/modul_datadump.R", package = "nra"), encoding = 'UTF-8')
 
-RegData <- lastshinydata()
+AllData <- lastshinydata()
+RegData <- AllData$RegData
+Skjemaoversikt <- AllData$Skjemaoversikt
+rm(AllData)
 BrValg <- BrValg(RegData=RegData)
 
 # Define UI for application
@@ -75,7 +78,7 @@ server <- function(input, output, session) {
 
   callModule(fordelingsfig, "fordelingsfig_id", reshID = reshID, RegData = RegData)
   callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData)
-  callModule(datadump, "gjsn_prepost_id", reshID = reshID, userRole = userRole, hvd_session = session)
+  callModule(datadump, "datadump_id", reshID = reshID, userRole = userRole, hvd_session = session)
 
    #Navbarwidget
    output$appUserName <- renderText(rapbase::getUserFullName(session))

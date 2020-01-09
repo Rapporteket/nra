@@ -49,24 +49,19 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
   #     shinyjs::hide(id = 'valgtShus')
   #   })
 
-  # output$valgtevar_dump <- renderUI({
-  #   ns <- session$ns
-  #   if (!is.null(names(RegData))) {
-  #     selectInput(inputId = ns("valgtevar_dump_verdi"), label = "Velg variabler å inkludere (ingen valgt er lik alle)",
-  #                 choices = names(RegData), multiple = TRUE)
-  #   }
-  # })
-
-
 
   output$lastNed_dump <- downloadHandler(
     filename = function(){
       paste0(input$dumptype, '_NRA', Sys.time(), '.csv')
     },
     content = function(file){
-      RegData <- nraHentTabell(input$dumptype)
-      dumpdata <- RegData[as.Date(RegData$HovedDato) >= input$datovalg[1] &
-                            as.Date(RegData$HovedDato) <= input$datovalg[2], ]
+      if (rapbase::isRapContext()) {
+        tmpData <- nraHentTabell(input$dumptype)
+      } else {
+        tmpData <- read.table(paste0('I:/nra/', input$dumptype, '2020-01-07.txt'), header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+      }
+      dumpdata <- tmpData[as.Date(tmpData$HovedDato) >= input$datovalg[1] &
+                            as.Date(tmpData$HovedDato) <= input$datovalg[2], ]
       if (userRole != 'SC') {
         dumpdata <- dumpdata[dumpdata$AvdRESH == reshID, ]
       }

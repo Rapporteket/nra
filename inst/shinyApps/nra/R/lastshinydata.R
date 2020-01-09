@@ -32,8 +32,10 @@ lastshinydata <- function() {
     ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                                  'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
     RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
+    Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2020-01-07 09-52-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
   }
   RegData <- nraPreprosess(RegData=RegData)
+  utdata <- list(RegData=RegData, Skjemaoversikt=Skjemaoversikt)
 
 }
 
