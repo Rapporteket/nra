@@ -14,7 +14,7 @@
 
 nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='2050-12-31',
                            outfile = '', preprosess=TRUE, minald=0, maxald=130, grvar='SenterKortNavn',
-                           erMann='', reshID, hentData=F, forlopstype1='', forlopstype2='',
+                           erMann=99, reshID, hentData=F, forlopstype1=99, forlopstype2=99,
                            sammenlign=0, inkl_konf=0, egen_mot_landet=F, valgtShus='', graa='')
 {
   egetShus <- RegData$SenterKortNavn[match(reshID, RegData$AvdRESH)]
@@ -59,8 +59,8 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       RegData <- RegData[,c("Variabel", "Grvar", "ForlopsID")]
       names(RegData)[names(RegData)=='Variabel'] <- 'VariabelPre'
       if (valgtVar=='QolSexualitet') {
-        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre==99])
-        RegData <- RegData[RegData$VariabelPre!=99, ]
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre %in% c(98,99)])
+        RegData <- RegData[!(RegData$VariabelPre %in% c(98,99)), ]
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
@@ -85,9 +85,9 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                        Oppfolging1[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                        suffixes = c('Pre', 'Post1'))
       if (valgtVar=='QolSexualitet') {
-        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre==99 | RegData$VariabelPost1==99])
-        RegData <- RegData[RegData$VariabelPre!=99, ]
-        RegData <- RegData[RegData$VariabelPost1!=99, ]
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre %in% c(98,99) | RegData$VariabelPost1 %in% c(98,99)])
+        RegData <- RegData[!(RegData$VariabelPre  %in% c(98,99)), ]
+        RegData <- RegData[!(RegData$VariabelPost1 %in% c(98,99)), ]
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
@@ -121,10 +121,13 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                        Oppfolging2[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                        suffixes = c('', 'Post5'))
       if (valgtVar=='QolSexualitet') {
-        Nuaktuelt <- length(RegData$Variabel[RegData$Variabel==99 | RegData$VariabelPost5==99 | RegData$Variabel==99])
-        RegData <- RegData[RegData$Variabel!=99, ]
-        RegData <- RegData[RegData$VariabelPost1!=99, ]
-        RegData <- RegData[RegData$VariabelPost5!=99, ]
+        Nuaktuelt <- length(RegData$Variabel[RegData$Variabel %in% c(98,99) | RegData$VariabelPost5 %in% c(98,99) | RegData$Variabel %in% c(98,99)])
+        RegData <- RegData[!(RegData$Variabel %in% c(98,99)), ]
+        RegData <- RegData[!(RegData$VariabelPost1 %in% c(98,99)), ]
+        RegData <- RegData[!(RegData$VariabelPost5 %in% c(98,99)), ]
+        # RegData <- RegData[RegData$Variabel!=99, ]
+        # RegData <- RegData[RegData$VariabelPost1!=99, ]
+        # RegData <- RegData[RegData$VariabelPost5!=99, ]
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
@@ -167,7 +170,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     retn<-'V'
     txtretn<-1
 
-    FigTypUt <- figtype(outfile, fargepalett='BlaaOff')
+    FigTypUt <- rapFigurer::figtype(outfile, fargepalett='BlaaOff')
     NutvTxt <- length(utvalgTxt)
     vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxt, units='figure', cex=cexgr)*0.7))
     par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1+length(tittel)-1)))	#Har alltid datoutvalg med
@@ -237,7 +240,7 @@ soylefarger[, which(grtxt %in% graa)] <- c('gray40', 'gray70', 'gray80')[1:(samm
     utdata <- list(PlotMatrise=PlotMatrise, KIned=KIned, KIopp=KIopp, utvalgTxt=utvalgTxt, tittel=tittel, grtxt=grtxt, grtxt2=grtxt2, Ngr=Ngr)
 
   } else {
-    FigTypUt <- figtype(outfile)
+    FigTypUt <- rapFigurer::figtype(outfile)
     farger <- FigTypUt$farger
     plot.new()
     legend('topleft',utvalgTxt, bty='n', cex=0.9, text.col=farger[1])

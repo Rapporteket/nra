@@ -49,7 +49,7 @@
 
 nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='2050-12-31',
                            valgtShus='', outfile = '', preprosess=TRUE, minald=0, maxald=130,
-                           erMann='', reshID, enhetsUtvalg=0, hentData=F, forlopstype1='', forlopstype2='')
+                           erMann=99, reshID, enhetsUtvalg=0, hentData=F, forlopstype1=99, forlopstype2=99)
 {
   if (valgtVar == 'SNMdagbok') {
     nraSNMdagbok(RegData=RegData, datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=enhetsUtvalg, valgtShus = valgtShus,
@@ -87,7 +87,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       shtxt <- 'Ditt utvalg'
     }
     if (valgtVar == 'Tilfredshet') {
-      RegData <- merge(RegData, RegData[,c("Tilfredshet", "KobletForlopsID")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+      RegData <- merge(RegData, RegData[which(RegData$ForlopsType1Num==3), c("Tilfredshet", "KobletForlopsID")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                        suffixes = c('', 'Post1'), all.x = TRUE)
     }
 
@@ -119,10 +119,13 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
         AntHoved <- table(RegData$VariabelGr[indHoved])
         NHoved <- sum(AntHoved)
         Andeler$Hoved <- 100*AntHoved/NHoved
+        tabelldata <- data.frame('AntHoved'=as.numeric(AntHoved), 'NHoved'=NHoved)
         if (medSml==1) {
           AntRest <- table(RegData$VariabelGr[indRest])
           NRest <- sum(AntRest)	#length(indRest)- Kan inneholde NA
           Andeler$Rest <- 100*AntRest/NRest
+          tabelldata$AntRest <- AntRest
+          tabelldata$NRest <- NRest
         }
       }
 
@@ -145,12 +148,15 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
         AntHoved <- PlotParams$AntVar
         NHoved <- max(PlotParams$NVar, na.rm=T)
         Andeler$Hoved <- 100*PlotParams$AntVar/PlotParams$NVar
+        tabelldata <- data.frame('AntHoved'=PlotParams$AntVar, 'NHoved'=PlotParams$NVar)
 
         if (medSml == 1) {
           PlotParams2 <- nraPrepVar(RegData[indRest, ], valgtVar, enhetsUtvalg, reshID=reshID)
           AntRest <- PlotParams2$AntVar
           NRest <- max(PlotParams2$NVar,na.rm=T)	#length(indRest)- Kan inneholde NA
           Andeler$Rest <- 100*PlotParams2$AntVar/PlotParams2$NVar
+          tabelldata$AntRest <- AntRest
+          tabelldata$NRest <- PlotParams2$NVar
           rm(PlotParams2)
         }
 
@@ -162,10 +168,10 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       tittel <- PlotParams$tittel; grtxt <- PlotParams$grtxt; grtxt2 <- PlotParams$grtxt2;
       stabel <- PlotParams$stabel; subtxt <- PlotParams$subtxt; incl_N <- PlotParams$incl_N;
       incl_pst <- PlotParams$incl_pst; retn <- PlotParams$retn; cexgr <- PlotParams$cexgr;
-      FigTypUt <- figtype(outfile=outfile, fargepalett=nraUtvalg$fargepalett, pointsizePDF=12);
+      FigTypUt <- rapFigurer::figtype(outfile=outfile, fargepalett=nraUtvalg$fargepalett, pointsizePDF=12);
       antDes <- PlotParams$antDes; smltxt <- PlotParams$smltxt;
     } else {
-      FigTypUt <- figtype(outfile, fargepalett=nraUtvalg$fargepalett, pointsizePDF=12)
+      FigTypUt <- rapFigurer::figtype(outfile, fargepalett=nraUtvalg$fargepalett, pointsizePDF=12)
       NHoved <- 0
       NRest <- 0
       medSml <- 1
@@ -207,7 +213,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
         pos <- barplot(rev(as.numeric(Andeler$Hoved)), horiz=TRUE, beside=TRUE, las=1, xlab="Andel pasienter (%)", #main=tittel,
                        col=fargeHoved, border='white', font.main=1, xlim=c(0, xmax), ylim=c(0.05,1.4)*antGr)	#
         if (NHoved>0) {mtext(at=pos+0.05, text=grtxtpst, side=2, las=1, cex=cexgr, adj=1, line=0.25)}
-        text(x=rev(as.numeric(Andeler$Hoved)), y=pos+0.05, labels = n_txt, pos=4, xpd = NA)
+        # text(x=rev(as.numeric(Andeler$Hoved)), y=pos+0.05, labels = n_txt, pos=4, xpd = NA)
 
         if (medSml == 1) {
           points(as.numeric(rev(Andeler$Rest)), pos, col=fargeRest,  cex=2, pch=18) #c("p","b","o"),
@@ -256,8 +262,8 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       AntallUt <- rbind(AntHoved, AntRest)
       rownames(AntallUt) <- c('Hoved', 'Rest')
 
-      UtData <- list(paste(toString(tittel),'.', sep=''), AndelerUt, AntallUt, grtxt )
-      names(UtData) <- c('Tittel', 'Andeler', 'Antall', 'GruppeTekst')
+      # UtData <- list('Tittel'=paste(toString(tittel),'.', sep=''), 'Andeler'=AndelerUt, 'Antall'=AntallUt, grtxt=grtxt, utvalgTxt=utvalgTxt)
+      UtData <- list('tittel'=tittel, TabellData=tabelldata, grtxt=grtxt, utvalgTxt=utvalgTxt)
       return(invisible(UtData))
 
     }

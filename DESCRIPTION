@@ -12,12 +12,21 @@ Description: Alle R-baserte resultattjenester på Rapporteket for NRA. Dette
     kjørefiler og eksempeldatasett.
 Depends:
     R (>= 3.1.3),
-    rapbase,
-    tidyverse
 License: GPL-2
 LazyData: TRUE
 Imports:
     knitr,
-    xtable
+    xtable,
+    DT,
+    tidyverse,
+    kableExtra,
+    shinyjs,
+    rapFigurer,
+    rapbase,
+    raplog
+Remotes:
+  Rapporteket/rapbase,
+  Rapporteket/raplog,
+  Rapporteket/rapFigurer
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1

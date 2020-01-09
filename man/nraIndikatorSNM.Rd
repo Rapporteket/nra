@@ -6,7 +6,8 @@
 til NRA ved snm.}
 \usage{
 nraIndikatorSNM(outfile = "", dekngrad = 85, posTestBedr75 = 73,
-  stmark9 = 30, stmarks12 = 44, infeksjon = 1.6)
+  stmark9 = 30, stmarks12 = 44, infeksjon = 1.6, width = 7.5,
+  height = 6)
 }
 \arguments{
 \item{outfile}{Navn på fil figuren skrives til. Default: '' (Figur skrives
