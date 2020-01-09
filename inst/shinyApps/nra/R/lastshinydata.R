@@ -14,6 +14,7 @@ lastshinydata <- function() {
 
   if (rapbase::isRapContext()) {
     RegData <- nra::nraHentRegData()
+    Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
   } else {
     RegData <- read.table('I:/nra/alleVarNum2020-01-07 09-52-48.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
     RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
