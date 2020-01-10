@@ -15,6 +15,7 @@ library(kableExtra)
 library(DT)
 library(htmltools)
 library(shinyjs)
+library(lubridate)
 
 addResourcePath('rap', system.file('www', package='rapbase'))
 regTitle <-  "RAPPORTEKET NRA"
@@ -42,21 +43,74 @@ BrValg <- BrValg(RegData=RegData)
 ui <- tagList(
   shinyalert::useShinyalert(),
   navbarPage(
-  title = div(a(includeHTML(system.file('www/logo.svg', package='rapbase'))),
-              regTitle),
-  windowTitle = regTitle,
-  theme = "rap/bootstrap.css",
+    title = div(a(includeHTML(system.file('www/logo.svg', package='rapbase'))),
+                regTitle),
+    windowTitle = regTitle,
+    theme = "rap/bootstrap.css",
 
-  tabPanel("Fordelingsfigurer",
-           fordelingsfig_UI(id = "fordelingsfig_id", BrValg = BrValg)
-  ),
-  tabPanel("Gjennomsnitt/andeler før og etter operasjon",
-           gjsn_prepost_UI(id = "gjsn_prepost_id")
-  ),
-  tabPanel("Datadump",
-           datadump_UI(id = "datadump_id")
+    tabPanel("Startside",
+             mainPanel(
+               shinyjs::useShinyjs(),
+               shinyalert::useShinyalert(),
+               rapbase::appNavbarUserWidget(user = uiOutput("appUserName"),
+                                            organization = uiOutput("appOrgName"),
+                                            addUserInfo = TRUE),
+
+               h2('Velkommen til Rapporteket - NRA', align='center'),
+               br(),
+               # h4(tags$b('Her skal Linn og Kristoffer formulere kloke og reflekterte meldinger til Rapportekets brukere. En foreløpig variant er gitt under:')),
+               # br(),
+               h4('Du er nå inne på Rapporteket for NRA, registerets resultattjeneste.
+                Disse sidene inneholder en samling av figurer og tabeller som viser resultater fra registeret.
+                På hver av sidene kan man gjøre utvalg i menyene til venstre. Alle resultater er basert
+                på ferdigstilte registreringer. Merk at data er hentet direkte fra registerets database.
+                Dette medfører at nyere data ikke er kvalitetssikret ennå.'),
+               h4('Du kan se på resultater for eget sykehus, nasjonale data og eget sykehus sett opp mot landet for øvrig.
+                Alle figurer og
+                tabeller kan lastes ned.'),
+               br(),
+               h4(tags$b(tags$u('Innhold i de ulike fanene:'))),
+               h4(tags$b('Fordelinger '), 'viser fordelinger (figur/tabell) av ulike variabler.
+                Man kan velge hvilken variabel man vil se på, og man kan gjøre ulike filtreringer.'),
+               h4(tags$b('Gjennomsnitt/andeler før og etter operasjon '), 'viser gjennomsnitt eller andel av en variabel. Kan vise enten kun pre-data,
+                pre og 1-årsoppfølgingsdata, eller pre-og 1 og 5-årsoppfølgingsdata'),
+               h4(tags$b('Datadump '), 'gir mulighet til å laste ned din egen avdelings registreringer.'),
+               h4(tags$b('Administrative tabeller '), 'er en samling oversikter over antall registreringer.'),
+               br(),
+               # br(),
+               # h3('HER KAN MAN F.EKS. VISE ANTALL REGISTRERINGER SISTE X MND.'),
+               # br(),
+               br(),
+               h4('Oversikt over registerets kvalitetsindikatorer og resultater finner du på www.kvalitetsregistre.no:', #helpText
+                  a("NRA", href="https://www.kvalitetsregistre.no/registers/541/resultater"),
+                  target="_blank", align='center'),
+               br(),
+               h4('Mer informasjon om registeret finnes på NRA sin ',
+                  a("hjemmeside", href="https://unn.no/fag-og-forskning/medisinske-kvalitetsregistre/nra-norsk-register-for-analinkontinens", target="_blank"),
+                  align='center')
+             )
+
+    ),
+
+
+    tabPanel("Fordelingsfigurer",
+             fordelingsfig_UI(id = "fordelingsfig_id", BrValg = BrValg)
+    ),
+    tabPanel("Gjennomsnitt/andeler før og etter operasjon",
+             gjsn_prepost_UI(id = "gjsn_prepost_id")
+    ),
+    tabPanel("Datadump",
+             datadump_UI(id = "datadump_id")
+    ),
+    tabPanel("Administrative tabeller",
+             sidebarPanel(
+               dateRangeInput(inputId="datovalg_adm", label = "Dato fra og til", min = '2014-01-01', language = "nb",
+                              max = Sys.Date(), start  = Sys.Date() %m-% months(12), end = Sys.Date(), separator = " til ")
+             ),
+             mainPanel(h4(tags$b(tags$u('Her kommer administrative tabeller for NRA:'))))
+    )
+
   )
-)
 )
 
 # Define server logic
@@ -80,18 +134,18 @@ server <- function(input, output, session) {
   callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData)
   callModule(datadump, "datadump_id", reshID = reshID, userRole = userRole, hvd_session = session)
 
-   #Navbarwidget
-   output$appUserName <- renderText(rapbase::getUserFullName(session))
-   output$appOrgName <- renderText(rapbase::getUserReshId(session))
+  #Navbarwidget
+  output$appUserName <- renderText(rapbase::getUserFullName(session))
+  output$appOrgName <- renderText(rapbase::getUserReshId(session))
 
-   # Brukerinformasjon
-   userInfo <- rapbase::howWeDealWithPersonalData(session)
-   observeEvent(input$userInfo, {
-     shinyalert("Dette vet Rapporteket om deg:", userInfo,
-                type = "", imageUrl = "rap/logo.svg",
-                closeOnEsc = TRUE, closeOnClickOutside = TRUE,
-                html = TRUE, confirmButtonText = "Den er grei!")
-   })
+  # Brukerinformasjon
+  userInfo <- rapbase::howWeDealWithPersonalData(session)
+  observeEvent(input$userInfo, {
+    shinyalert("Dette vet Rapporteket om deg:", userInfo,
+               type = "", imageUrl = "rap/logo.svg",
+               closeOnEsc = TRUE, closeOnClickOutside = TRUE,
+               html = TRUE, confirmButtonText = "Den er grei!")
+  })
 
 
 }
