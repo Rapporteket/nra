@@ -9,36 +9,32 @@ admtab_UI <- function(id){
   shiny::sidebarLayout(
     sidebarPanel(
       id = ns("id_adm_panel"),
-      conditionalPanel(condition = paste0("input['", ns('admtabeller'), "'] == 'id_ant_skjema'"),
-                       dateRangeInput(inputId=ns("datovalg_adm"), label = "Dato fra og til", min = '2014-01-01', language = "nb",
-                                      max = Sys.Date(), start  = Sys.Date() %m-% months(12), end = Sys.Date(), separator = " til ")
-      ),
-      # checkboxInput(inputId = ns("kun_oblig"), label = "Inkluder kun obligatoriske reseksjoner", value = F),
-      # conditionalPanel(condition = paste0("input['", ns("admtabeller"), "'] == 'id_ant_tid'"),
-      #                  selectInput(inputId = ns("adm_tidsenhet"), label = "Velg tidsenhet",
-      #                              choices = c('Måneder'=1, 'År'=2)),
-      #                  conditionalPanel(condition = paste0("input['", ns("adm_tidsenhet"), "'] == '1'"),
-      #                                   norgast::dateInput2(inputId=ns("datovalg_adm_tid_mnd"), label = "Vis til og med måned: ", min = '2014-01-01',
-      #                                                       max = Sys.Date(), value = Sys.Date(), minview = 'months', format = "MM yyyy", language="no"),
-      #                                   sliderInput(inputId=ns("ant_mnd"), label = "Antall måneder", min = 1, max = 24, value = 12, step = 1)),
-      #                  conditionalPanel(condition = paste0("input['", ns("adm_tidsenhet"), "'] == '2'"),
-      #                                   norgast::dateInput2(inputId=ns("datovalg_adm_tid_aar"), label = "Vis til og med år: ", min = '2014-01-01',
-      #                                                       max = Sys.Date(), value = Sys.Date(), minview = 'years', format = "yyyy", language="no"),
-      #                                   sliderInput(inputId= ns("ant_aar"), label = "Antall år", min = 1, max = 10, value = 5, step = 1)),
-      #                  selectInput(inputId = ns("regstatus_tid"), label = "Skjemastatus",
-      #                              choices = c('Ferdige forløp'=1, 'Oppfølging i kladd'=2, 'Ferdig basisreg. oppfølging mangler'=3,
-      #                                          'Basisreg. i kladd'=4))
-      # ),
+      selectInput(inputId = ns("adm_tidsenhet"), label = "Velg tidsenhet",
+                  choices = c('Måneder'=1, 'År'=2)),
+      conditionalPanel(condition = paste0("input['", ns("adm_tidsenhet"), "'] == '1'"),
+                       norgast::dateInput2(inputId=ns("datovalg_adm_tid_mnd"), label = "Vis til og med måned: ", min = '2014-01-01',
+                                           max = Sys.Date(), value = Sys.Date(), minview = 'months', format = "MM yyyy", language="no"),
+                       sliderInput(inputId=ns("ant_mnd"), label = "Antall måneder", min = 1, max = 24, value = 12, step = 1)),
+      conditionalPanel(condition = paste0("input['", ns("adm_tidsenhet"), "'] == '2'"),
+                       norgast::dateInput2(inputId=ns("datovalg_adm_tid_aar"), label = "Vis til og med år: ", min = '2014-01-01',
+                                           max = Sys.Date(), value = Sys.Date(), minview = 'years', format = "yyyy", language="no"),
+                       sliderInput(inputId= ns("ant_aar"), label = "Antall år", min = 1, max = 10, value = 5, step = 1)),
+      sliderInput(inputId=ns("alder"), label = "Alder", min = 0,
+                  max = 130, value = c(0, 130)),
+      selectInput(inputId = ns("erMann"), label = "Kjønn",
+                  choices = c('Begge'=99, 'Kvinne'=0, 'Mann'=1)),
+      selectInput(inputId = ns("forlopstype1"), label = "Velg forløpstype",
+                  choices = c('--'=99, 'Sfinkterplastikk'=1, 'SNM'=2, 'Oppfølging 1 år'=3, 'Oppfølging 5 år'=4)),
+      uiOutput(outputId = ns('forlopstype2')),
       tags$hr(),
       actionButton(ns("reset_input"), "Nullstill valg")
     ),
     mainPanel(tabsetPanel(id= ns("admtabeller"),
                           tabPanel("Antall skjema", value = "id_ant_skjema",
-                                   h4(tags$b(tags$u('Her kommer administrative tabeller for NRA:'))),
-                                   DTOutput(ns("Tabell_adm1")), downloadButton(ns("lastNed_adm1"), "Last ned tabell")),
-                          tabPanel("Registreringer over tid", value = "id_ant_tid",
-                                   DTOutput(ns("Tabell_adm2")), downloadButton(ns("lastNed_adm2"), "Last ned tabell")
-                          )
+                                   h4('Her kan du velge om du vil se registreringer per måned eller per år og for hvor
+                                             lang periode. For sfinkterplastikk og SNM gjøres datofiltreringen på prosedyredato,
+                                             mens for oppfølginger er det dato for siste utfylling som brukes.'),
+                                   DTOutput(ns("Tabell_adm2")), downloadButton(ns("lastNed_adm2"), "Last ned tabell"))
     )
     )
 
@@ -52,124 +48,43 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     shinyjs::reset("id_adm_panel")
   })
 
-  antskjema <- function() {
-
-    tmp <- merge(skjemaoversikt[skjemaoversikt$Skjemanavn=='Registrering', c("ForlopsID", "SkjemaStatus", "HovedDato", "OpprettetDato", "Sykehusnavn", "AvdRESH")],
-                 skjemaoversikt[skjemaoversikt$Skjemanavn=='Oppfølging', c("ForlopsID", "SkjemaStatus")],
-                 by = 'ForlopsID', all.x = T, suffixes = c('', '_oppf'))
-
-    if (input$kun_oblig) {
-      tmp <- tmp[tmp$ForlopsID %in% RegData$ForlopsID[RegData$Op_gr %in% 1:7], ]
+  output$forlopstype2 <- renderUI({
+    ns <- session$ns
+    if (as.numeric(input$forlopstype1)==2) {
+      selectInput(inputId = ns("forlopstype2_verdi"), label = "SNM-type",
+                  choices = if (as.numeric(input$forlopstype1)!=1) {
+                    c('Test usikker'=1, 'Test positiv'=2, 'Revisjon'=3, 'Eksplantasjon'=4, 'Test negativ'=5)
+                  },  multiple = TRUE)
     }
+  })
 
-    tmp$SkjemaStatus[tmp$SkjemaStatus==-1] <- 0
-    tmp$SkjemaStatus_oppf[tmp$SkjemaStatus_oppf==-1] <- 0
-    tmp$HovedDato[is.na(tmp$HovedDato)] <- tmp$OpprettetDato[is.na(tmp$HovedDato)]
-
-    aux <- tmp %>% filter(HovedDato >= input$datovalg_adm[1] & HovedDato <= input$datovalg_adm[2]) %>%
-      group_by(Sykehusnavn) %>% summarise('Ferdige forløp' = sum(SkjemaStatus==1 & SkjemaStatus_oppf==1, na.rm = T),
-                                          'Oppfølging i kladd' = sum(SkjemaStatus==1 & SkjemaStatus_oppf==0, na.rm = T),
-                                          'Ferdig basisreg. oppfølging mangler' = sum(SkjemaStatus==1 & is.na(SkjemaStatus_oppf), na.rm = T),
-                                          'Basisreg i kladd' = sum(SkjemaStatus==0, na.rm = T),
-                                          'N' = n())
-    aux2 <- tmp %>% filter(HovedDato >= input$datovalg_adm[1] & HovedDato <= input$datovalg_adm[2]) %>%
-      summarise('Ferdige forløp' = sum(SkjemaStatus==1 & SkjemaStatus_oppf==1, na.rm = T),
-                'Oppfølging i kladd' = sum(SkjemaStatus==1 & SkjemaStatus_oppf==0, na.rm = T),
-                'Ferdig basisreg. oppfølging mangler' = sum(SkjemaStatus==1 & is.na(SkjemaStatus_oppf), na.rm = T),
-                'Basisreg i kladd' = sum(SkjemaStatus==0, na.rm = T),
-                'N' = n())
-
-    ant_skjema <- bind_rows(aux, bind_cols(tibble(Sykehusnavn='Totalt'), aux2))
-
-    sketch <- htmltools::withTags(table(
-      tableHeader(ant_skjema[-dim(ant_skjema)[1], ]),
-      tableFooter(c('Sum' , as.numeric(ant_skjema[dim(ant_skjema)[1], 2:dim(ant_skjema)[2]])))))
-    list(ant_skjema=ant_skjema, sketch=sketch)
-
-
-  }
-
-  output$Tabell_adm1 = renderDT(
-    datatable(antskjema()$ant_skjema[-dim(antskjema()$ant_skjema)[1], ],
-              container = antskjema()$sketch,
-              rownames = F,
-              options = list(pageLength = 40)
-    )
-  )
-
-
-  output$lastNed_adm1 <- downloadHandler(
-    filename = function(){
-      paste0('Regoversikt', Sys.time(), '.csv')
-    },
-
-    content = function(file){
-      TabellData <- antskjema()$ant_skjema
-      write.csv2(TabellData, file, row.names = F)
-    }
-  )
 
 
   andre_adm_tab <- function() {
 
+    aux <- nraUtvalg(RegData = RegData, minald=as.numeric(input$alder[1]), maxald=as.numeric(input$alder[2]),
+                     datoFra = '2012-01-01', datoTil = '2100-01-01',
+                     erMann = as.numeric(input$erMann),forlopstype1=as.numeric(input$forlopstype1),
+                     forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99})
+    aux <- aux$RegData
+
     if (input$adm_tidsenhet == 1) {
 
       tilDato <- as.Date(paste0(input$datovalg_adm_tid_mnd))
-
-      # fraDato <- as.Date(input$datovalg_adm_tid_mnd) %m-% months(input$ant_mnd) %>% floor_date(unit="months")
       fraDato <- tilDato %m-% months(as.numeric(input$ant_mnd)) %>% floor_date(unit="months")
-      tmp <- merge(skjemaoversikt[skjemaoversikt$Skjemanavn=='Registrering', c("ForlopsID", "SkjemaStatus", "HovedDato", "OpprettetDato", "Sykehusnavn", "AvdRESH")],
-                   skjemaoversikt[skjemaoversikt$Skjemanavn=='Oppfølging', c("ForlopsID", "SkjemaStatus")],
-                   by = 'ForlopsID', all.x = T, suffixes = c('', '_oppf'))
 
-      if (input$kun_oblig) {
-        tmp <- tmp[tmp$ForlopsID %in% RegData$ForlopsID[RegData$Op_gr %in% 1:7], ]
-      }
-
-      tmp$SkjemaStatus[tmp$SkjemaStatus==-1] <- 0
-      tmp$SkjemaStatus_oppf[tmp$SkjemaStatus_oppf==-1] <- 0
-      tmp$HovedDato[is.na(tmp$HovedDato)] <- as.Date(tmp$OpprettetDato[is.na(tmp$HovedDato)])
-
-      # aux <- tmp[tmp$HovedDato >= fraDato & tmp$HovedDato <= input$datovalg_adm_tid_mnd, ]
-      aux <- tmp
-
-      # aux$mnd <- factor(format(aux$HovedDato, format='%b-%y'), levels = format(seq(as.Date(fraDato),as.Date(input$datovalg_adm_tid_mnd), by="month"), "%b-%y"))
       aux$mnd <- factor(format(aux$HovedDato, format='%b-%y'), levels = format(seq(fraDato, tilDato, by="month"), "%b-%y"))
 
-      ant_skjema <- switch (input$regstatus_tid,
-                            '1' = as.data.frame.matrix(addmargins(table(aux[which(aux$SkjemaStatus==1 & aux$SkjemaStatus_oppf==1) , c('Sykehusnavn', 'mnd')]))),
-                            '2' = as.data.frame.matrix(addmargins(table(aux[which(aux$SkjemaStatus==1 & aux$SkjemaStatus_oppf==0) , c('Sykehusnavn', 'mnd')]))),
-                            '3' = as.data.frame.matrix(addmargins(table(aux[which(aux$SkjemaStatus==1 & is.na(aux$SkjemaStatus_oppf)) , c('Sykehusnavn', 'mnd')]))),
-                            '4' = as.data.frame.matrix(addmargins(table(aux[which(aux$SkjemaStatus==0) , c('Sykehusnavn', 'mnd')])))
-      ) %>% as_tibble(rownames = 'Sykehusnavn')
+      ant_skjema <-  as.data.frame.matrix(addmargins(table(aux[, c('SenterKortNavn', 'mnd')]))) %>% as_tibble(rownames = 'SenterKortNavn')
     }
 
     if (input$adm_tidsenhet == 2) {
 
       fraDato <- as.Date(input$datovalg_adm_tid_aar) %m-% years(input$ant_aar) %>% floor_date(unit="years")
-      tmp <- merge(skjemaoversikt[skjemaoversikt$Skjemanavn=='Registrering', c("ForlopsID", "SkjemaStatus", "HovedDato", "OpprettetDato", "Sykehusnavn", "AvdRESH")],
-                   skjemaoversikt[skjemaoversikt$Skjemanavn=='Oppfølging', c("ForlopsID", "SkjemaStatus")],
-                   by = 'ForlopsID', all.x = T, suffixes = c('', '_oppf'))
-
-      if (input$kun_oblig) {
-        tmp <- tmp[tmp$ForlopsID %in% RegData$ForlopsID[RegData$Op_gr %in% 1:7], ]
-      }
-
-      tmp$SkjemaStatus[tmp$SkjemaStatus==-1] <- 0
-      tmp$SkjemaStatus_oppf[tmp$SkjemaStatus_oppf==-1] <- 0
-      tmp$HovedDato[is.na(tmp$HovedDato)] <- as.Date(tmp$OpprettetDato[is.na(tmp$HovedDato)])
-
-      # aux <- tmp[tmp$HovedDato >= fraDato & tmp$HovedDato <= input$datovalg_adm_tid_aar, ]
-      aux <- tmp
 
       aux$mnd <- factor(format(aux$HovedDato, format='%Y'), levels = format(seq(as.Date(fraDato),as.Date(input$datovalg_adm_tid_aar), by="year"), "%Y"))
 
-      ant_skjema <- switch (input$regstatus_tid,
-                            '1' = as.data.frame.matrix(addmargins(table(aux[which(aux$SkjemaStatus==1 & aux$SkjemaStatus_oppf==1) , c('Sykehusnavn', 'mnd')]))),
-                            '2' = as.data.frame.matrix(addmargins(table(aux[which(aux$SkjemaStatus==1 & aux$SkjemaStatus_oppf==0) , c('Sykehusnavn', 'mnd')]))),
-                            '3' = as.data.frame.matrix(addmargins(table(aux[which(aux$SkjemaStatus==1 & is.na(aux$SkjemaStatus_oppf)) , c('Sykehusnavn', 'mnd')]))),
-                            '4' = as.data.frame.matrix(addmargins(table(aux[which(aux$SkjemaStatus==0) , c('Sykehusnavn', 'mnd')])))
-      ) %>% as_tibble(rownames = 'Sykehusnavn')
+      ant_skjema <-  as.data.frame.matrix(addmargins(table(aux[, c('SenterKortNavn', 'mnd')]))) %>% as_tibble(rownames = 'SenterKortNavn')
     }
 
     sketch <- htmltools::withTags(table(
@@ -186,57 +101,57 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
               options = list(pageLength = 40)
     )
   )
-
-  output$lastNed_adm2 <- downloadHandler(
-    filename = function(){
-      paste0('Regoversikt_tid', Sys.time(), '.csv')
-    },
-
-    content = function(file){
-      TabellData <- andre_adm_tab()$ant_skjema
-      write.csv2(TabellData, file, row.names = F)
-    }
-  )
-
-  shiny::observe({
-    if (rapbase::isRapContext()) {
-      if (req(input$admtabeller) == "id_ant_skjema") {
-        mld_adm1 <- paste0(
-          "NoRGast: Admin. tabell: Antall skjema, dato ",
-          input$datovalg_adm[1], ' til ', input$datovalg_adm[2])
-      }
-      if (req(input$admtabeller) == "id_ant_tid") {
-        mld_adm1 <- paste0(
-          "NoRGast: Admin. tabell: Antall skjema pr ",
-          c('måned', 'år')[as.numeric(input$adm_tidsenhet)], ". ",
-          c('Ferdige forløp', 'Oppfølging i kladd', 'Ferdig basisreg. oppfølging mangler',
-            'Basisreg. i kladd')[as.numeric(input$regstatus_tid)])
-      }
-      raplog::repLogger(
-        session = hvd_session,
-        msg = mld_adm1
-      )
-
-      shinyjs::onclick(
-        "lastNed_adm1",
-        raplog::repLogger(
-          session = hvd_session,
-          msg = paste0("NoRGast: nedlasting tabell: Antall skjema, dato ",
-                       input$datovalg_adm[1], ' til ', input$datovalg_adm[2])
-        )
-      )
-      shinyjs::onclick(
-        "lastNed_adm2",
-        raplog::repLogger(
-          session = hvd_session,
-          msg = paste0("NoRGast: nedlasting tabell: Antall skjema pr ",
-                       c('måned', 'år')[as.numeric(input$adm_tidsenhet)], ". ",
-                       c('Ferdige forløp', 'Oppfølging i kladd', 'Ferdig basisreg. oppfølging mangler',
-                         'Basisreg. i kladd')[as.numeric(input$regstatus_tid)])
-        )
-      )
-    }
-  })
+  #
+  # output$lastNed_adm2 <- downloadHandler(
+  #   filename = function(){
+  #     paste0('Regoversikt_tid', Sys.time(), '.csv')
+  #   },
+  #
+  #   content = function(file){
+  #     TabellData <- andre_adm_tab()$ant_skjema
+  #     write.csv2(TabellData, file, row.names = F)
+  #   }
+  # )
+  #
+  # shiny::observe({
+  #   if (rapbase::isRapContext()) {
+  #     if (req(input$admtabeller) == "id_ant_skjema") {
+  #       mld_adm1 <- paste0(
+  #         "NoRGast: Admin. tabell: Antall skjema, dato ",
+  #         input$datovalg_adm[1], ' til ', input$datovalg_adm[2])
+  #     }
+  #     if (req(input$admtabeller) == "id_ant_tid") {
+  #       mld_adm1 <- paste0(
+  #         "NoRGast: Admin. tabell: Antall skjema pr ",
+  #         c('måned', 'år')[as.numeric(input$adm_tidsenhet)], ". ",
+  #         c('Ferdige forløp', 'Oppfølging i kladd', 'Ferdig basisreg. oppfølging mangler',
+  #           'Basisreg. i kladd')[as.numeric(input$regstatus_tid)])
+  #     }
+  #     raplog::repLogger(
+  #       session = hvd_session,
+  #       msg = mld_adm1
+  #     )
+  #
+  #     shinyjs::onclick(
+  #       "lastNed_adm1",
+  #       raplog::repLogger(
+  #         session = hvd_session,
+  #         msg = paste0("NoRGast: nedlasting tabell: Antall skjema, dato ",
+  #                      input$datovalg_adm[1], ' til ', input$datovalg_adm[2])
+  #       )
+  #     )
+  #     shinyjs::onclick(
+  #       "lastNed_adm2",
+  #       raplog::repLogger(
+  #         session = hvd_session,
+  #         msg = paste0("NoRGast: nedlasting tabell: Antall skjema pr ",
+  #                      c('måned', 'år')[as.numeric(input$adm_tidsenhet)], ". ",
+  #                      c('Ferdige forløp', 'Oppfølging i kladd', 'Ferdig basisreg. oppfølging mangler',
+  #                        'Basisreg. i kladd')[as.numeric(input$regstatus_tid)])
+  #       )
+  #     )
+  #   }
+  # })
 
 
 

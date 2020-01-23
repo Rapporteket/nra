@@ -96,7 +96,7 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
   #Hvis for få observasjoner..
   #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & enhetsUtvalg == 1)) {
   if (NHoved < 10 | (medSml ==1 & Nrest<10)) {
-    FigTypUt <- figtype(outfile)
+    FigTypUt <- rapFigurer::figtype(outfile, fargepalett=nraUtvalg$fargepalett)
     farger <- FigTypUt$farger
     plot.new()
     title(main='SNM-dagbok')
@@ -107,7 +107,7 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
   } else {
     # x11()
     #Plottspesifikke parametre:
-    FigTypUt <- figtype(outfile, fargepalett=nraUtvalg$fargepalett)
+    FigTypUt <- rapFigurer::figtype(outfile, fargepalett=nraUtvalg$fargepalett)
     NutvTxt <- length(utvalgTxt)
     vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxt, units='figure', cex=cexgr)*0.7))
     par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1+length(tittel)-1)))	#Har alltid datoutvalg med

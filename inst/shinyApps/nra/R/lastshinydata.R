@@ -35,8 +35,24 @@ lastshinydata <- function() {
     RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
     Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2020-01-07 09-52-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
   }
-  RegData <- nraPreprosess(RegData=RegData)
-  utdata <- list(RegData=RegData, Skjemaoversikt=Skjemaoversikt)
+  Skjemaoversikt$SistLagretDato <- as.Date(Skjemaoversikt$SistLagretDato)
+  RegData$HovedDato[RegData$HovedDato == ''] <- as.character(Skjemaoversikt$SistLagretDato[Skjemaoversikt$ForlopsID %in%
+                                                                                             RegData$ForlopsID[RegData$HovedDato == '']])
+  RegData <- nra::nraPreprosess(RegData=RegData)
+
+
+  tmp <- merge(Skjemaoversikt[Skjemaoversikt$Skjemanavn == '1A Anamnese', ], Skjemaoversikt[Skjemaoversikt$Skjemanavn == '1B Symptom', ],
+               by = 'ForlopsID', suffixes = c('', '1B'))
+  tmp <- merge(tmp, RegData[, c("ForlopsID", "PasientID")], by='ForlopsID', all.x = T)
+  tmp <- merge(tmp, Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('2A SNM-1'), ], suffixes = c('','SNM1'), by = 'ForlopsID', all.x = T)
+  tmp <- merge(tmp, Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('2A SNM-2'), ], suffixes = c('','SNM2'), by = 'ForlopsID', all.x = T)
+  tmp <- merge(tmp, Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('2B Sfinkter'), ], suffixes = c('','Sfinkter'), by = 'ForlopsID', all.x = T)
+  tmp2 <- merge(Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('1B Oppfølging 1 år'),], RegData[, c("ForlopsID", "KobletForlopsID")], by='ForlopsID')
+  tmp <- merge(tmp, tmp2, suffixes = c('','Oppf1'), by.x = 'ForlopsID', by.y = "KobletForlopsID", all.x = T)
+  tmp2 <- merge(Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('1B Oppfølging 5 år'),], RegData[, c("ForlopsID", "KobletForlopsID")], by='ForlopsID')
+  tmp <- merge(tmp, tmp2, suffixes = c('','Oppf5'), by.x = 'ForlopsID', by.y = "KobletForlopsID", all.x = T)
+
+  utdata <- list(RegData = RegData, Skjemaoversikt = Skjemaoversikt, skjema_utflatet = tmp)
 
 }
 

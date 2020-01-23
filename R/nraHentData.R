@@ -60,6 +60,7 @@ nraHentRegData <- function() {
                   alleVarNum.UrgencyUnderTest,
                   alleVarNum.AvfoeringerUnderTest,
                   alleVarNum.LekkasjedagerUnder,
+                  alleVarNum.WexnerTotalScore,
                   ForlopsOversikt.KobletForlopsID,
                   ForlopsOversikt.ForlopsID,
                   ForlopsOversikt.HovedDato,
