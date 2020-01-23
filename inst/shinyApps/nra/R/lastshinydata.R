@@ -35,9 +35,9 @@ lastshinydata <- function() {
     RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
     Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2020-01-07 09-52-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
   }
-  Skjemaoversikt$SistLagretDato <- as.Date(Skjemaoversikt$SistLagretDato, format="%Y-%m-%d")
-  RegData$HovedDato[RegData$HovedDato == ''] <- as.character(Skjemaoversikt$SistLagretDato[Skjemaoversikt$ForlopsID %in%
-                                                                                             RegData$ForlopsID[RegData$HovedDato == '']])
+  # Skjemaoversikt$SistLagretDato <- as.Date(Skjemaoversikt$SistLagretDato, format="%Y-%m-%d")
+  # RegData$HovedDato[RegData$HovedDato == ''] <- as.character(Skjemaoversikt$SistLagretDato[Skjemaoversikt$ForlopsID %in%
+  #                                                                                            RegData$ForlopsID[RegData$HovedDato == '']])
   RegData <- nra::nraPreprosess(RegData=RegData)
 
 
