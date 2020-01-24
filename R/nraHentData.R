@@ -60,6 +60,7 @@ nraHentRegData <- function() {
                   alleVarNum.UrgencyUnderTest,
                   alleVarNum.AvfoeringerUnderTest,
                   alleVarNum.LekkasjedagerUnder,
+                  alleVarNum.WexnerTotalScore,
                   ForlopsOversikt.KobletForlopsID,
                   ForlopsOversikt.ForlopsID,
                   ForlopsOversikt.HovedDato,
@@ -71,9 +72,30 @@ nraHentRegData <- function() {
                   ForlopsOversikt.ForlopsType2Num,
                   ForlopsOversikt.ForlopsType1,
                   ForlopsOversikt.ForlopsType2,
-                  ForlopsOversikt.ErMann
+                  ForlopsOversikt.ErMann,
+                  ForlopsOversikt.OppflgRegStatus
                   FROM alleVarNum INNER JOIN ForlopsOversikt
                   ON alleVarNum.ForlopsID = ForlopsOversikt.ForlopsID")
+
+  RegData <- rapbase::LoadRegData(registryName, query, dbType)
+
+  return(RegData)
+}
+
+#' Fetch chosen table for NRA
+#'
+#' Provides NRA data from staging
+#'
+#' @inheritParams nraFigAndeler
+#'
+#' @return RegData data frame
+#' @export
+nraHentTabell <- function(tabnavn) {
+
+  registryName <- "nra"
+  dbType <- "mysql"
+
+  query <- paste0("SELECT * FROM ", tabnavn)
 
   RegData <- rapbase::LoadRegData(registryName, query, dbType)
 

@@ -6,9 +6,11 @@
 inkludert konfidensintervaller.}
 \usage{
 nraGjsnPrePost(RegData, valgtVar, datoFra = "2012-04-01",
-  datoTil = "2050-12-31", outfile = "", preprosess = TRUE, minald = 0,
-  maxald = 130, erMann = "", reshID, hentData = F, forlopstype1 = "",
-  forlopstype2 = "", sammenlign = 0)
+  datoTil = "2050-12-31", outfile = "", preprosess = TRUE,
+  minald = 0, maxald = 130, grvar = "SenterKortNavn", erMann = 99,
+  reshID, hentData = F, forlopstype1 = 99, forlopstype2 = 99,
+  sammenlign = 0, inkl_konf = 0, egen_mot_landet = F,
+  valgtShus = "", graa = "")
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -59,6 +61,9 @@ TRUE: Ja}
 \item{sammenlign}{0: Nei - Lag figur kun for pre
 1: Ja, 1 års - lag figur med pre og 1-års oppfølging
 2: Ja, alle år - lag figur med pre, 1-års og 5-års oppfølging}
+
+\item{valgtShus}{Vektor med AvdResh over hvilke sykehus man genererer rapporten for.
+Denne overstyrer reshID og er bare tilgjengelig for SC-bruker.}
 }
 \value{
 En figur med gjennomsnitt før operasjon, etter 1 år og etter 5 år
@@ -66,4 +71,3 @@ En figur med gjennomsnitt før operasjon, etter 1 år og etter 5 år
 \description{
 Gjelder St. Marks, Generell livskvalitet og Seksualitet
 }
-

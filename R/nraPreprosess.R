@@ -11,7 +11,11 @@
 nraPreprosess <- function(RegData)
 {
   # RegData <- RegData[RegData$BasisRegStatus==1,]
-  RegData$HovedDato <- as.POSIXlt(RegData$HovedDato, format="%Y-%m-%d")
+  RegData$HovedDato <- as.Date(RegData$HovedDato, format="%Y-%m-%d")
+  RegData$Aar <- as.numeric(format(RegData$HovedDato, format="%Y"))
+  RegData$Mnd <- as.numeric(format(RegData$HovedDato, format="%m"))
+  RegData$SenterKortNavn <- trimws(RegData$SenterKortNavn)
+
 
   RegData$Sfinktervurdering <- NA
   RegData$Sfinktervurdering[RegData$Ultralyd==1 & RegData$PartiellDefekt==0 &
@@ -33,6 +37,7 @@ nraPreprosess <- function(RegData)
                               RegData$FullveggsdefektYtreSfinkter==0 &
                               RegData$FullveggsdefektIndreSfinkter %in% 1:2] <- 5
   RegData$Sfinktervurdering[RegData$Ultralyd==2] <- 9
+  RegData$Sfinktervurdering[RegData$Ultralyd==0] <- 99
 
 
   return(invisible(RegData))

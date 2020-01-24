@@ -6,8 +6,9 @@
 \usage{
 nraFigAndeler(RegData, valgtVar, datoFra = "2012-04-01",
   datoTil = "2050-12-31", valgtShus = "", outfile = "",
-  preprosess = TRUE, minald = 0, maxald = 130, erMann = "", reshID,
-  enhetsUtvalg = 0, hentData = F, forlopstype1 = "", forlopstype2 = "")
+  preprosess = TRUE, minald = 0, maxald = 130, erMann = 99, reshID,
+  enhetsUtvalg = 0, hentData = F, forlopstype1 = 99,
+  forlopstype2 = 99)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
@@ -70,4 +71,3 @@ En figur med søylediagram eller et stabelplot av ønsket variabel
 Denne funksjonen lager et søylediagram eller stabelplot som viser andeler av valgt variabel
 filtrert på de utvalg som er gjort.
 }
-
