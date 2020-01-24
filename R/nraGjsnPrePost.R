@@ -41,6 +41,8 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   if (valgtVar=='Urinlekkasje') {
     RegData <- RegData[RegData$Urinlekkasje != 9, ]
     RegData$Variabel <- 100*RegData$Variabel}
+  if (valgtVar=='GenQol') {
+    RegData <- RegData[RegData$GenQol != 98, ]}
 
   ## Skill ut oppfølginger
   Oppfolging1 <- RegData[RegData$ForlopsType1Num == 3, ]

@@ -73,9 +73,12 @@ ui <- tagList(
                h4(tags$b(tags$u('Innhold i de ulike fanene:'))),
                h4(tags$b('Fordelinger '), 'viser fordelinger (figur/tabell) av ulike variabler.
                 Man kan velge hvilken variabel man vil se på, og man kan gjøre ulike filtreringer.'),
+               br(),
                h4(tags$b('Gjennomsnitt/andeler før og etter operasjon '), 'viser gjennomsnitt eller andel av en variabel. Kan vise enten kun pre-data,
                 pre og 1-årsoppfølgingsdata, eller pre-og 1 og 5-årsoppfølgingsdata'),
+               br(),
                h4(tags$b('Datadump '), 'gir mulighet til å laste ned din egen avdelings registreringer.'),
+               br(),
                h4(tags$b('Administrative tabeller '), 'er en samling oversikter over antall registreringer.'),
                br(),
                # br(),
