@@ -31,10 +31,10 @@ gjsn_prepost_UI <- function(id){
     ),
     # Show a plot of the generated distribution
     mainPanel(
-      tabsetPanel(
-        tabPanel("Figur",
+      tabsetPanel(id = ns("tab"),
+        tabPanel("Figur", value = "fig",
                  plotOutput(ns("Figur1"), height="auto"), downloadButton(ns("lastNedBilde"), "Last ned figur")),
-        tabPanel("Tabell",
+        tabPanel("Tabell", value = "tab",
                  uiOutput(ns("utvalg")),
                  tableOutput(ns("Tabell1")), downloadButton(ns("lastNed"), "Last ned tabell")
         )
@@ -219,6 +219,47 @@ gjsn_prepost <- function(input, output, session, reshID, RegData){
                      forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99}, outfile = file)
     }
   )
+
+  shiny::observe({
+    if (rapbase::isRapContext()) {
+      if (req(input$tab) == "fig") {
+        mld_fordeling <- paste0(
+          "NRA: Figur - gj.sn. pre-post, variabel - ",
+          input$valgtVar)
+      }
+      if (req(input$tab) == "tab") {
+        mld_fordeling <- paste(
+          "NRA: tabell - gj.sn. pre-post, variabel - ",
+          input$valgtVar)
+      }
+      raplog::repLogger(
+        session = hvd_session,
+        msg = mld_fordeling
+      )
+      mldLastNedFig <- paste(
+        "NRA: nedlasting figur - gj.sn. pre-post variabel -",
+        input$valgtVar
+      )
+      mldLastNedTab <- paste(
+        "NRA: nedlasting tabell - gj.sn. pre-post variabel -",
+        input$valgtVar
+      )
+      shinyjs::onclick(
+        "lastNedBilde",
+        raplog::repLogger(
+          session = hvd_session,
+          msg = mldLastNedFig
+        )
+      )
+      shinyjs::onclick(
+        "lastNed",
+        raplog::repLogger(
+          session = hvd_session,
+          msg = mldLastNedTab
+        )
+      )
+    }
+  })
 
 
 

@@ -31,10 +31,10 @@ fordelingsfig_UI <- function(id, BrValg){
     ),
     # Show a plot of the generated distribution
     mainPanel(
-      tabsetPanel(
-        tabPanel("Figur",
+      tabsetPanel(id = ns("tab"),
+        tabPanel("Figur", value = "fig",
                  plotOutput(ns("Figur1"), height="auto"), downloadButton(ns("lastNedBilde"), "Last ned figur")),
-        tabPanel("Tabell",
+        tabPanel("Tabell", value = "tab",
                  uiOutput(ns("utvalg")),
                  tableOutput(ns("Tabell1")), downloadButton(ns("lastNed"), "Last ned tabell")
         )
@@ -140,6 +140,48 @@ fordelingsfig <- function(input, output, session, reshID, RegData){
                     else {99}, outfile = file)
     }
   )
+
+
+  shiny::observe({
+    if (rapbase::isRapContext()) {
+      if (req(input$tab) == "fig") {
+        mld_fordeling <- paste0(
+          "NRA: Figur - fordeling, variabel - ",
+          input$valgtVar)
+      }
+      if (req(input$tab) == "tab") {
+        mld_fordeling <- paste(
+          "NRA: tabell - fordeling. variabel - ",
+          input$valgtVar)
+      }
+      raplog::repLogger(
+        session = hvd_session,
+        msg = mld_fordeling
+      )
+      mldLastNedFig <- paste(
+        "NRA: nedlasting figur - fordeling. variabel -",
+        input$valgtVar
+      )
+      mldLastNedTab <- paste(
+        "NRA: nedlasting tabell - fordeling. variabel -",
+        input$valgtVar
+      )
+      shinyjs::onclick(
+        "lastNedBilde",
+        raplog::repLogger(
+          session = hvd_session,
+          msg = mldLastNedFig
+        )
+      )
+      shinyjs::onclick(
+        "lastNed",
+        raplog::repLogger(
+          session = hvd_session,
+          msg = mldLastNedTab
+        )
+      )
+    }
+  })
 
 
 
