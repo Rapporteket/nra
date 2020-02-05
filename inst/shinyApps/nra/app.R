@@ -130,8 +130,8 @@ server <- function(input, output, session) {
   # }
 
 
-  callModule(fordelingsfig, "fordelingsfig_id", reshID = reshID, RegData = RegData)
-  callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData)
+  callModule(fordelingsfig, "fordelingsfig_id", reshID = reshID, RegData = RegData, hvd_session = session)
+  callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData, hvd_session = session)
   callModule(datadump, "datadump_id", reshID = reshID, userRole = userRole, hvd_session = session)
   callModule(admtab, "admtab_id", reshID = reshID, RegData = RegData, userRole = userRole, hvd_session = session, skjemaoversikt=Skjemaoversikt)
 

@@ -44,7 +44,7 @@ gjsn_prepost_UI <- function(id){
 }
 
 
-gjsn_prepost <- function(input, output, session, reshID, RegData){
+gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
 
   output$forlopstype2 <- renderUI({
     ns <- session$ns

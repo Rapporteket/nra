@@ -44,7 +44,7 @@ fordelingsfig_UI <- function(id, BrValg){
 }
 
 
-fordelingsfig <- function(input, output, session, reshID, RegData){
+fordelingsfig <- function(input, output, session, reshID, RegData, hvd_session){
 
   output$forlopstype2 <- renderUI({
     ns <- session$ns
