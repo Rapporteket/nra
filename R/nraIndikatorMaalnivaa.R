@@ -121,7 +121,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
 
   andeler <- bind_rows(andeler, tibble(SenterKortNavn='(N)', n=NA, N=NA, Andel=NA))
 
-  FigTypUt <- rapbase::figtype(outfile='', width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
+  FigTypUt <- rapFigurer::figtype(outfile='', width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
   farger <- FigTypUt$farger
   soyleFarger <- rep(farger[3], dim(andeler)[1])
   soyleFarger[which(substr(andeler$SenterKortNavn, 1, 6)=='Nasjon')] <- farger[4]

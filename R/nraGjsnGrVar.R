@@ -8,7 +8,7 @@
 
 nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', datoTil='2050-12-31',
                          outfile = '', preprosess=TRUE, minald=0, maxald=130, decreasing=F, egen_mot_landet=F,
-                         erMann='', hentData=F, forlopstype1='', forlopstype2='', terskel=0, reshID=0,
+                         erMann=99, hentData=F, forlopstype1=99, forlopstype2=99, terskel=0, reshID=0,
                          inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt',
                          graa = '')
 {
@@ -29,8 +29,8 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
 
 
   if (valgtVar == 'Tilfredshet') {
-    RegData <- merge(RegData[, -which(names(RegData)=="Tilfredshet")], RegData[,c("Tilfredshet", "KobletForlopsID")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
-                     suffixes = c('', 'Post1'))
+    RegData <- merge(RegData[, -which(names(RegData)=="Tilfredshet")], RegData[,c("Tilfredshet", "KobletForlopsID")],
+                     by.x = 'ForlopsID', by.y = 'KobletForlopsID', suffixes = c('', 'Post1'))
     RegData <- RegData[which(RegData$Tilfredshet %in% 0:10), ]
     tittel <- 'Tilfredshet med behandling'
   }
@@ -77,7 +77,7 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
 
   Tabell <- bind_rows(Tabell, tibble(grvar='(N)', summert=NA, N=NA, gj.sn=NA, grvar_ren=NA))
 
-  FigTypUt <- rapbase::figtype(outfile='', width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
+  FigTypUt <- rapFigurer::figtype(outfile='', width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
   farger <- FigTypUt$farger
   soyleFarger <- rep(farger[3], dim(Tabell)[1])
   soyleFarger[which(substr(Tabell$grvar, 1, 6)=='Nasjon')] <- farger[4]
