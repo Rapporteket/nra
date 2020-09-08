@@ -17,7 +17,7 @@ gjsn_prepost_UI <- function(id){
                       'Påvirkning seksualliv'='QolSexualitet', 'Andel urininkontinente'='Urinlekkasje')),
       selectInput(inputId = ns("sammenlign"), label = "Sammenlign med oppfølging", choices =
                     c('Kun pre'=0, 'Pre og 1-årsoppfølging'=1, 'Pre 1- og 5-årsoppfølging'=2)),
-      dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til", min = '2014-01-01',
+      dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),
       sliderInput(inputId=ns("alder"), label = "Alder", min = 0,
                   max = 130, value = c(0, 130)),

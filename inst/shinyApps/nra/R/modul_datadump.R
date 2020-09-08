@@ -10,7 +10,7 @@ datadump_UI <- function(id){
     sidebarPanel(
       id = ns("id_dump_panel"),
       # uiOutput(outputId = ns('valgtevar_dump')),
-      dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til", min = '2014-01-01', language = "nb",
+      dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til", language = "nb",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), separator = " til "),
       selectInput(inputId = ns("dumptype"), label = "Velg type datadump",
                   choices = c('alleVar', 'alleVarNum', 'ForlopsOversikt', 'SkjemaOversikt')),
@@ -58,7 +58,7 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
       if (rapbase::isRapContext()) {
         tmpData <- nraHentTabell(input$dumptype)
       } else {
-        tmpData <- read.table(paste0('I:/nra/', input$dumptype, '2020-01-07.txt'), header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+        tmpData <- read.table(paste0('I:/nra/', input$dumptype, '2020-09-08.txt'), header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
       }
       dumpdata <- tmpData[as.Date(tmpData$HovedDato) >= input$datovalg[1] &
                             as.Date(tmpData$HovedDato) <= input$datovalg[2], ]

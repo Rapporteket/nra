@@ -13,7 +13,7 @@ fordelingsfig_UI <- function(id, BrValg){
   shiny::sidebarLayout(
     sidebarPanel(
       selectInput(inputId = ns("valgtVar"), label = "Velg variabel", choices = BrValg$varvalg),
-      dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til", min = '2014-01-01',
+      dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),
       selectInput(inputId = ns("enhetsUtvalg"), label = "Lag figur for",
                   choices = c('Hele landet'=0, 'Egen avd. mot landet forøvrig'=1, 'Egen avd.'=2)),
