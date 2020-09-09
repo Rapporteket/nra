@@ -8,7 +8,7 @@
 
 nraSNMdagbokPst <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', valgtShus='',
                            outfile = '', preprosess=TRUE, minald=0, maxald=130, enhetsUtvalg=0,
-                           erMann='', reshID, hentData=F, forlopstype1='', forlopstype2='')
+                           erMann=99, reshID, hentData=F, forlopstype1=99, forlopstype2=99)
 
 {
 
@@ -52,6 +52,9 @@ nraSNMdagbokPst <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31',
                          forlopstype1=forlopstype1, forlopstype2=forlopstype2)
   RegData <- nraUtvalg$RegData
   utvalgTxt <- nraUtvalg$utvalgTxt
+
+  RegData <- RegData[-which(rowSums(is.na(RegData[, c("InkontinensFoerTest", "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer",
+                      "InkontinensUnderTest", "UrgencyUnderTest", "AvfoeringerUnderTest", "LekkasjedagerUnder")])) !=0 ), ]
 
   if (enhetsUtvalg %in% c(0,2)) {		#Ikke sammenlikning
     medSml <- 0
@@ -112,7 +115,7 @@ nraSNMdagbokPst <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31',
   #Hvis for få observasjoner..
   #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & enhetsUtvalg == 1)) {
   if (NHoved < 10 | (medSml ==1 & Nrest<10)) {
-    FigTypUt <- figtype(outfile)
+    FigTypUt <- rapFigurer::figtype(outfile)
     farger <- FigTypUt$farger
     plot.new()
     title(main=c('SNM-dagbok, andel med prosentvis reduksjon', 'i lekkasjeepisoder større eller lik definert mål.'))
@@ -123,7 +126,7 @@ nraSNMdagbokPst <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31',
   } else {
     # x11()
     #Plottspesifikke parametre:
-    FigTypUt <- figtype(outfile, fargepalett=nraUtvalg$fargepalett)
+    FigTypUt <- rapFigurer::figtype(outfile, fargepalett=nraUtvalg$fargepalett)
     NutvTxt <- length(utvalgTxt)
     vmarg <- switch(retn, V=0, H=max(0, strwidth(grtxt, units='figure', cex=cexgr)*0.7))
     par('fig'=c(vmarg, 1, 0, 1-0.02*(NutvTxt-1+length(tittel)-1)))	#Har alltid datoutvalg med

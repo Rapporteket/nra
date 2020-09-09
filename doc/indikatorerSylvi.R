@@ -1,7 +1,8 @@
 library(nra)
+library(tidyverse)
 rm(list = ls())
 
-RegData <- read.table('I:/nra/alleVarNum2020-01-07 09-52-48.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/alleVarNum2020-06-15 14-54-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -14,7 +15,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                        "WexLivsstilsendring", "WexnerTotalScore")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2020-01-07 09-52-46.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2020-06-15 14-54-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -30,7 +31,7 @@ minald <- 0  #alder, fra og med
 maxald <- 130	#alder, til og med
 erMann <- 99
 datoFra <- '2011-01-01'	 # min og max dato i utvalget vises alltid i figuren.
-datoTil <- '2018-12-31'
+datoTil <- '2019-12-31'
 enhetsUtvalg <- 0 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 preprosess<-F
 hentData <- F
@@ -340,12 +341,17 @@ write.csv2(kobling_resh_shusnavn,
 ################## NØKKELTALL ######################################
 
 
-nokkeltall <- RegDataAlle %>% group_by(Aar) %>% summarise('Antall SNM' = sum(ForlopsType1Num==2),
-                                            'Antall sfinkt'  = sum(ForlopsType1Num==1),
-                                            'Antall 1-årsoppf.' = sum(ForlopsType1Num==3),
-                                            'Antall 5-årsoppf.' = sum(ForlopsType1Num==4),
-                                            'Totalt' = n(),
-                                            'Antall sykehus' = length(unique(AvdRESH)))
+nokkeltall <- RegDataAlle %>% group_by(Aar) %>%
+  summarise('Antall SNM' = sum(ForlopsType1Num==2),
+            'Antall sfinkt'  = sum(ForlopsType1Num==1),
+            'Antall 1-årsoppf.' = sum(ForlopsType1Num==3),
+            'Antall 5-årsoppf.' = sum(ForlopsType1Num==4),
+            'Totalt' = n(),
+            'Antall sykehus' = length(unique(AvdRESH)),
+            'Gjennomsnittsalder' = mean(PasientAlder[ForlopsType1Num %in% 1:2]),
+            'Andel 65 år og eldre' = sum(PasientAlder[ForlopsType1Num %in% 1:2]>=65)/sum(ForlopsType1Num %in% 1:2),
+            'Andel med symptomvarighet mer enn 10 år' = sum(Symtomvarighet[ForlopsType1Num %in% 1:2]==4)/sum(ForlopsType1Num %in% 1:2)
+  )
 
 write.csv2(nokkeltall, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/nokkeltall_nra.csv', row.names = F)
 
@@ -390,12 +396,12 @@ prepostgjsntab <- function(grvar, valgtVar,RegData, datoFra, datoTil, minald, ma
   }
 
   utdata <- RegData %>% group_by(Aar, Grvar) %>% summarise(gj.sn.pre = mean(VariabelPre),
-                                                         gj.sn.post = mean(VariabelPost1),
-                                                         N = n())
+                                                           gj.sn.post = mean(VariabelPost1),
+                                                           N = n())
 }
 
 urin_snm <- prepostgjsntab(grvar=grvar, valgtVar=valgtVar, RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,
-                       forlopstype1=2, forlopstype2=forlopstype2, valgtShus=valgtShus)
+                           forlopstype1=2, forlopstype2=forlopstype2, valgtShus=valgtShus)
 
 urin_sfinkter <- prepostgjsntab(grvar=grvar, valgtVar=valgtVar, RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,
                                 forlopstype1=1, forlopstype2=forlopstype2, valgtShus=valgtShus)
@@ -404,7 +410,7 @@ gql_snm <- prepostgjsntab(grvar=grvar, valgtVar=valgtVar, RegData=RegData, datoF
                           forlopstype1=2, forlopstype2=forlopstype2, valgtShus=valgtShus)
 
 gql_sfinkter <- prepostgjsntab(grvar=grvar, valgtVar=valgtVar, RegData=RegData, datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,
-                          forlopstype1=1, forlopstype2=forlopstype2, valgtShus=valgtShus)
+                               forlopstype1=1, forlopstype2=forlopstype2, valgtShus=valgtShus)
 
 RegData <- merge(RegData, RegData[which(RegData$ForlopsType1Num==3), c("Tilfredshet", "KobletForlopsID")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                  suffixes = c('', 'Post1'), all.x = TRUE)

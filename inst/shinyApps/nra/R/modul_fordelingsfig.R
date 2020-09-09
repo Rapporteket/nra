@@ -13,7 +13,7 @@ fordelingsfig_UI <- function(id, BrValg){
   shiny::sidebarLayout(
     sidebarPanel(
       selectInput(inputId = ns("valgtVar"), label = "Velg variabel", choices = BrValg$varvalg),
-      dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til", min = '2014-01-01',
+      dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),
       selectInput(inputId = ns("enhetsUtvalg"), label = "Lag figur for",
                   choices = c('Hele landet'=0, 'Egen avd. mot landet forøvrig'=1, 'Egen avd.'=2)),
@@ -31,10 +31,10 @@ fordelingsfig_UI <- function(id, BrValg){
     ),
     # Show a plot of the generated distribution
     mainPanel(
-      tabsetPanel(
-        tabPanel("Figur",
+      tabsetPanel(id = ns("tab"),
+        tabPanel("Figur", value = "fig",
                  plotOutput(ns("Figur1"), height="auto"), downloadButton(ns("lastNedBilde"), "Last ned figur")),
-        tabPanel("Tabell",
+        tabPanel("Tabell", value = "tab",
                  uiOutput(ns("utvalg")),
                  tableOutput(ns("Tabell1")), downloadButton(ns("lastNed"), "Last ned tabell")
         )
@@ -44,7 +44,7 @@ fordelingsfig_UI <- function(id, BrValg){
 }
 
 
-fordelingsfig <- function(input, output, session, reshID, RegData){
+fordelingsfig <- function(input, output, session, reshID, RegData, hvd_session){
 
   output$forlopstype2 <- renderUI({
     ns <- session$ns
@@ -140,6 +140,48 @@ fordelingsfig <- function(input, output, session, reshID, RegData){
                     else {99}, outfile = file)
     }
   )
+
+
+  shiny::observe({
+    if (rapbase::isRapContext()) {
+      if (req(input$tab) == "fig") {
+        mld_fordeling <- paste0(
+          "NRA: Figur - fordeling, variabel - ",
+          input$valgtVar)
+      }
+      if (req(input$tab) == "tab") {
+        mld_fordeling <- paste(
+          "NRA: tabell - fordeling. variabel - ",
+          input$valgtVar)
+      }
+      raplog::repLogger(
+        session = hvd_session,
+        msg = mld_fordeling
+      )
+      mldLastNedFig <- paste(
+        "NRA: nedlasting figur - fordeling. variabel -",
+        input$valgtVar
+      )
+      mldLastNedTab <- paste(
+        "NRA: nedlasting tabell - fordeling. variabel -",
+        input$valgtVar
+      )
+      shinyjs::onclick(
+        "lastNedBilde",
+        raplog::repLogger(
+          session = hvd_session,
+          msg = mldLastNedFig
+        )
+      )
+      shinyjs::onclick(
+        "lastNed",
+        raplog::repLogger(
+          session = hvd_session,
+          msg = mldLastNedTab
+        )
+      )
+    }
+  })
 
 
 

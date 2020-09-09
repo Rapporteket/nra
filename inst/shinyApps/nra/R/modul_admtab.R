@@ -12,11 +12,11 @@ admtab_UI <- function(id){
       selectInput(inputId = ns("adm_tidsenhet"), label = "Velg tidsenhet",
                   choices = c('Måneder'=1, 'År'=2)),
       conditionalPanel(condition = paste0("input['", ns("adm_tidsenhet"), "'] == '1'"),
-                       norgast::dateInput2(inputId=ns("datovalg_adm_tid_mnd"), label = "Vis til og med måned: ", min = '2014-01-01',
+                       norgast::dateInput2(inputId=ns("datovalg_adm_tid_mnd"), label = "Vis til og med måned: ",
                                            max = Sys.Date(), value = Sys.Date(), minview = 'months', format = "MM yyyy", language="no"),
                        sliderInput(inputId=ns("ant_mnd"), label = "Antall måneder", min = 1, max = 24, value = 12, step = 1)),
       conditionalPanel(condition = paste0("input['", ns("adm_tidsenhet"), "'] == '2'"),
-                       norgast::dateInput2(inputId=ns("datovalg_adm_tid_aar"), label = "Vis til og med år: ", min = '2014-01-01',
+                       norgast::dateInput2(inputId=ns("datovalg_adm_tid_aar"), label = "Vis til og med år: ",
                                            max = Sys.Date(), value = Sys.Date(), minview = 'years', format = "yyyy", language="no"),
                        sliderInput(inputId= ns("ant_aar"), label = "Antall år", min = 1, max = 10, value = 5, step = 1)),
       sliderInput(inputId=ns("alder"), label = "Alder", min = 0,
@@ -34,7 +34,7 @@ admtab_UI <- function(id){
                                    h4('Her kan du velge om du vil se registreringer per måned eller per år og for hvor
                                              lang periode. For sfinkterplastikk og SNM gjøres datofiltreringen på prosedyredato,
                                              mens for oppfølginger er det dato for siste utfylling som brukes.'),
-                                   DTOutput(ns("Tabell_adm2")), downloadButton(ns("lastNed_adm2"), "Last ned tabell"))
+                                   DTOutput(ns("Tabell_adm")), downloadButton(ns("lastNed_adm"), "Last ned tabell"))
     )
     )
 
@@ -94,64 +94,42 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
   }
 
-  output$Tabell_adm2 = renderDT(
+  output$Tabell_adm = renderDT(
     datatable(andre_adm_tab()$ant_skjema[-dim(andre_adm_tab()$ant_skjema)[1], ],
               container = andre_adm_tab()$sketch,
               rownames = F,
               options = list(pageLength = 40)
     )
   )
-  #
-  # output$lastNed_adm2 <- downloadHandler(
-  #   filename = function(){
-  #     paste0('Regoversikt_tid', Sys.time(), '.csv')
-  #   },
-  #
-  #   content = function(file){
-  #     TabellData <- andre_adm_tab()$ant_skjema
-  #     write.csv2(TabellData, file, row.names = F)
-  #   }
-  # )
-  #
-  # shiny::observe({
-  #   if (rapbase::isRapContext()) {
-  #     if (req(input$admtabeller) == "id_ant_skjema") {
-  #       mld_adm1 <- paste0(
-  #         "NoRGast: Admin. tabell: Antall skjema, dato ",
-  #         input$datovalg_adm[1], ' til ', input$datovalg_adm[2])
-  #     }
-  #     if (req(input$admtabeller) == "id_ant_tid") {
-  #       mld_adm1 <- paste0(
-  #         "NoRGast: Admin. tabell: Antall skjema pr ",
-  #         c('måned', 'år')[as.numeric(input$adm_tidsenhet)], ". ",
-  #         c('Ferdige forløp', 'Oppfølging i kladd', 'Ferdig basisreg. oppfølging mangler',
-  #           'Basisreg. i kladd')[as.numeric(input$regstatus_tid)])
-  #     }
-  #     raplog::repLogger(
-  #       session = hvd_session,
-  #       msg = mld_adm1
-  #     )
-  #
-  #     shinyjs::onclick(
-  #       "lastNed_adm1",
-  #       raplog::repLogger(
-  #         session = hvd_session,
-  #         msg = paste0("NoRGast: nedlasting tabell: Antall skjema, dato ",
-  #                      input$datovalg_adm[1], ' til ', input$datovalg_adm[2])
-  #       )
-  #     )
-  #     shinyjs::onclick(
-  #       "lastNed_adm2",
-  #       raplog::repLogger(
-  #         session = hvd_session,
-  #         msg = paste0("NoRGast: nedlasting tabell: Antall skjema pr ",
-  #                      c('måned', 'år')[as.numeric(input$adm_tidsenhet)], ". ",
-  #                      c('Ferdige forløp', 'Oppfølging i kladd', 'Ferdig basisreg. oppfølging mangler',
-  #                        'Basisreg. i kladd')[as.numeric(input$regstatus_tid)])
-  #       )
-  #     )
-  #   }
-  # })
+
+  output$lastNed_adm <- downloadHandler(
+    filename = function(){
+      paste0('Regoversikt_tid', Sys.time(), '.csv')
+    },
+
+    content = function(file){
+      TabellData <- andre_adm_tab()$ant_skjema
+      write.csv2(TabellData, file, row.names = F)
+    }
+  )
+
+
+  shiny::observe({
+    if (rapbase::isRapContext()) {
+      raplog::repLogger(
+        session = hvd_session,
+        msg = 'NRA: Kjører administrativ rapport.'
+      )
+
+      shinyjs::onclick(
+        "lastNed_adm",
+        raplog::repLogger(
+          session = hvd_session,
+          msg = "NRA: nedlasting adm. tabell."
+        )
+      )
+    }
+  })
 
 
 
