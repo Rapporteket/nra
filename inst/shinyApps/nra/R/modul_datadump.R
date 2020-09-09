@@ -72,7 +72,7 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
       # if (!is.null(input$op_gruppe)) {dumpdata <- dumpdata[which(dumpdata$Op_gr %in% as.numeric(input$op_gruppe)), ]}
       # if (!is.null(input$ncsp_verdi)) {dumpdata <- dumpdata[which(substr(dumpdata$Hovedoperasjon, 1, 5) %in% ncsp_verdi), ]}
       # if (!is.null(input$valgtevar_dump_verdi)) {dumpdata <- dumpdata[, input$valgtevar_dump_verdi]}
-
+      if (input$dumptype == "ForlopsOversikt") {dumpdata <- apply(dumpdata, 2, as.character)}
       write.csv2(dumpdata, file, row.names = F, na = '')
     }
   )
