@@ -74,7 +74,8 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
       # if (!is.null(input$valgtevar_dump_verdi)) {dumpdata <- dumpdata[, input$valgtevar_dump_verdi]}
       if (input$dumptype == "ForlopsOversikt") {
         dumpdata <- apply(dumpdata, 2, as.character)
-        dumpdata <- dumpdata[dumpdata$PasientID != "", ]
+        dumpdata <- as.data.frame(dumpdata)
+        dumpdata <- dumpdata[which(dumpdata$PasientID != ""), ]
         }
       write.csv2(dumpdata, file, row.names = F, na = '', fileEncoding = 'Latin1')
     }
