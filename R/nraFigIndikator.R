@@ -169,30 +169,6 @@ nraFigIndikator <- function(indikatordata, tittel='', terskel=30, minstekrav = N
       mtext( c(NA, purrr::as_vector(N[,3]), names(N)[3], NA, NA), side=4, line=6.5, las=1, at=ypos, col=1, cex=cexgr*.7, adj = 1)
       mtext( 'N', side=4, line=5.0, las=1, at=max(ypos), col=1, cex=cexgr*.7, adj = 1)
     }
-    # else {
-    #   mtext( '(N)', side=2, line=0.3, las=1, at=max(ypos)+diff(ypos)[1], col=1, cex=cexgr, adj = 1)
-    # }
-
-    # par(xpd=TRUE)
-    # points(y=ypos, x=andeler[,2],cex=pktStr, pch= 19)
-    # par(xpd=FALSE)
-    # # mtext( 'Boområde/opptaksområde', side=2, line=9.5, las=0, col=1, cex=cexgr)
-    # if (legPlass=='nede'){
-    #   legend('bottomright', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',
-    #          lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-    #          legend=names(N[,-1]), ncol = 1)}
-    # if (legPlass=='top'){
-    #   legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
-    #          lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-    #          legend=names(N[,-1]), ncol = dim(andeler)[2])}
-    # if (legPlass=='topleft'){
-    #   legend('topleft', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
-    #          lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-    #          legend=names(N[,-1]), ncol = dim(andeler)[2])}
-    # if (legPlass=='topright'){
-    #   legend('topright', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
-    #          lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-    #          legend=names(N[,-1]), ncol = dim(andeler)[2])}
     par(xpd=TRUE)
     points(y=ypos, x=purrr::as_vector(andeler[,2]),cex=pktStr) #'#4D4D4D'
     # points(y=ypos, x=purrr::as_vector(andeler[,3]),cex=pktStr,pch= 19)
