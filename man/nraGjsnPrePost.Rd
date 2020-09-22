@@ -5,12 +5,27 @@
 \title{Denne funksjonen generer figur på gjennomsnitt før operasjon, etter 1 år og etter 5 år,
 inkludert konfidensintervaller.}
 \usage{
-nraGjsnPrePost(RegData, valgtVar, datoFra = "2012-04-01",
-  datoTil = "2050-12-31", outfile = "", preprosess = TRUE,
-  minald = 0, maxald = 130, grvar = "SenterKortNavn", erMann = 99,
-  reshID, hentData = F, forlopstype1 = 99, forlopstype2 = 99,
-  sammenlign = 0, inkl_konf = 0, egen_mot_landet = F,
-  valgtShus = "", graa = "")
+nraGjsnPrePost(
+  RegData,
+  valgtVar,
+  datoFra = "2012-04-01",
+  datoTil = "2050-12-31",
+  outfile = "",
+  preprosess = TRUE,
+  minald = 0,
+  maxald = 130,
+  grvar = "SenterKortNavn",
+  erMann = 99,
+  reshID,
+  hentData = F,
+  forlopstype1 = 99,
+  forlopstype2 = 99,
+  sammenlign = 0,
+  inkl_konf = 0,
+  egen_mot_landet = F,
+  valgtShus = "",
+  graa = ""
+)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}

@@ -4,12 +4,30 @@
 \alias{nraGjsnGrVar}
 \title{Denne funksjonen generer figur på gjennomsnitt gruppert etter valgt grupperingsvariabel}
 \usage{
-nraGjsnGrVar(RegData, valgtVar = "Tilfredshet", datoFra = "2012-04-01",
-  datoTil = "2050-12-31", outfile = "", preprosess = TRUE,
-  minald = 0, maxald = 130, decreasing = F, egen_mot_landet = F,
-  erMann = "", hentData = F, forlopstype1 = "", forlopstype2 = "",
-  terskel = 0, reshID = 0, inkl_konf = 0, grvar = "SenterKortNavn",
-  width = 600, height = 600, xtekst = "Gjennomsnitt", graa = "")
+nraGjsnGrVar(
+  RegData,
+  valgtVar = "Tilfredshet",
+  datoFra = "2012-04-01",
+  datoTil = "2050-12-31",
+  outfile = "",
+  preprosess = TRUE,
+  minald = 0,
+  maxald = 130,
+  decreasing = F,
+  egen_mot_landet = F,
+  erMann = 99,
+  hentData = F,
+  forlopstype1 = 99,
+  forlopstype2 = 99,
+  terskel = 0,
+  reshID = 0,
+  inkl_konf = 0,
+  grvar = "SenterKortNavn",
+  width = 600,
+  height = 600,
+  xtekst = "Gjennomsnitt",
+  graa = ""
+)
 }
 \arguments{
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}

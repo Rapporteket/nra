@@ -39,6 +39,8 @@ nraPreprosess <- function(RegData)
   RegData$Sfinktervurdering[RegData$Ultralyd==2] <- 9
   RegData$Sfinktervurdering[RegData$Ultralyd==0] <- 99
 
+  # RegData$Onestage <- factor(RegData$Onestage, levels = c(0,1), labels = c("Midl. elektr.", "Permanent"))
+  RegData$Testprosedyre <- factor(RegData$Testprosedyre, levels = c(1,2), labels = c("Midl. elektr.", "Permanent"))
 
   return(invisible(RegData))
 }
