@@ -77,7 +77,7 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData <- RegData[!is.na(RegData$Variabel), ]
     RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
     RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==1 | RegData$KomplikasjonT2==1))] <- 1   # sårinfeksjon fremfor annet
-    tittel <- 'Komplikasjoner SNM innen 30 dager - kombinert'
+    tittel <- 'Komplikasjoner SNM innen 30 dager'
     gr <- c(0,1,2,9)
     grtxt <- c('Ingen', 'Sårinfeksjon mistenkt', 'Sårinfeksjon bekreftet', 'Annet')
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)

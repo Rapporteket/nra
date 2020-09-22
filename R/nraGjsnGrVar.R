@@ -28,12 +28,22 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
   RegData$grvar <- RegData[, grvar]
 
 
+  # if (valgtVar == 'Tilfredshet') {
+  #   RegData <- merge(RegData[, -which(names(RegData)=="Tilfredshet")], RegData[,c("Tilfredshet", "KobletForlopsID",
+  #                                                                                 "ForlopsType1Num", "ForlopsType2Num")],
+  #                    by.x = 'ForlopsID', by.y = 'KobletForlopsID', suffixes = c('', 'Post1'))
+  #
+  #   RegData <- RegData[which(RegData$Tilfredshet %in% 0:10), ]
+  #   tittel <- 'Tilfredshet med behandling'
+  # }
   if (valgtVar == 'Tilfredshet') {
-    RegData <- merge(RegData[, -which(names(RegData)=="Tilfredshet")], RegData[,c("Tilfredshet", "KobletForlopsID")],
-                     by.x = 'ForlopsID', by.y = 'KobletForlopsID', suffixes = c('', 'Post1'))
+    RegData <- merge(RegData[, -which(names(RegData)=="Tilfredshet")],
+                     RegData[which(RegData$ForlopsType1Num==3), c("Tilfredshet", "KobletForlopsID")],
+                     by.x = 'ForlopsID', by.y = 'KobletForlopsID')
     RegData <- RegData[which(RegData$Tilfredshet %in% 0:10), ]
-    tittel <- 'Tilfredshet med behandling'
+    tittel <- c('Tilfredshet med behandling', 'ved 1-årsoppføging')
   }
+
 
   ## Fjerner registreringer som mangler valgt variabel
   RegData$Variabel <- RegData[, valgtVar]
@@ -77,18 +87,19 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
 
   Tabell <- bind_rows(Tabell, tibble(grvar='(N)', summert=NA, N=NA, gj.sn=NA, grvar_ren=NA))
 
-  FigTypUt <- rapFigurer::figtype(outfile='', width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
+  # FigTypUt <- rapFigurer::figtype(outfile='', width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
+  FigTypUt <- rapFigurer::figtype(outfile=outfile, pointsizePDF=11, fargepalett='BlaaOff')
   farger <- FigTypUt$farger
   soyleFarger <- rep(farger[3], dim(Tabell)[1])
   soyleFarger[which(substr(Tabell$grvar, 1, 6)=='Nasjon')] <- farger[4]
   soyleFarger[which(Tabell$grvar_ren %in% graa)] <- 'gray88'
-  windows(width = width, height = height)
+  # windows(width = width, height = height)
 
   oldpar_mar <- par()$mar
   oldpar_fig <- par()$fig
 
 
-  cexgr <- 1.2
+  cexgr <- 1.4
   xmax <- max(Tabell$gj.sn, na.rm = T)*1.1
 
   vmarg <- max(0, strwidth(Tabell$gj.sn, units='figure', cex=cexgr)*0.8)
@@ -98,7 +109,7 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
 
   ypos <- barplot( t(Tabell$gj.sn), beside=T, las=1,
                    # main = tittel,
-                   font.main=1, cex.main=1.3,
+                   font.main=1, #cex.main=1.3,
                    # xlim=c(0,max(andeler, na.rm = T)*1.1),
                    xlim=c(0,xmax),
                    names.arg=rep('',dim(Tabell)[1]),
@@ -110,15 +121,15 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
   axis(1,cex.axis=0.9)
   mtext(Tabell$grvar, side=2, line=0.2, las=1, at=ypos, col=1, cex=cexgr)
   mtext( 'Sykehus/HF', side=2, line=9.5, las=0, col=1, cex=cexgr)
-  text(x=0, y=ypos, labels = col_txt, cex=0.8,pos=4)
+  text(x=0, y=ypos, labels = col_txt, cex=0.8*cexgr,pos=4)
 
 
-  title(tittel, line=1, font.main=1, cex=1.4)
-  mtext(nraUtvalg$utvalgTxt, side=3, las=1, cex=0.9, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
+  title(tittel, line=1, font.main=1, cex.main=1.2*cexgr)
+  mtext(nraUtvalg$utvalgTxt, side=3, las=1, cex=0.9*cexgr, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
 
   par('fig'= oldpar_fig)
-  if (outfile != '') {savePlot(outfile, type=substr(outfile, nchar(outfile)-2, nchar(outfile)))}
-
+  # if (outfile != '') {savePlot(outfile, type=substr(outfile, nchar(outfile)-2, nchar(outfile)))}
+  if (outfile != '') {dev.off()}
 }
 
 

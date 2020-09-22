@@ -15,8 +15,8 @@
 indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfile='', width=600, height=600,
                                    decreasing=F, terskel=0, minstekrav = NA, maal = NA, xtekst ='Andel %',
                                    til100 = F, skriftStr=1.3, pktStr=1.5, datoFra='2016-01-01', datoTil='2050-12-31',
-                                   hentData=F, preprosess=T, minald=0, maxald=130, erMann='',
-                                   forlopstype1='', forlopstype2='', sammenlign=1)
+                                   hentData=F, preprosess=T, minald=0, maxald=130, erMann=99,
+                                   forlopstype1=99, forlopstype2=99, sammenlign=1)
   {
 
   ## Hvis spørring skjer fra R på server. ######################

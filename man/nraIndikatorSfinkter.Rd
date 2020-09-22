@@ -5,8 +5,14 @@
 \title{Denne lager en figur som er en sammenstilling av alle kvalitetsindikatorene
 til NRA ved snm.}
 \usage{
-nraIndikatorSfinkter(outfile = "", dekngrad = 82, stmark9 = 41,
-  stmarks12 = 50, width = 7.5, height = 4.5)
+nraIndikatorSfinkter(
+  outfile = "",
+  dekngrad = 82,
+  stmark9 = 41,
+  stmarks12 = 50,
+  width = 7.5,
+  height = 4.5
+)
 }
 \arguments{
 \item{outfile}{Navn på fil figuren skrives til. Default: '' (Figur skrives

@@ -52,7 +52,7 @@ library(tidyverse)
 rm(list = ls())
 hentData <- F
 
-RegData <- read.table('I:/nra/alleVarNum2020-09-04 15-00-46.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/alleVarNum2020-09-17 15-10-35.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -63,9 +63,9 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
                        "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
-                       "WexLivsstilsendring", "WexnerTotalScore")]
+                       "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2020-09-04 15-00-46.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2020-09-17 15-10-35.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -387,7 +387,100 @@ if (utformat!='pdf') {
                          forlopstype1=2, forlopstype2=forlopstype2, sammenlign = 2)
 }
 
+valgtVar <- "reduksjon_lekkasje50"
+outfile='reduksjon_lekkasje50.pdf'
+indikatorFigRaterGrVar_basis(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=skriftStr, pktStr=1.5, datoFra='2019-01-01', datoTil='2019-12-31',
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=2, forlopstype2=2)
+
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar_basis(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=skriftStr, pktStr=1.5, datoFra='2019-01-01', datoTil='2019-12-31',
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=2, forlopstype2=2)
+}
+
+valgtVar <- "reduksjon_lekkasje75"
+outfile='reduksjon_lekkasje75.pdf'
+indikatorFigRaterGrVar_basis(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=skriftStr, pktStr=1.5, datoFra='2019-01-01', datoTil='2019-12-31',
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=2, forlopstype2=2)
+
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar_basis(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=skriftStr, pktStr=1.5, datoFra='2019-01-01', datoTil='2019-12-31',
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=2, forlopstype2=2)
+}
+
+valgtVar <- "utfort_ultralyd"
+outfile='utfort_ultralyd.pdf'
+indikatorFigRaterGrVar_basis(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=skriftStr, pktStr=1.5, datoFra='2019-01-01', datoTil='2019-12-31',
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=c(1,2), forlopstype2=c(1,2,5, NA))
+
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar_basis(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=decreasing, terskel=terskel, minstekrav = minstekrav, maal = maal, xtekst =xtekst,
+                       til100 = til100, skriftStr=skriftStr, pktStr=1.5, datoFra='2019-01-01', datoTil='2019-12-31',
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=c(1,2), forlopstype2=c(1,2,5, NA))
+}
+
+valgtVar <- "saarinfeksjon"
+outfile='saarinfeksjon.pdf'
+indikatorFigRaterGrVar_basis(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=T, terskel=terskel, minstekrav = minstekrav, maal = 2, xtekst =xtekst,
+                       til100 = til100, skriftStr=skriftStr, pktStr=1.5, datoFra='2019-01-01', datoTil='2019-12-31',
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  indikatorFigRaterGrVar_basis(RegData=RegData, valgtVar=valgtVar, outfile=outfile, width=width, height=height,
+                       decreasing=T, terskel=terskel, minstekrav = minstekrav, maal = 2, xtekst =xtekst,
+                       til100 = til100, skriftStr=skriftStr, pktStr=1.5, datoFra='2019-01-01', datoTil='2019-12-31',
+                       hentData=hentData, preprosess=preprosess, minald=minald, maxald=maxald, erMann=erMann,
+                       forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
 @
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{saarinfeksjon.pdf}
+\caption{Andel med sårinfeksjon}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{utfort_ultralyd.pdf}
+\caption{Andel med utført ultralyd}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{reduksjon_lekkasje50.pdf}
+\caption{SNM-dagbok, andel med prosentvis reduksjon i lekkasjeepisoder $\geq$ 50 blant de med positiv test}
+\end{figure}
+
+\newpage
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{reduksjon_lekkasje75.pdf}
+\caption{SNM-dagbok, andel med prosentvis reduksjon i lekkasjeepisoder $\geq$ 75 blant de med positiv test}
+\end{figure}
 
 \begin{figure}[ht]
 \centering
@@ -512,10 +605,37 @@ if (utformat!='pdf') {
 
 <<'Fig:Før og etter', include=FALSE, echo=FALSE, eval=T, cache=FALSE, warning=F>>=
 # datoFra='2018-01-01'
-datoFra=paste0(rap_aar-1, '-01-01')
+datoFra=paste0(rap_aar-2, '-01-01')
 datoTil=paste0(rap_aar-1, '-12-31')
 # datoTil='2018-12-31'
 
+# outfile <- 'StMarksTotalScore_snm_elektrode.pdf'
+# nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
+#                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = "Testprosedyre",
+#                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+#                sammenlign=1, inkl_konf=1)
+# if (utformat!='pdf') {
+#   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+#   nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
+#                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = "Testprosedyre",
+#                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+#                sammenlign=1, inkl_konf=1)
+# }
+
+outfile <- 'WexnerTotalScore_snm_elektrode.pdf'
+nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = "Testprosedyre",
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, grvar = "Testprosedyre",
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               sammenlign=1, inkl_konf=1)
+}
+
+datoFra=paste0(rap_aar-1, '-01-01')
 
 outfile <- 'WexnerTotalScore_sfinkt.pdf'
 WexnerTotalScore_sfinkt <- nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
@@ -693,6 +813,19 @@ if (utformat!='pdf') {
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
                  sammenlign=1, inkl_konf=1)
+}
+
+outfile <- 'Tilfredshet_gr.pdf'
+nraGjsnGrVar(RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, decreasing=decreasing,
+             erMann=erMann, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2, terskel=5,
+             inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt')
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnGrVar(RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, decreasing=decreasing,
+               erMann=erMann, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=99, terskel=5,
+               inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt')
 }
 
 
@@ -945,6 +1078,17 @@ if (utformat!='pdf') {
 @
 
 
+% \begin{figure}[ht]
+% \centering
+% \includegraphics[width=\Sexpr{figstr}\textwidth]{StMarksTotalScore_snm_elektrode.pdf}
+% \caption{St. Marks før og etter, snm, midlertidig vs. permanent elektrode}
+% \end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{WexnerTotalScore_snm_elektrode.pdf}
+\caption{Wexner før og etter, snm, midlertidig vs. permanent elektrode}
+\end{figure}
 
 \begin{figure}[ht]
 \centering
@@ -1091,6 +1235,11 @@ if (utformat!='pdf') {
 \caption{Andel med urinlekkasje, sfinkterplastikk, Pre, 1- og 5-årsoppfølging}
 \end{figure}
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{Tilfredshet_gr.pdf}
+\caption{Gjennomsnittlig tilfredshet med behandling, 0=Svært misfornøyd, 10=svært fornøyd. Alle.}
+\end{figure}
 
 \begin{figure}[ht]
 \centering
@@ -1252,13 +1401,13 @@ outfile='Sfinktervurdering.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+              valgtShus = valgtShus, forlopstype1=c(1,2), forlopstype2=c(1,2,5, NA))
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=c(1,2,5, NA))
 }
 
 outfile='Sfinktervurdering_sfinkt.pdf'
@@ -1278,13 +1427,13 @@ outfile='Sfinktervurdering_snm.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+              valgtShus = valgtShus, forlopstype1=2, forlopstype2=c(1,2,5))
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraFigAndeler(RegData=RegData, valgtVar='Sfinktervurdering', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-                valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+                valgtShus = valgtShus, forlopstype1=2, forlopstype2=c(1,2,5))
 }
 
 
