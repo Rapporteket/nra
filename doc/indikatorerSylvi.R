@@ -21,6 +21,7 @@ ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID
 
 RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
 RegData <- nraPreprosess(RegData=RegData)
+RegData$SenterKortNavn <- paste0(RegData$SenterKortNavn, ' ')
 
 RegDataAlle <- RegData
 
@@ -44,7 +45,7 @@ rap_aar <- 2019
 # Suksessrate test-prosedyre SNM
 
 RegData <- RegData[RegData$ForlopsType1Num == 2, ]
-RegData <- RegData[RegData$ForlopsType2Num == 2, ]
+# RegData <- RegData[RegData$ForlopsType2Num == 2, ]
 RegData <- RegData[!is.na(RegData$InkontinensFoerTest), ]
 
 nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
@@ -103,9 +104,9 @@ write.csv2(indikator,
            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind2_ultralyd.csv', row.names = F)
 
 # Sårinfeksjon innen 30 dager
-
 RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)
-RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+RegData <- RegData[RegData$ForlopsType1Num == 2, ] # Kun SNM
+RegData <- RegData[RegData$ForlopsType2Num %in% c(1,2,5), ] # Kun test positiv, test usikker, test negativ
 RegData <- RegData[!is.na(RegData$Variabel), ]
 RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
 RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==1 | RegData$KomplikasjonT2==1))] <- 1
@@ -125,7 +126,7 @@ names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator3.", utformat)
 nraFigIndikator(plotdata, tittel = c('Andel bekreftet sårinfeksjon innen', '30 dager etter implantasjon'), terskel = 5,
-                maal = 4, maalretn = 'lav', decreasing = T, outfile = outfile)
+                maal = 4, maalretn = 'lav', decreasing = T, outfile = outfile, desimal = T, xmax=5)
 
 ind3_saarinfeksjon <- indikator
 write.csv2(indikator,
@@ -189,7 +190,7 @@ indikator <- indikator[ , c("AvdRESH", "Aar", "Indikator", "nevner", "Index", "A
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind5', 'Nevner Ind5', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind5')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator5.", utformat)
@@ -246,7 +247,7 @@ indikator <- indikator[ , c("AvdRESH", "Aar", "Indikator", "nevner", "Index", "A
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind7', 'Nevner Ind7', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind7')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator7.", utformat)
@@ -303,7 +304,7 @@ indikator <- indikator[ , c("AvdRESH", "Aar", "Indikator", "nevner", "Index", "A
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind9', 'Nevner Ind9', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind9')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator9.", utformat)
@@ -359,7 +360,7 @@ indikator <- indikator[ , c("AvdRESH", "Aar", "Indikator", "nevner", "Index", "A
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind11', 'Nevner Ind11', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind11')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator11.", utformat)
@@ -396,7 +397,7 @@ plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator12.", utformat)
-nraFigIndikator(plotdata, tittel = c('Wexnerskår <=9', '1 år etter snm'), terskel = 5,
+nraFigIndikator(plotdata, tittel = c('Wexnerskår <=9', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 30, outfile=outfile)
 
 ind12_wexner_9_1aar_snm <- indikator
@@ -427,7 +428,7 @@ plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator13.", utformat)
-nraFigIndikator(plotdata, tittel = c('Wexnerskår <=12', '1 år etter snm'), terskel = 5,
+nraFigIndikator(plotdata, tittel = c('Wexnerskår <=12', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 50, outfile=outfile)
 
 ind13_wexner_12_1aar_snm <- indikator

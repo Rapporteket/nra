@@ -15,7 +15,7 @@ nraPreprosess <- function(RegData)
   RegData$Aar <- as.numeric(format(RegData$HovedDato, format="%Y"))
   RegData$Mnd <- as.numeric(format(RegData$HovedDato, format="%m"))
   RegData$SenterKortNavn <- trimws(RegData$SenterKortNavn)
-
+  RegData$SenterKortNavn[RegData$SenterKortNavn=="Helse Ber"] <- "Haukeland"
 
   RegData$Sfinktervurdering <- NA
   RegData$Sfinktervurdering[RegData$Ultralyd==1 & RegData$PartiellDefekt==0 &

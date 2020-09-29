@@ -10,7 +10,7 @@
 #'
 nraFigIndikator <- function(indikatordata, tittel='', terskel=30, minstekrav = NA, maal = NA, skriftStr=1.3, pktStr=1.4,
                              legPlass='top', minstekravTxt='Min.', maalTxt='Mål', graaUt=NA, decreasing=F, outfile = '',
-                             lavDG=NA, width=800, height=700, inkl_konf=F, maalretn='hoy')
+                             lavDG=NA, width=800, height=700, inkl_konf=F, maalretn='hoy', desimal=FALSE, xmax=NA)
   {
 
   # tittel='testtittel'; terskel=30; minstekrav = NA; maal = 30; skriftStr=1.3; pktStr=1.4;
@@ -52,7 +52,7 @@ nraFigIndikator <- function(indikatordata, tittel='', terskel=30, minstekrav = N
   N <- N[rekkefolge, ]
 
   # Skjul også tidligere år hvis siste år er sensurert pga. for få reg.
-  andeler[as.vector(N[, dim(andeler)[2]]<terskel), 2:3] <- NA
+  # andeler[as.vector(N[, dim(andeler)[2]]<terskel), 2:3] <- NA
 
   # Beregn konfidensintervaller
   KI <- binomkonf(purrr::as_vector(AntTilfeller[rekkefolge, dim(andeler)[2]]),
@@ -60,6 +60,7 @@ nraFigIndikator <- function(indikatordata, tittel='', terskel=30, minstekrav = N
   KI[, is.na(andeler[, dim(andeler)[2]])] <- NA
 
   pst_txt <- paste0(sprintf('%.0f', purrr::as_vector(andeler[, dim(andeler)[2]])), ' %')
+  if (desimal) {pst_txt <- paste0(sprintf('%.1f', purrr::as_vector(andeler[, dim(andeler)[2]])), ' %')}
   # pst_txt[is.na(andeler[, dim(andeler)[2]])] <- paste0('N<', terskel, ' eller dekningsgrad mindre en 60 pst.')
   pst_txt[N[, dim(andeler)[2]]<terskel] <- paste0('N<', terskel)
   pst_txt[andeler$SenterKortNavn %in% lavDG] <- 'Dekningsgrad < 60 %'
@@ -102,8 +103,8 @@ nraFigIndikator <- function(indikatordata, tittel='', terskel=30, minstekrav = N
     par('mar'=c(5.1, 4.1, 5.1, 2.1))
     xmax <- min(max(KI, na.rm = T)*1.15,100)
   } else {
-    xmax <- min(100, 1.15*max(andeler[,-1], na.rm = T))
-  }
+    if (is.na(xmax)){xmax <- min(100, 1.15*max(andeler[,-1], na.rm = T))}
+    }
 
   ypos <- barplot( t(andeler[,dim(andeler)[2]]), beside=T, las=1,
                    xlim=c(0,xmax),
@@ -170,13 +171,13 @@ nraFigIndikator <- function(indikatordata, tittel='', terskel=30, minstekrav = N
       mtext( 'N', side=4, line=5.0, las=1, at=max(ypos), col=1, cex=cexgr*.7, adj = 1)
     }
     par(xpd=TRUE)
-    points(y=ypos, x=purrr::as_vector(andeler[,2]),cex=pktStr) #'#4D4D4D'
+    points(y=ypos, x=purrr::as_vector(andeler[,2]),cex=pktStr,  pch= 19) #'#4D4D4D'
     # points(y=ypos, x=purrr::as_vector(andeler[,3]),cex=pktStr,pch= 19)
     par(xpd=FALSE)
     if (legPlass=='nede'){
       legend(x=82, y=ypos[2]+1 ,xjust=0, cex=cexgr, bty='n', #bg='white', box.col='white',
-             lwd=c(NA,NA,NA), pch=c(1,19,15), pt.cex=c(1.2,1.2,1.8), col=c('black','black',farger[3]),
-             legend=names(N) )}
+             lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
+             legend=names(N[,-1]), ncol = dim(andeler)[2]-1 )}
     if (legPlass=='top'){
       legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
              lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
@@ -207,10 +208,7 @@ nraFigIndikator <- function(indikatordata, tittel='', terskel=30, minstekrav = N
              legend=names(N[,-1]), ncol = dim(andeler)[2]-1)
     }
   # }
-
-    text(x=0, y=ypos, labels = pst_txt, cex=0.75, pos=4)#
-
-
   }
+  text(x=0, y=ypos, labels = pst_txt, cex=0.75, pos=4)
   if ( outfile != '') {dev.off()}
 }
