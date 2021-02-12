@@ -61,6 +61,7 @@ nraHentRegData <- function() {
                   alleVarNum.AvfoeringerUnderTest,
                   alleVarNum.LekkasjedagerUnder,
                   alleVarNum.WexnerTotalScore,
+                  alleVarNum.Testprosedyre,
                   ForlopsOversikt.KobletForlopsID,
                   ForlopsOversikt.ForlopsID,
                   ForlopsOversikt.HovedDato,
