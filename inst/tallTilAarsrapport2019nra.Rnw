@@ -127,13 +127,13 @@ pktStr=1.5
 datoFra=paste0(rap_aar-1, '-01-01')
 datoTil=paste0(rap_aar-1, '-12-31')
 
-RegDataStr9 <- rbind(RegData[which(RegData$StMarksTotalScore>=9 & RegData$ForlopsType1Num %in% 1:2), ],
+RegDataStr9 <- rbind(RegData[which(RegData$StMarksTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ],
       RegData[which(RegData$ForlopsType1Num %in% 3:4),])
-RegDataStr12 <- rbind(RegData[which(RegData$StMarksTotalScore>=12 & RegData$ForlopsType1Num %in% 1:2), ],
+RegDataStr12 <- rbind(RegData[which(RegData$StMarksTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ],
       RegData[which(RegData$ForlopsType1Num %in% 3:4),])
-WexDataStr9 <- rbind(RegData[which(RegData$WexnerTotalScore>=9 & RegData$ForlopsType1Num %in% 1:2), ],
+WexDataStr9 <- rbind(RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ],
       RegData[which(RegData$ForlopsType1Num %in% 3:4),])
-WexDataStr12 <- rbind(RegData[which(RegData$WexnerTotalScore>=12 & RegData$ForlopsType1Num %in% 1:2), ],
+WexDataStr12 <- rbind(RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ],
       RegData[which(RegData$ForlopsType1Num %in% 3:4),])
 
 outfile <- 'WexnerMindreEnn9_snm.pdf'
@@ -1283,13 +1283,13 @@ outfile='PasientAlder.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='PasientAlder', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+              valgtShus = valgtShus, forlopstype1=1:2, forlopstype2=c(1,2,5,NA))
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraFigAndeler(RegData=RegData, valgtVar='PasientAlder', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                valgtShus = valgtShus, forlopstype1=1:2, forlopstype2=c(1,2,5,NA))
 }
 
 outfile='Kompl_sfinkt.pdf'
@@ -1309,13 +1309,13 @@ outfile='KomplSNMtot.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='KomplSNMtot', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=c(1,2,5))
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraFigAndeler(RegData=RegData, valgtVar='KomplSNMtot', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=c(1,2,5))
 }
 
 outfile='TidlBeh_sfinkt.pdf'
@@ -1348,13 +1348,13 @@ outfile='TidlBeh.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+              valgtShus = valgtShus, forlopstype1=1:2, forlopstype2=c(1,2,5,NA))
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraFigAndeler(RegData=RegData, valgtVar='TidlBeh', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                valgtShus = valgtShus, forlopstype1=1:2, forlopstype2=c(1,2,5,NA))
 }
 
 
@@ -1375,26 +1375,26 @@ outfile='Symtomvarighet_snm.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+              valgtShus = valgtShus, forlopstype1=2, forlopstype2=c(1,2,5))
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-                valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+                valgtShus = valgtShus, forlopstype1=2, forlopstype2=c(1,2,5))
 }
 
 outfile='Symtomvarighet.pdf'
 nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+              valgtShus = valgtShus, forlopstype1=1:2, forlopstype2=c(1,2,5,NA))
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraFigAndeler(RegData=RegData, valgtVar='Symtomvarighet', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                valgtShus = valgtShus, forlopstype1=1:2, forlopstype2=c(1,2,5,NA))
 }
 
 outfile='Sfinktervurdering.pdf'
