@@ -2,6 +2,17 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
+### Mai Lisbeth 12.01.2021 ###############################
+Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+Skjemaoversikt$SistLagretDato <- as.Date(Skjemaoversikt$SistLagretDato)
+aux <- Skjemaoversikt[Skjemaoversikt$SistLagretDato == "2021-12-12", ]
+
+RegData <- read.table('I:/nra/alleVar2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+aux <- RegData[RegData$ForlopsType1Num == 3, ]
+
+write.csv2(RegData, "I:/nra/regdata.csv", row.names = F, fileEncoding = "Latin1")
+
+### Ukjent bestilling ... ###############################
 RegData <- read.table('I:/nra/alleVarNum2020-09-04 15-00-46.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 
 # pr pid, kan ha to abd60 , men kun 1 abd65
