@@ -14,6 +14,7 @@ nraUtvalg(
   erMann = 99,
   forlopstype1 = 99,
   forlopstype2 = 99,
+  onestage = 99,
   fargepalett = "BlaaRapp"
 )
 }

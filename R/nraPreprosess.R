@@ -42,5 +42,8 @@ nraPreprosess <- function(RegData)
   # RegData$Onestage <- factor(RegData$Onestage, levels = c(0,1), labels = c("Midl. elektr.", "Permanent"))
   RegData$Testprosedyre <- factor(RegData$Testprosedyre, levels = c(1,2), labels = c("Midl. elektr.", "Permanent"))
 
+  RegData$InkontinensScore <- RegData$StMarksTotalScore
+  RegData$InkontinensScore[is.na(RegData$InkontinensScore)] <- RegData$WexnerTotalScore[is.na(RegData$InkontinensScore)]
+
   return(invisible(RegData))
 }

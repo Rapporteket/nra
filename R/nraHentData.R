@@ -2,8 +2,6 @@
 #'
 #' Provides NRA data from staging
 #'
-#' @inheritParams nraFigAndeler
-#'
 #' @return RegData data frame
 #' @export
 

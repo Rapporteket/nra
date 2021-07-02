@@ -110,7 +110,10 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     SamletPrPID <- aggregate(RegData[, c("Konservativ", "Irrigasjon", "Tibialisstimulering", "AnalInjection", "SNM", "Sfinkterplastikk",
                                          "Rectopexi", "KirurgiForRectumprolaps", "Gracilisplastikk", "Stomi", "AnnetTidligereBeh")],
                              by=list(RegData$PasientID), max, na.rm = TRUE)
-    # SamletPrPID[SamletPrPID==-Inf] <- NA
+    # RegData[, c("Konservativ", "Irrigasjon", "Tibialisstimulering", "AnalInjection", "SNM", "Sfinkterplastikk",
+    #             "Rectopexi", "KirurgiForRectumprolaps", "Gracilisplastikk", "Stomi", "AnnetTidligereBeh", "PasientID")] %>% group_by(PasientID) %>%
+    #   summarise_all(max, na.rm=T)
+    SamletPrPID[SamletPrPID==-Inf] <- NA
     AntVar <- colSums(SamletPrPID[,-1], na.rm = T)
     NVar<-rep(N, length(AntVar))
     grtxt <- c("Konservativ", "Irrigasjon", "Tibialisstimulering", "Analinjeksjon", "SNM", "Sfinkterplastikk",

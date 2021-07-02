@@ -8,7 +8,7 @@ indikatorFigRaterGrVar_basis <- function(RegData, valgtVar='reduksjon_lekkasje50
                                    decreasing=F, terskel=0, minstekrav = NA, maal = NA, xtekst ='Andel %',
                                    til100 = F, skriftStr=1.3, pktStr=1.5, datoFra='2016-01-01', datoTil='2050-12-31',
                                    hentData=F, preprosess=T, minald=0, maxald=130, erMann='',
-                                   forlopstype1=99, forlopstype2=99)
+                                   forlopstype1=99, forlopstype2=99, onestage=99)
 {
 
   ## Hvis spørring skjer fra R på server. ######################
@@ -68,7 +68,7 @@ indikatorFigRaterGrVar_basis <- function(RegData, valgtVar='reduksjon_lekkasje50
   ## Gjør utvalg basert på brukervalg
   nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
                          minald=minald, maxald=maxald, erMann=erMann,
-                         forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                         forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
 
   RegData <- nraUtvalg$RegData
 

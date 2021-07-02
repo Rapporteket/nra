@@ -50,52 +50,8 @@ ui <- tagList(
     theme = "rap/bootstrap.css",
 
     tabPanel("Startside",
-             mainPanel(
-               shinyjs::useShinyjs(),
-               shinyalert::useShinyalert(),
-               rapbase::appNavbarUserWidget(user = uiOutput("appUserName"),
-                                            organization = uiOutput("appOrgName"),
-                                            addUserInfo = TRUE),
-
-               h2('Velkommen til Rapporteket - NRA', align='center'),
-               br(),
-               # h4(tags$b('Her skal Tone og Stig formulere kloke og reflekterte meldinger til Rapportekets brukere. En foreløpig variant er gitt under:')),
-               # br(),
-               h4('Du er nå inne på Rapporteket for NRA, registerets resultattjeneste.
-                Disse sidene inneholder en samling av figurer og tabeller som viser resultater fra registeret.
-                På hver av sidene kan man gjøre utvalg i menyene til venstre. Alle resultater er basert
-                på ferdigstilte registreringer. Merk at data er hentet direkte fra registerets database.
-                Dette medfører at nyere data ikke er kvalitetssikret ennå.'),
-               h4('Du kan se på resultater for eget sykehus, nasjonale data og eget sykehus sett opp mot landet for øvrig.
-                Alle figurer og
-                tabeller kan lastes ned.'),
-               br(),
-               h4(tags$b(tags$u('Innhold i de ulike fanene:'))),
-               h4(tags$b('Fordelinger '), 'viser fordelinger (figur/tabell) av ulike variabler.
-                Man kan velge hvilken variabel man vil se på, og man kan gjøre ulike filtreringer.'),
-               br(),
-               h4(tags$b('Gjennomsnitt/andeler før og etter operasjon '), 'viser gjennomsnitt eller andel av en variabel. Kan vise enten kun pre-data,
-                pre og 1-årsoppfølgingsdata, eller pre-og 1 og 5-årsoppfølgingsdata'),
-               br(),
-               h4(tags$b('Datadump '), 'gir mulighet til å laste ned din egen avdelings registreringer.'),
-               br(),
-               h4(tags$b('Administrative tabeller '), 'er en samling oversikter over antall registreringer.'),
-               br(),
-               # br(),
-               # h3('HER KAN MAN F.EKS. VISE ANTALL REGISTRERINGER SISTE X MND.'),
-               # br(),
-               br(),
-               h4('Oversikt over registerets kvalitetsindikatorer og resultater finner du på www.kvalitetsregistre.no:', #helpText
-                  a("NRA", href="https://www.kvalitetsregistre.no/registers/541/resultater"),
-                  target="_blank", align='center'),
-               br(),
-               h4('Mer informasjon om registeret finnes på NRA sin ',
-                  a("hjemmeside", href="https://unn.no/fag-og-forskning/medisinske-kvalitetsregistre/nra-norsk-register-for-analinkontinens", target="_blank"),
-                  align='center')
-             )
-
+             startside_UI(id = "startside_id")
     ),
-
 
     tabPanel("Fordelingsfigurer",
              fordelingsfig_UI(id = "fordelingsfig_id", BrValg = BrValg)
@@ -129,7 +85,7 @@ server <- function(input, output, session) {
   #   shiny::hideTab("norgast_app_id", target = "Sykehusvisning")
   # }
 
-
+  # callModule(startside, "startside_id")
   callModule(fordelingsfig, "fordelingsfig_id", reshID = reshID, RegData = RegData, hvd_session = session)
   callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData, hvd_session = session)
   callModule(datadump, "datadump_id", reshID = reshID, userRole = userRole, hvd_session = session)

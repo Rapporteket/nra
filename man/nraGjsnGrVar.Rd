@@ -26,7 +26,8 @@ nraGjsnGrVar(
   width = 600,
   height = 600,
   xtekst = "Gjennomsnitt",
-  graa = ""
+  graa = "",
+  onestage = 99
 )
 }
 \arguments{

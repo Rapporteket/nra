@@ -2,6 +2,15 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
+### Stid Norderval
+RegData <- read.table('I:/nra/alleVarNum2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+# ForlopData <- read.table('I:/nra/ForlopsOversikt2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData_sfinkt <- RegData[RegData$ForlopsType1Num == 1, ]
+RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_sfinkt$ForlopsID, ]
+utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)
+
+write.csv2(utlevering, "I:/nra/utlevering_nra_2021_06_29.csv", row.names = F, fileEncoding = "Latin1")
+
 ### Mai Lisbeth 12.01.2021 ###############################
 Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 Skjemaoversikt$SistLagretDato <- as.Date(Skjemaoversikt$SistLagretDato)

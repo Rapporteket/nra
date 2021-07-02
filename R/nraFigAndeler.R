@@ -49,12 +49,12 @@
 
 nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='2050-12-31',
                            valgtShus='', outfile = '', preprosess=TRUE, minald=0, maxald=130,
-                           erMann=99, reshID, enhetsUtvalg=0, hentData=F, forlopstype1=99, forlopstype2=99)
+                           erMann=99, reshID, enhetsUtvalg=0, hentData=F, forlopstype1=99, forlopstype2=99, onestage=99)
 {
   if (valgtVar == 'SNMdagbok') {
     nraSNMdagbok(RegData=RegData, datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=enhetsUtvalg, valgtShus = valgtShus,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
   } else {
 
 
@@ -95,7 +95,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
     nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
                            minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
-                           forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                           forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
     RegData <- nraUtvalg$RegData
     utvalgTxt <- nraUtvalg$utvalgTxt
 

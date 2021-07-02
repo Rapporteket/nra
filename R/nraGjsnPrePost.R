@@ -15,13 +15,13 @@
 nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='2050-12-31',
                            outfile = '', preprosess=TRUE, minald=0, maxald=130, grvar='SenterKortNavn',
                            erMann=99, reshID, hentData=F, forlopstype1=99, forlopstype2=99,
-                           sammenlign=0, inkl_konf=0, egen_mot_landet=F, valgtShus='', graa='')
+                           sammenlign=0, inkl_konf=0, egen_mot_landet=F, valgtShus='', graa='', onestage=99)
 {
   egetShus <- RegData$SenterKortNavn[match(reshID, RegData$AvdRESH)]
   RegData$Grvar <- RegData[, grvar]
   if (valgtShus != '') {RegData <- RegData[which(RegData$AvdRESH %in% valgtShus), ]}
 
-  if (valgtVar %in% c('StMarksTotalScore', 'GenQol', 'QolSexualitet', 'WexnerTotalScore')) {
+  if (valgtVar %in% c('StMarksTotalScore', 'GenQol', 'QolSexualitet', 'WexnerTotalScore', 'InkontinensScore ')) {
     inkl_konf <- 1
   }
 
@@ -52,7 +52,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
   nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
                          minald=minald, maxald=maxald, erMann=erMann,
-                         forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus)
+                         forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
   RegData <- nraUtvalg$RegData
   utvalgTxt <- nraUtvalg$utvalgTxt
 
@@ -66,7 +66,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
-                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus)
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
       utvalgTxt <- nraUtvalg$utvalgTxt
       Pre <- aggregate(RegData$VariabelPre, by=list(RegData$Grvar), mean, na.rm = TRUE)
       PrePostSD <- aggregate(RegData[, c('VariabelPre')],
@@ -93,7 +93,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
-                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus)
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
       utvalgTxt <- nraUtvalg$utvalgTxt
       PrePost <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
                            by=list(RegData$Grvar), mean, na.rm = TRUE)
@@ -133,7 +133,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       }
       nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
                              datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
-                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus)
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
       utvalgTxt <- nraUtvalg$utvalgTxt
       PrePost <- aggregate(RegData[, c('Variabel', 'VariabelPost1', "VariabelPost5")],
                            by=list(RegData$Grvar), mean, na.rm = TRUE)
@@ -157,7 +157,8 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                                          'Skala fra 0=\'I svært liten grad\' til 10=\'I svært stor grad\'',
                                          paste0('Spørsmålet uaktuelt i ', Nuaktuelt, ' forløp')),
                      'Urinlekkasje' = paste0('Andel med urinlekkasje ', tittel2),
-                     'WexnerTotalScore' = paste0('Wexner ', tittel2, ', inkl. 95 % konf.int.')
+                     'WexnerTotalScore' = paste0('Wexner ', tittel2, ', inkl. 95 % konf.int.'),
+                     'InkontinensScore' = paste0('InkontinensScore ', tittel2, ', inkl. 95 % konf.int.')
     )
 
     ytekst <- switch(valgtVar,
@@ -165,7 +166,8 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                      'GenQol' = 'Gjennomsnittsscore',
                      'QolSexualitet' = 'Gjennomsnittsscore',
                      'Urinlekkasje' = 'Andel i prosent',
-                     'WexnerTotalScore' = 'Gjennomsnittsscore'
+                     'WexnerTotalScore' = 'Gjennomsnittsscore',
+                     'InkontinensScore' = 'Gjennomsnittsscore'
     )
     cexgr<-0.9
     cexleg <- 0.9	#Størrelse på legendtekst

@@ -27,7 +27,8 @@ indikatorFigRaterGrVar(
   erMann = 99,
   forlopstype1 = 99,
   forlopstype2 = 99,
-  sammenlign = 1
+  sammenlign = 1,
+  onestage = 99
 )
 }
 \arguments{
