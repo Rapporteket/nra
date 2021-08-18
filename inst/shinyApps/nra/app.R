@@ -64,7 +64,19 @@ ui <- tagList(
     ),
     tabPanel("Administrative tabeller",
              admtab_UI(id = "admtab_id")
+    ),
+    shiny::tabPanel(
+      "Eksport",
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(
+          rapbase::exportUCInput("nraExport")
+        ),
+        shiny::mainPanel(
+          rapbase::exportGuideUI("nraExportGuide")
+        )
+      )
     )
+
 
   )
 )
@@ -90,6 +102,12 @@ server <- function(input, output, session) {
   callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData, hvd_session = session)
   callModule(datadump, "datadump_id", reshID = reshID, userRole = userRole, hvd_session = session)
   callModule(admtab, "admtab_id", reshID = reshID, RegData = RegData, userRole = userRole, hvd_session = session, skjemaoversikt=Skjemaoversikt)
+  # Eksport  #
+  rapbase::exportUCServer("nraExport", "nra")
+  ## veileding
+  rapbase::exportGuideServer("nraExportGuide", "nra")
+
+  #################################################################################################################################
 
   #Navbarwidget
   output$appUserName <- renderText(rapbase::getUserFullName(session))

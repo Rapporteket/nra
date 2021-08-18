@@ -22,7 +22,8 @@ Imports:
     kableExtra,
     shinyjs,
     rapFigurer,
-    rapbase
+    rapbase,
+    shinyalert
 Remotes:
   Rapporteket/rapbase,
   Rapporteket/rapFigurer
