@@ -86,7 +86,7 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
 
       shinyjs::onclick(
         "lastNed_dump",
-        raplog::repLogger(
+        rapbase::repLogger(
           session = hvd_session,
           msg = paste0("NRA: nedlasting datadump", input$dumptype)
         )

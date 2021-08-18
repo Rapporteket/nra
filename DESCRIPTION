@@ -22,11 +22,9 @@ Imports:
     kableExtra,
     shinyjs,
     rapFigurer,
-    rapbase,
-    raplog
+    rapbase
 Remotes:
   Rapporteket/rapbase,
-  Rapporteket/raplog,
   Rapporteket/rapFigurer
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

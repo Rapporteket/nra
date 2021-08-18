@@ -130,14 +130,14 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
   shiny::observe({
     if (rapbase::isRapContext()) {
-      raplog::repLogger(
+      rapbase::repLogger(
         session = hvd_session,
         msg = 'NRA: Kjører administrativ rapport.'
       )
 
       shinyjs::onclick(
         "lastNed_adm",
-        raplog::repLogger(
+        rapbase::repLogger(
           session = hvd_session,
           msg = "NRA: nedlasting adm. tabell."
         )

@@ -73,7 +73,7 @@ ui <- tagList(
 server <- function(input, output, session) {
 
   if (rapbase::isRapContext()) {
-    raplog::appLogger(session = session, msg = 'Starter NRA')
+    rapbase::appLogger(session = session, msg = 'Starter NRA')
     reshID <- rapbase::getUserReshId(session)
     userRole <- rapbase::getUserRole(session)
   } else {
