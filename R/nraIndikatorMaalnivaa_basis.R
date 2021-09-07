@@ -32,6 +32,13 @@ indikatorFigRaterGrVar_basis <- function(RegData, valgtVar='reduksjon_lekkasje50
     RegData$Indikator[RegData$pst_endr < 50] <- 0
   }
 
+  if (valgtVar=='reduksjon_lekkasje50_v2') {
+    tittel <- c('Andel med prosentvis reduksjon', 'i lekkasjeepisoper >= 50%')
+    maal <- 70
+    RegData$Indikator <- RegData$Indikator1_lekk_red50
+    RegData <- RegData[!is.na(RegData$Indikator), ]
+  }
+
   if (valgtVar=='reduksjon_lekkasje75') {
     tittel <- c('Andel med prosentvis reduksjon', 'i lekkasjeepisoper >= 75%')
     maal <- 70
@@ -42,6 +49,15 @@ indikatorFigRaterGrVar_basis <- function(RegData, valgtVar='reduksjon_lekkasje50
     RegData$Indikator[RegData$pst_endr >= 75] <- 1
     RegData$Indikator[RegData$pst_endr < 75] <- 0
   }
+
+  if (valgtVar=='reduksjon_lekkasje75_v2') {
+    tittel <- c('Andel med prosentvis reduksjon', 'i lekkasjeepisoper >= 75%')
+    maal <- 70
+    RegData$Indikator <- RegData$red75
+    RegData <- RegData[!is.na(RegData$Indikator), ]
+  }
+
+
 
   if (valgtVar=='utfort_ultralyd') {
     tittel <- c('Andel med utført ultralyd')

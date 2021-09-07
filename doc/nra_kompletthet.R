@@ -3,7 +3,7 @@ library(tidyverse)
 rm(list = ls())
 hentData <- F
 
-RegData <- read.table('I:/nra/alleVarNum2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/alleVarNum2021-09-02 10-37-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 # RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
 #                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
 #                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -16,7 +16,7 @@ RegData <- read.table('I:/nra/alleVarNum2021-06-25 14-16-02.txt', header=TRUE, s
 #                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
 #                        "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2021-09-02 10-37-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 

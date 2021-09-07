@@ -21,7 +21,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   RegData$Grvar <- RegData[, grvar]
   if (valgtShus != '') {RegData <- RegData[which(RegData$AvdRESH %in% valgtShus), ]}
 
-  if (valgtVar %in% c('StMarksTotalScore', 'GenQol', 'QolSexualitet', 'WexnerTotalScore', 'InkontinensScore ')) {
+  if (valgtVar %in% c('StMarksTotalScore', 'GenQol', 'QolSexualitet', 'WexnerTotalScore', 'InkontinensScore')) {
     inkl_konf <- 1
   }
 
@@ -80,7 +80,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     }
 
     if (sammenlign == 1) {
-      RegData <- RegData[which(RegData$OppflgRegStatus %in% 1:2), ]
+      # RegData <- RegData[which(RegData$OppflgRegStatus %in% 1:2), ]
       Oppfolging1 <- Oppfolging1[Oppfolging1$KobletForlopsID %in% RegData$ForlopsID, ]
       RegData <- RegData[RegData$ForlopsID %in% Oppfolging1$KobletForlopsID, ]
       RegData <- merge(RegData[,c("PasientID", "Variabel", "Grvar", "ForlopsID", "ForlopsType1Num")],
@@ -111,7 +111,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     }
 
     if (sammenlign == 2) {
-      RegData <- RegData[which(RegData$OppflgRegStatus %in% 1:2), ]
+      # RegData <- RegData[which(RegData$OppflgRegStatus %in% 1:2), ]
       Oppfolging1 <- Oppfolging1[Oppfolging1$KobletForlopsID %in% RegData$ForlopsID, ]
       RegData <- RegData[RegData$ForlopsID %in% Oppfolging1$KobletForlopsID, ]
       RegData <- merge(RegData[,c("PasientID", "Variabel", "Grvar", "ForlopsID", "ForlopsType1Num")],

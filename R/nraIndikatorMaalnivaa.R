@@ -87,6 +87,16 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
     RegData <- RegData[-which(RegData$ForlopsType1Num %in% 1:2 & RegData$Urinlekkasje == 0), ] # fjern de som ikke er urininkontinent ved inklusjon
   }
 
+  if (valgtVar=='blitt_kontinent_v2') {
+    tittel <- 'Andel urininkontinente før operasjon som er kontinente'
+    maal <- NA
+    RegData$Indikator <- NA
+    RegData$Indikator[which(RegData$Urinlekkasje_v2==0)] <- 1 # Ikke urininkontinent
+    RegData$Indikator[which(RegData$Urinlekkasje_v2==1)] <- 0
+    RegData <- RegData[!is.na(RegData$Indikator), ]
+    RegData <- RegData[-which(RegData$ForlopsType1Num %in% 1:2 & RegData$Urinlekkasje_v2 == 0), ] # fjern de som ikke er urininkontinent ved inklusjon
+  }
+
   ## Skill ut oppfølginger
   if (sammenlign==1) {
     Oppfolging <- RegData[RegData$ForlopsType1Num == 3, ] # 1-årsoppfølging

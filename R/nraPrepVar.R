@@ -121,6 +121,25 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     tittel <- 'Tidligere behandling'
   }
 
+  if (valgtVar == 'TidlBeh_v2') {
+    retn <- 'H'
+    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
+    N <- length(unique(RegData$PasientID))
+
+    SamletPrPID <- aggregate(RegData[, c("Konservativ_v2", "AnalInjection", "SNM", "Sfinkterplastikk",
+                                         "Prolapskirurgi", "Stomi", "KunstigLukkMuskel", "AnnetTidligereBeh")],
+                             by=list(RegData$PasientID), max, na.rm = TRUE)
+    # RegData[, c("Konservativ", "Irrigasjon", "Tibialisstimulering", "AnalInjection", "SNM", "Sfinkterplastikk",
+    #             "Rectopexi", "KirurgiForRectumprolaps", "Gracilisplastikk", "Stomi", "AnnetTidligereBeh", "PasientID")] %>% group_by(PasientID) %>%
+    #   summarise_all(max, na.rm=T)
+    SamletPrPID[SamletPrPID==-Inf] <- NA
+    AntVar <- colSums(SamletPrPID[,-1], na.rm = T)
+    NVar<-rep(N, length(AntVar))
+    grtxt <- c("Konservativ behandling", "Anal injeksjon", "SNM", "Rekonstruksjon av lukkemuskelen",
+               "Kirurgi for endetarmsprolaps", "Stomi", "Kunstig lukkemuskel", "Annen")
+    tittel <- 'Tidligere behandling'
+  }
+
   if (valgtVar == 'KomplSfinkter') {
     retn <- 'H'
     RegData <- RegData[RegData$ForlopsType1Num == 1, ]

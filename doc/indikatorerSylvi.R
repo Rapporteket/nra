@@ -2,7 +2,7 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
-RegData <- read.table('I:/nra/alleVarNum2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/alleVarNum2021-09-02 10-37-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -10,12 +10,15 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter", "GenQol",
                        "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje", "Komplikasjon",
                        "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
-                       "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
-                       "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
+                       "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyFoerTest", "UrgencyUnderTest",
+                       "UrgencyFoerTestUtenLekkasje", "UrgencyFoerTestMedLekkasje", "UrgencyFoerPassivLekkasje", "UrgencyUnderPassivLekkasje",
+                       "UrgencyUnderUtenTestMedLekkasje", "UrgencyUnderTestLekkasje", #"LekasjeFriFoerTest", "LekasjeFriUnderTest",
+                       "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig', "ICIQ_hyppighet",
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
-                       "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre")]
+                       "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre", "KirurgiForRectumprolaps_v2",
+                       "KunstigLukkMuskel")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2021-09-02 10-37-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -24,6 +27,8 @@ RegData <- nraPreprosess(RegData=RegData)
 RegData$SenterKortNavn <- paste0(RegData$SenterKortNavn, ' ')
 
 RegDataAlle <- RegData
+
+# write.csv2(RegDataAlle, "utforsk.csv", row.names = F, fileEncoding = "Latin1")
 
 rap_aar <- 2020
 reshID <- 700116 #  #Må sendes med til funksjon
@@ -38,25 +43,31 @@ hentData <- F
 forlopstype1=99
 forlopstype2=99
 valgtShus <- '' #c('601225', '700116')
-utformat <- 'wmf'
+utformat <- 'pdf'
 
 
 # Suksessrate test-prosedyre SNM
 
-RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+# RegData <- RegData[RegData$ForlopsType1Num == 2, ]
 # RegData <- RegData[RegData$ForlopsType2Num == 2, ]
-RegData <- RegData[!is.na(RegData$InkontinensFoerTest), ]
+# RegData <- RegData[!is.na(RegData$InkontinensFoerTest), ]
 
 nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
                        minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
-                       forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                       forlopstype1=2, forlopstype2=2)
 RegData <- nraUtvalg$RegData
 rm(nraUtvalg)
-RegData <- RegData[-which(rowSums(is.na(RegData[, c("InkontinensFoerTest","InkontinensUnderTest")])) !=0 ), ]
-indikator <- RegData[, c("Aar", "AvdRESH", "InkontinensFoerTest", "InkontinensUnderTest", "PasientID", "ForlopsID")]
-indikator$ind <- (indikator$InkontinensFoerTest - indikator$InkontinensUnderTest)/indikator$InkontinensFoerTest*100
-indikator$ind[is.nan(indikator$ind)] <- 0
-indikator$ind <- as.numeric(indikator$ind >= 50)
+
+## Gammel versjon
+# RegData <- RegData[-which(rowSums(is.na(RegData[, c("InkontinensFoerTest","InkontinensUnderTest")])) !=0 ), ]
+# indikator <- RegData[, c("Aar", "AvdRESH", "InkontinensFoerTest", "InkontinensUnderTest", "PasientID", "ForlopsID")]
+# indikator$ind <- (indikator$InkontinensFoerTest - indikator$InkontinensUnderTest)/indikator$InkontinensFoerTest*100
+# indikator$ind[is.nan(indikator$ind)] <- 0
+# indikator$ind <- as.numeric(indikator$ind >= 50)
+## Ny versjon
+indikator <- RegData[!is.na(RegData$Indikator1_lekk_red50), c("Aar", "AvdRESH", "Indikator1_lekk_red50", "PasientID", "ForlopsID")]
+names(indikator)[names(indikator)=="Indikator1_lekk_red50"] <- "ind"
+
 indikator$nevner <- 1
 indikator$Index <- 'Ind1'
 indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
@@ -72,11 +83,11 @@ nraFigIndikator(plotdata, tittel = c('Andel med prosentvis reduksjon', 'i lekkas
                 outfile=outfile)
 
 ind1_50pstlekkasjereduksjon <- indikator
-# write.csv2(indikator,
-#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind1_50pstlekkasjereduksjon.csv', row.names = F)
+write.csv2(indikator,
+           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind1_50pstlekkasjereduksjon.csv', row.names = F)
 
-# indikator1 %>% group_by(Aar, AvdRESH) %>% summarise("andel måloppnåelse" = mean(ind)*100,
-#                                           N = n())
+# indikator %>% group_by(Aar, ReshId) %>% summarise("andel måloppnåelse" = mean(`Teller Ind1`)*100,
+#                                           N = n()) %>% filter(Aar >= 2018)
 
 
 # Andel med utført ultralyd
@@ -92,6 +103,7 @@ indikator$Index <- 'Ind2'
 indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
 indikator <- indikator[, c("AvdRESH", "Aar", "ind", "nevner", "Index", "AarID")]
 Indikatorer <- bind_rows(Indikatorer, indikator)
+# Indikatorer <- indikator
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind2', 'Nevner Ind2', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind2')]
@@ -107,7 +119,7 @@ ind2_ultralyd <- indikator
 # Sårinfeksjon innen 30 dager
 RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)
 RegData <- RegData[RegData$ForlopsType1Num == 2, ] # Kun SNM
-RegData <- RegData[RegData$ForlopsType2Num %in% c(1,2,5), ] # Kun test positiv, test usikker, test negativ
+RegData <- RegData[RegData$ForlopsType2Num %in% c(1,2,5,3), ] # Kun test positiv, test usikker, test negativ
 RegData <- RegData[!is.na(RegData$Variabel), ]
 RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
 RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==1 | RegData$KomplikasjonT2==1))] <- 1
@@ -496,7 +508,7 @@ names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator14.", utformat)
 nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=9', '1 år etter operasjon med SNM'), terskel = 5,
-                maal = 50, outfile=outfile)
+                maal = 30, outfile=outfile)
 
 RegData <- komboStr9
 RegData$Indikator <- NA
@@ -523,7 +535,7 @@ names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator15.", utformat)
 nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=9', '1 år etter sfinkterplastikk'), terskel = 5,
-                maal = 50, outfile=outfile)
+                maal = 30, outfile=outfile)
 
 
 RegData <- komboStr12
