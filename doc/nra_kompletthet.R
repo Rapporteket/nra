@@ -56,10 +56,10 @@ write.csv2(utprint, "doc/kompletthetStMarksWexnerKombo.csv", row.names = F, file
 
 # Urinlekkasje
 
-RegData_forlop_1$beggemangler <- is.na(RegData_forlop_1$Urinlekkasje) & is.na(RegData_forlop_1$Urinlekkasje_oppf)
-RegData_forlop_1$premangler_postutfylt <- is.na(RegData_forlop_1$Urinlekkasje) & !is.na(RegData_forlop_1$Urinlekkasje_oppf)
-RegData_forlop_1$preutfylt_postmangler <- !is.na(RegData_forlop_1$Urinlekkasje) & is.na(RegData_forlop_1$Urinlekkasje_oppf)
-RegData_forlop_1$beggeutfylt <- !is.na(RegData_forlop_1$Urinlekkasje) & !is.na(RegData_forlop_1$Urinlekkasje_oppf)
+RegData_forlop_1$beggemangler <- is.na(RegData_forlop_1$Urinlekkasje_v2) & is.na(RegData_forlop_1$Urinlekkasje_v2_oppf)
+RegData_forlop_1$premangler_postutfylt <- is.na(RegData_forlop_1$Urinlekkasje_v2) & !is.na(RegData_forlop_1$Urinlekkasje_v2_oppf)
+RegData_forlop_1$preutfylt_postmangler <- !is.na(RegData_forlop_1$Urinlekkasje_v2) & is.na(RegData_forlop_1$Urinlekkasje_v2_oppf)
+RegData_forlop_1$beggeutfylt <- !is.na(RegData_forlop_1$Urinlekkasje_v2) & !is.na(RegData_forlop_1$Urinlekkasje_v2_oppf)
 
 oppsum <- RegData_forlop_1 %>% group_by(Aar, SenterKortNavn, ForlopsType2) %>%
   summarise(beggemangler = sum(beggemangler),

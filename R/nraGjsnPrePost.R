@@ -38,9 +38,10 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   ## Fjerner registreringer som mangler valgt variabel
   RegData$Variabel <- RegData[, valgtVar]
   RegData <- RegData[!is.na(RegData$Variabel), ]
-  if (valgtVar=='Urinlekkasje') {
-    RegData <- RegData[RegData$Urinlekkasje != 9, ]
+  if (valgtVar %in% c('Urinlekkasje', 'Urinlekkasje_v2')) {
+    RegData <- RegData[RegData$Variabel != 9, ]
     RegData$Variabel <- 100*RegData$Variabel}
+
   if (valgtVar=='GenQol') {
     RegData <- RegData[RegData$GenQol != 98, ]}
 
@@ -157,6 +158,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                                          'Skala fra 0=\'I svært liten grad\' til 10=\'I svært stor grad\'',
                                          paste0('Spørsmålet uaktuelt i ', Nuaktuelt, ' forløp')),
                      'Urinlekkasje' = paste0('Andel med urinlekkasje ', tittel2),
+                     'Urinlekkasje_v2' = paste0('Andel med urinlekkasje ', tittel2),
                      'WexnerTotalScore' = paste0('Wexner ', tittel2, ', inkl. 95 % konf.int.'),
                      'InkontinensScore' = paste0('InkontinensScore ', tittel2, ', inkl. 95 % konf.int.')
     )
@@ -166,6 +168,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                      'GenQol' = 'Gjennomsnittsscore',
                      'QolSexualitet' = 'Gjennomsnittsscore',
                      'Urinlekkasje' = 'Andel i prosent',
+                     'Urinlekkasje_v2' = 'Andel i prosent',
                      'WexnerTotalScore' = 'Gjennomsnittsscore',
                      'InkontinensScore' = 'Gjennomsnittsscore'
     )

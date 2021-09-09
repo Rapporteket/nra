@@ -54,7 +54,7 @@ utformat <- 'pdf'
 
 nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
                        minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
-                       forlopstype1=2, forlopstype2=2)
+                       forlopstype1=2, forlopstype2=forlopstype2)
 RegData <- nraUtvalg$RegData
 rm(nraUtvalg)
 
@@ -79,7 +79,8 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind1')]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0("indikator1.", utformat)
-nraFigIndikator(plotdata, tittel = c('Andel med prosentvis reduksjon', 'i lekkasjeepisoder >= 50%'), terskel = 5, maal = 70,
+nraFigIndikator(plotdata, tittel = c('Andel med prosentvis reduksjon', 'i lekkasjeepisoder >= 50%')
+                , terskel = 5, maal = 70,
                 outfile=outfile)
 
 ind1_50pstlekkasjereduksjon <- indikator
@@ -153,23 +154,24 @@ RegData <- RegDataAlle
 #                      RegData[which(RegData$ForlopsType1Num %in% 3:4),])
 # RegDataStr12 <- rbind(RegData[which(RegData$StMarksTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ],
 #                       RegData[which(RegData$ForlopsType1Num %in% 3:4),])
-RegDataStr9 <- RegData[which(RegData$StMarksTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ]
+RegDataStr9 <- RegData[which(RegData$StMarksTotalScore>9 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
 RegDataStr9 <- dplyr::bind_rows(RegDataStr9, RegData[RegData$KobletForlopsID %in% RegDataStr9$ForlopsID, ])
-RegDataStr12 <- RegData[which(RegData$StMarksTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ]
+RegDataStr12 <- RegData[which(RegData$StMarksTotalScore>12 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
 RegDataStr12 <- dplyr::bind_rows(RegDataStr12, RegData[RegData$KobletForlopsID %in% RegDataStr12$ForlopsID, ])
 # WexDataStr9 <- rbind(RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ],
 #                      RegData[which(RegData$ForlopsType1Num %in% 3:4),])
 # WexDataStr12 <- rbind(RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ],
 #                       RegData[which(RegData$ForlopsType1Num %in% 3:4),])
-WexDataStr9 <- RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ]
+WexDataStr9 <- RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
 WexDataStr9 <- dplyr::bind_rows(WexDataStr9, RegData[RegData$KobletForlopsID %in% WexDataStr9$ForlopsID, ])
-WexDataStr12 <- RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ]
+WexDataStr12 <- RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
 WexDataStr12 <- dplyr::bind_rows(WexDataStr12, RegData[RegData$KobletForlopsID %in% WexDataStr12$ForlopsID, ])
 # komboStr9 <- dplyr::bind_rows(RegDataStr9, RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ])
 # komboStr12 <- dplyr::bind_rows(RegDataStr12, RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ])
 komboStr9 <- dplyr::bind_rows(RegDataStr9, WexDataStr9)
+komboStr9 <- komboStr9[match(unique(komboStr9$ForlopsID), komboStr9$ForlopsID), ]
 komboStr12 <- dplyr::bind_rows(RegDataStr12, WexDataStr12)
-
+komboStr12 <- komboStr12[match(unique(komboStr12$ForlopsID), komboStr12$ForlopsID), ]
 
 # St. Mark’s Inkontinensskår <9 og 12, 1 og 5 år etter SNM
 RegData <- RegDataStr9

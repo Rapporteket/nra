@@ -49,13 +49,13 @@ nraPreprosess <- function(RegData)
   # RegData$Indikator1_lekk_red50_v1[is.nan(RegData$Indikator1_lekk_red50_v1)] <- 0
   # RegData$Indikator1_lekk_red50_v1 <- as.numeric(RegData$Indikator1_lekk_red50_v1 >= 50)
   #
-  RegData$Indikator1_lekk_red50_v2 <- pmax((RegData$InkontinensFoerTest - RegData$InkontinensUnderTest)/RegData$InkontinensFoerTest*100,
-                                           (RegData$UrgencyFoerTest - RegData$UrgencyUnderTest)/RegData$UrgencyFoerTest*100, na.rm = T)
+  RegData$Indikator1_lekk_red50_v2 <- pmax((RegData$InkontinensFoerTest - RegData$InkontinensUnderTest)/RegData$InkontinensFoerTest*100) #,
+                                           # (RegData$UrgencyFoerTest - RegData$UrgencyUnderTest)/RegData$UrgencyFoerTest*100, na.rm = T)
   RegData$Indikator1_lekk_red50_v2[is.nan(RegData$Indikator1_lekk_red50_v2)] <- 0
   RegData$red75_v2 <- as.numeric(RegData$Indikator1_lekk_red50_v2 >= 75)
   RegData$Indikator1_lekk_red50_v2 <- as.numeric(RegData$Indikator1_lekk_red50_v2 >= 50)
 
-  RegData$Indikator1_lekk_red50_v3 <- pmax((RegData$UrgencyFoerTestUtenLekkasje - RegData$UrgencyUnderUtenTestMedLekkasje)/RegData$UrgencyFoerTestUtenLekkasje*100,
+  RegData$Indikator1_lekk_red50_v3 <- pmax(# (RegData$UrgencyFoerTestUtenLekkasje - RegData$UrgencyUnderUtenTestMedLekkasje)/RegData$UrgencyFoerTestUtenLekkasje*100,
                                            (RegData$UrgencyFoerTestMedLekkasje - RegData$UrgencyUnderTestLekkasje)/RegData$UrgencyFoerTestMedLekkasje*100,
                                            (RegData$UrgencyFoerPassivLekkasje - RegData$UrgencyUnderPassivLekkasje)/RegData$UrgencyFoerPassivLekkasje*100,
                                            na.rm = T)

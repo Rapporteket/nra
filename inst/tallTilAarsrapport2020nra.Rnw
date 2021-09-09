@@ -52,7 +52,7 @@ library(tidyverse)
 rm(list = ls())
 hentData <- F
 
-RegData <- read.table('I:/nra/alleVarNum2021-09-02 10-37-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/alleVarNum2021-09-03 12-07-14.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -89,7 +89,7 @@ hentData <- F
 forlopstype1=99
 forlopstype2=99
 valgtShus <- '' #c('601225', '700116')
-utformat <- 'pdf'
+utformat <- 'wmf'
 
 
 figstr <- 0.61
@@ -857,52 +857,52 @@ if (utformat!='pdf') {
 }
 
 outfile <- 'Urinlekkasje_sfinkt.pdf'
-nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra=datoFra, datoTil=datoTil,
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
                sammenlign=1, inkl_konf=0)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
-  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra=datoFra, datoTil=datoTil,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
                  sammenlign=1, inkl_konf=0)
 }
 
 outfile <- 'Urinlekkasje_snm.pdf'
-nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra=datoFra, datoTil=datoTil,
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
                sammenlign=1, inkl_konf=0)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
-  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra=datoFra, datoTil=datoTil,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
                  sammenlign=1, inkl_konf=0)
 }
 
 outfile <- 'Urinlekkasje_5aar_snm.pdf'
-nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=paste0(rap_aar-4, '-12-31'),
+nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra='2013-01-01', datoTil=paste0(rap_aar-4, '-12-31'),
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
                sammenlign=2, inkl_konf=0, valgtShus='')
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
-  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=paste0(rap_aar-4, '-12-31'),
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra='2013-01-01', datoTil=paste0(rap_aar-4, '-12-31'),
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
                  sammenlign=2, inkl_konf=0, valgtShus='')
 }
 
 outfile <- 'Urinlekkasje_5aar_sfinkt.pdf'
-nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=paste0(rap_aar-4, '-12-31'),
+nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra='2013-01-01', datoTil=paste0(rap_aar-4, '-12-31'),
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
                sammenlign=2, inkl_konf=0, valgtShus='')
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
-  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra='2013-01-01', datoTil=paste0(rap_aar-4, '-12-31'),
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra='2013-01-01', datoTil=paste0(rap_aar-4, '-12-31'),
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=1, forlopstype2=forlopstype2,
                  sammenlign=2, inkl_konf=0, valgtShus='')
@@ -925,13 +925,13 @@ if (utformat!='pdf') {
 outfile <- 'GenQol_snm.pdf'
 nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=2,
                sammenlign=1, inkl_konf=1)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=2,
                  sammenlign=1, inkl_konf=1)
 }
 
@@ -1161,13 +1161,13 @@ if (utformat!='pdf') {
 outfile <- 'GenQol_snm_5aar.pdf'
 nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=2,
                sammenlign=2, inkl_konf=1)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=2,
                  sammenlign=2, inkl_konf=1)
 }
 
@@ -1709,51 +1709,8 @@ if (utformat!='pdf') {
 \caption{SNM-dagbok, andel måloppnåelse, alle.}
 \end{figure}
 
-% <<'snmdagbok', results='asis', echo=FALSE>>=
-%
-% tmp <- RegData[RegData$ForlopsType1Num==2 & RegData$Aar==rap_aar & !is.na(RegData$UrgencyFoerTest), ]
-% tmp$pstEndr <- (tmp$InkontinensFoerTest - tmp$InkontinensUnderTest)/tmp$InkontinensFoerTest*100
-% write.csv2(tmp[, c('InkontinensFoerTest', 'InkontinensUnderTest', "pstEndr", 'ForlopsType2')], 'lekkasje.csv', row.names = F)
-%
-% tmp2 <- tmp[which(tmp$pstEndr>=50), ]
-% # tmp2[, c('InkontinensFoerTest', 'InkontinensUnderTest', "pstEndr", 'ForlopsType2')]
-% # round(mean(tmp2$pstEndr>=75)*100, 1)
-%
-% # datoFra <- '2018-01-01'
-% #
-% # RegData <- RegData[RegData$ForlopsType1Num == 2, ]
-% # RegData <- RegData[!is.na(RegData$UrgencyFoerTest), ]
-% # nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
-% #                          minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
-% #                          forlopstype1=forlopstype1, forlopstype2=2)
-% #   RegData <- nraUtvalg$RegData
-% #   utvalgTxt <- nraUtvalg$utvalgTxt
-% #
-% # Pre <- RegData[, c("InkontinensFoerTest", "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer")]
-% # Post <- RegData[, c("InkontinensUnderTest", "UrgencyUnderTest", "AvfoeringerUnderTest", "LekkasjedagerUnder")]
-% #
-% # PstEndr <- (Pre-Post)/Pre*100
-% # PstEndr[is.nan(PstEndr[,1]), 1] <- 0
-% # PstEndr[is.nan(PstEndr[,2]), 2] <- 0
-% # PstEndr[is.nan(PstEndr[,3]), 3] <- 0
-% # PstEndr[is.nan(PstEndr[,4]), 4] <- 0
-% #
-% # aux <- PstEndr[which(PstEndr$InkontinensFoerTest >= 50), ]
-% # aux2 <- PstEndr[which(PstEndr$InkontinensFoerTest < 50), ]
-% # MaalIkkeNaadd <- data.frame(Pre=Pre$InkontinensFoerTest[which(PstEndr$InkontinensFoerTest < 50)],
-% #            Test=Post$InkontinensUnderTest[which(PstEndr$InkontinensFoerTest < 50)],
-% #            PstEndr=round(PstEndr$InkontinensFoerTest[which(PstEndr$InkontinensFoerTest < 50)], 1))
-% #
-% # # terskel <- t(matrix(c(70,50,50,50), 4,dim(PstEndr)[1]))
-% # AndelMaaloppnaaelse <- c(mean(PstEndr$InkontinensFoerTest >= 50), mean(PstEndr$InkontinensFoerTest >=75))*100
-% # AndelMaaloppnaaelse2 <- c(mean(aux$InkontinensFoerTest >= 50), mean(aux$InkontinensFoerTest >=75))*100
-% #
-% #
-% # # AndelMaaloppnaaelse3 <- c(mean(PstEndr$LekkasjedagerFoer > 50), mean(PstEndr$LekkasjedagerFoer >75))*100
-% @
-%
-% Av \Sexpr{dim(tmp2)[1]} pasienter med $\geq 50$ \% reduksjon i lekkasjeepisoder har \Sexpr{round(mean(tmp2$pstEndr>=75)*100, 1)} \% en reduksjon som er $\geq 75$ \%.
 
+\addtolength{\hoffset}{-1.5cm}
 
 <<'konfidensintervaller', results='asis', echo=FALSE>>=
 
@@ -1765,6 +1722,9 @@ print(xtable::xtable(konftabell5, align=c('l', 'l', rep('r', dim(konftabell5)[2]
 
 
 @
+
+% \addtolength{\hoffset}{1.5cm}
+
 
 \clearpage
 
@@ -1866,13 +1826,13 @@ if (utformat!='pdf') {
 outfile <- 'StMarksTotalScore_SNM_onestage.pdf'
 nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=2,
                sammenlign=1, inkl_konf=1, onestage=1)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
-                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=2,
                  sammenlign=1, inkl_konf=1, onestage=1)
 }
 
@@ -1903,13 +1863,13 @@ if (utformat!='pdf') {
 }
 
 outfile <- 'Urinlekkasje_snm_onestage.pdf'
-nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra=datoFra, datoTil=datoTil,
                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
                sammenlign=1, inkl_konf=0, onestage=1)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
-  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje', datoFra=datoFra, datoTil=datoTil,
+  nraGjsnPrePost(RegData, valgtVar='Urinlekkasje_v2', datoFra=datoFra, datoTil=datoTil,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
                  sammenlign=1, inkl_konf=0, onestage=1)
@@ -2041,3 +2001,52 @@ print(xtable::xtable(ant_onestage, align=c('l', 'l', rep('r', dim(ant_onestage)[
 
 
 \end{document}
+
+
+
+
+% <<'snmdagbok', results='asis', echo=FALSE>>=
+%
+% tmp <- RegData[RegData$ForlopsType1Num==2 & RegData$Aar==rap_aar & !is.na(RegData$UrgencyFoerTest), ]
+% tmp$pstEndr <- (tmp$InkontinensFoerTest - tmp$InkontinensUnderTest)/tmp$InkontinensFoerTest*100
+% write.csv2(tmp[, c('InkontinensFoerTest', 'InkontinensUnderTest', "pstEndr", 'ForlopsType2')], 'lekkasje.csv', row.names = F)
+%
+% tmp2 <- tmp[which(tmp$pstEndr>=50), ]
+% # tmp2[, c('InkontinensFoerTest', 'InkontinensUnderTest', "pstEndr", 'ForlopsType2')]
+% # round(mean(tmp2$pstEndr>=75)*100, 1)
+%
+% # datoFra <- '2018-01-01'
+% #
+% # RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+% # RegData <- RegData[!is.na(RegData$UrgencyFoerTest), ]
+% # nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
+% #                          minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
+% #                          forlopstype1=forlopstype1, forlopstype2=2)
+% #   RegData <- nraUtvalg$RegData
+% #   utvalgTxt <- nraUtvalg$utvalgTxt
+% #
+% # Pre <- RegData[, c("InkontinensFoerTest", "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer")]
+% # Post <- RegData[, c("InkontinensUnderTest", "UrgencyUnderTest", "AvfoeringerUnderTest", "LekkasjedagerUnder")]
+% #
+% # PstEndr <- (Pre-Post)/Pre*100
+% # PstEndr[is.nan(PstEndr[,1]), 1] <- 0
+% # PstEndr[is.nan(PstEndr[,2]), 2] <- 0
+% # PstEndr[is.nan(PstEndr[,3]), 3] <- 0
+% # PstEndr[is.nan(PstEndr[,4]), 4] <- 0
+% #
+% # aux <- PstEndr[which(PstEndr$InkontinensFoerTest >= 50), ]
+% # aux2 <- PstEndr[which(PstEndr$InkontinensFoerTest < 50), ]
+% # MaalIkkeNaadd <- data.frame(Pre=Pre$InkontinensFoerTest[which(PstEndr$InkontinensFoerTest < 50)],
+% #            Test=Post$InkontinensUnderTest[which(PstEndr$InkontinensFoerTest < 50)],
+% #            PstEndr=round(PstEndr$InkontinensFoerTest[which(PstEndr$InkontinensFoerTest < 50)], 1))
+% #
+% # # terskel <- t(matrix(c(70,50,50,50), 4,dim(PstEndr)[1]))
+% # AndelMaaloppnaaelse <- c(mean(PstEndr$InkontinensFoerTest >= 50), mean(PstEndr$InkontinensFoerTest >=75))*100
+% # AndelMaaloppnaaelse2 <- c(mean(aux$InkontinensFoerTest >= 50), mean(aux$InkontinensFoerTest >=75))*100
+% #
+% #
+% # # AndelMaaloppnaaelse3 <- c(mean(PstEndr$LekkasjedagerFoer > 50), mean(PstEndr$LekkasjedagerFoer >75))*100
+% @
+%
+% Av \Sexpr{dim(tmp2)[1]} pasienter med $\geq 50$ \% reduksjon i lekkasjeepisoder har \Sexpr{round(mean(tmp2$pstEndr>=75)*100, 1)} \% en reduksjon som er $\geq 75$ \%.
+
