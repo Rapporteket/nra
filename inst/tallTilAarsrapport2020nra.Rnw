@@ -1715,8 +1715,8 @@ if (utformat!='pdf') {
 <<'konfidensintervaller', results='asis', echo=FALSE>>=
 
 print(xtable::xtable(konftabell1, align=c('l', 'l', rep('r', dim(konftabell1)[2]-1)), caption = 'Wexner før og etter, snm'), include.rownames = F)
-print(xtable::xtable(konftabell2, align=c('l', 'l', rep('r', dim(konftabell2)[2]-1)), caption = 'St. Marks før og etter, pr. år, SNM'), include.rownames = F)
-print(xtable::xtable(konftabell3, align=c('l', 'l', rep('r', dim(konftabell3)[2]-1)), caption = 'St. Marks før og etter, pr. år, Sfinkter'), include.rownames = F)
+print(xtable::xtable(konftabell2, align=c('l', 'l', rep('r', dim(konftabell2)[2]-1)), caption = 'St. Marks før og etter, pr. år, Sfinkter'), include.rownames = F)
+print(xtable::xtable(konftabell3, align=c('l', 'l', rep('r', dim(konftabell3)[2]-1)), caption = 'St. Marks før og etter, pr. år, SNM'), include.rownames = F)
 print(xtable::xtable(konftabell4, align=c('l', 'l', rep('r', dim(konftabell4)[2]-1)), caption = 'St Marks før og etter 1 og 5 år, Sfinkter'), include.rownames = F)
 print(xtable::xtable(konftabell5, align=c('l', 'l', rep('r', dim(konftabell5)[2]-1)), caption = 'St Marks før og etter 1 og 5 år, SNM'), include.rownames = F)
 

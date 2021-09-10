@@ -43,8 +43,8 @@ hentData <- F
 forlopstype1=99
 forlopstype2=99
 valgtShus <- '' #c('601225', '700116')
-utformat <- 'pdf'
-
+utformat <- 'wmf'
+figfolder <- "C:/GIT/nra/inst/indikatorfig/"
 
 # Suksessrate test-prosedyre SNM
 
@@ -78,14 +78,14 @@ names(indikator) <- c('ReshId', 'Aar', 'Teller Ind1', 'Nevner Ind1', 'Indikator'
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind1')]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator1.", utformat)
+outfile <- paste0(figfolder, paste0("indikator1.", utformat))
 nraFigIndikator(plotdata, tittel = c('Andel med prosentvis reduksjon', 'i lekkasjeepisoder >= 50%')
                 , terskel = 5, maal = 70,
                 outfile=outfile)
 
 ind1_50pstlekkasjereduksjon <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind1_50pstlekkasjereduksjon.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind1_50pstlekkasjereduksjon.csv', row.names = F)
 
 # indikator %>% group_by(Aar, ReshId) %>% summarise("andel måloppnåelse" = mean(`Teller Ind1`)*100,
 #                                           N = n()) %>% filter(Aar >= 2018)
@@ -110,7 +110,7 @@ names(indikator) <- c('ReshId', 'Aar', 'Teller Ind2', 'Nevner Ind2', 'Indikator'
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind2')]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator2.", utformat)
+outfile <- paste0(figfolder, paste0("indikator2.", utformat))
 nraFigIndikator(plotdata, tittel = c('Andel med utført ultralyd'), terskel = 5, maal = 95, outfile=outfile)
 
 ind2_ultralyd <- indikator
@@ -139,7 +139,7 @@ names(indikator) <- c('ReshId', 'Aar', 'Teller Ind3', 'Nevner Ind3', 'Indikator'
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind3')]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator3.", utformat)
+outfile <- paste0(figfolder, paste0("indikator3.", utformat))
 nraFigIndikator(plotdata, tittel = c('Andel bekreftet sårinfeksjon innen', '30 dager etter implantasjon'), terskel = 5,
                 maal = 4, maalretn = 'lav', decreasing = T, outfile = outfile, desimal = T, xmax=5)
 
@@ -198,7 +198,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind4')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator4.", utformat)
+outfile <- paste0(figfolder, paste0("indikator4.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=9', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 30, outfile=outfile)
 
@@ -220,10 +220,10 @@ Indikatorer <- bind_rows(Indikatorer, indikator)
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind5', 'Nevner Ind5', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind5')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator5.", utformat)
+outfile <- paste0(figfolder, paste0("indikator5.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=9', '5 år etter operasjon med SNM'), terskel = 5,
                 maal = 30, outfile=outfile)
 
@@ -257,7 +257,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind6')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator6.", utformat)
+outfile <- paste0(figfolder, paste0("indikator6.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=12', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 50, outfile=outfile)
 
@@ -281,10 +281,10 @@ Indikatorer <- bind_rows(Indikatorer, indikator)
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind7', 'Nevner Ind7', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind7')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator7.", utformat)
+outfile <- paste0(figfolder, paste0("indikator7.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=12', '5 år etter operasjon med SNM'), terskel = 5,
                 maal = 50, outfile=outfile)
 
@@ -318,7 +318,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind8')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator8.", utformat)
+outfile <- paste0(figfolder, paste0("indikator8.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=9', '1 år etter sfinkterplastikk'), terskel = 5,
                 maal = 30, outfile=outfile)
 
@@ -342,10 +342,10 @@ Indikatorer <- bind_rows(Indikatorer, indikator)
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind9', 'Nevner Ind9', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind9')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator9.", utformat)
+outfile <- paste0(figfolder, paste0("indikator9.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=9', '5 år etter sfinkterplastikk'), terskel = 5,
                 maal = 30, outfile=outfile)
 
@@ -378,7 +378,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind10')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator10.", utformat)
+outfile <- paste0(figfolder, paste0("indikator10.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=12', '1 år etter sfinkterplastikk'), terskel = 5,
                 maal = 50, outfile=outfile)
 
@@ -402,10 +402,10 @@ Indikatorer <- bind_rows(Indikatorer, indikator)
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind11', 'Nevner Ind11', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind11')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator11.", utformat)
+outfile <- paste0(figfolder, paste0("indikator11.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=12', '5 år etter sfinkterplastikk'), terskel = 5,
                 maal = 30, outfile=outfile)
 
@@ -440,7 +440,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind12')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator12.", utformat)
+outfile <- paste0(figfolder, paste0("indikator12.", utformat))
 nraFigIndikator(plotdata, tittel = c('Wexnerskår <=9', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 30, outfile=outfile)
 
@@ -473,7 +473,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind13')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator13.", utformat)
+outfile <- paste0(figfolder, paste0("indikator13.", utformat))
 nraFigIndikator(plotdata, tittel = c('Wexnerskår <=12', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 50, outfile=outfile)
 
@@ -508,7 +508,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind14')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator14.", utformat)
+outfile <- paste0(figfolder, paste0("indikator14.", utformat))
 nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=9', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 30, outfile=outfile)
 
@@ -535,7 +535,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller ind15')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator15.", utformat)
+outfile <- paste0(figfolder, paste0("indikator15.", utformat))
 nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=9', '1 år etter sfinkterplastikk'), terskel = 5,
                 maal = 30, outfile=outfile)
 
@@ -563,7 +563,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind16')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator16.", utformat)
+outfile <- paste0(figfolder, paste0("indikator16.", utformat))
 nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=12', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 50, outfile=outfile)
 
@@ -591,7 +591,7 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind17')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator17.", utformat)
+outfile <- paste0(figfolder, paste0("indikator17.", utformat))
 nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=12', '1 år etter sfinkterplastikk'), terskel = 5,
                 maal = 50, outfile=outfile)
 
@@ -739,7 +739,7 @@ Indikatorer$ind_id[Indikatorer$ind_id == "Ind17"] <- "nra_inkontinensscore_12_1a
 Indikatorer$context <- "caregiver"
 
 # write.csv2(Indikatorer, "I:/nra/indikatorer_shusviser_nra21102020.csv", row.names = F, fileEncoding = "UTF-8")
-write.csv2(Indikatorer, "I:/nra/indikatorer_shusviser_nra27052021.csv", row.names = F, fileEncoding = "UTF-8")
+write.csv2(Indikatorer, "I:/nra/indikatorer_shusviser_nra09092021.csv", row.names = F, fileEncoding = "UTF-8")
 
 dg_tall <- readxl::read_xlsx("Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Sykehusviser/Dekningsgrader/Dekningsgrad_NRA.xlsx",
                              sheet = "DG_Totalt m utregning")
