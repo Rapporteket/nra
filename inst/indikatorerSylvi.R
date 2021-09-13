@@ -125,6 +125,9 @@ indikator <- indikator[indikator$ForlopsType1Num %in% c(1,2) & indikator$Forlops
 indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
 indikator$ind <- indikator$Konservativ_v2
 indikator <- indikator[!is.na(indikator$ind), ]
+indikator <- indikator %>% group_by(PasientID, Aar, AvdRESH) %>%
+  summarise(ind = max(ind),
+            ForlopsID = ForlopsID[ind==max(ind)][1])
 indikator$nevner <- 1
 indikator$Index <- 'Ind18'
 indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
