@@ -1459,39 +1459,39 @@ if (utformat!='pdf') {
 }
 
 outfile='TidlBeh_sfinkt.pdf'
-nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v2', datoFra=datoFra, datoTil=datoTil,
+nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v3', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
-  nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v2', datoFra=datoFra, datoTil=datoTil,
+  nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v3', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
                 valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
 }
 
 outfile='TidlBeh_snm.pdf'
-nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v2', datoFra=datoFra, datoTil=datoTil,
+nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v3', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
-  nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v2', datoFra=datoFra, datoTil=datoTil,
+  nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v3', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
                 valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
 }
 
 outfile<-'TidlBeh.pdf'
-nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v2', datoFra=datoFra, datoTil=datoTil,
+nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v3', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=1:2, forlopstype2=c(1,2,5,NA))
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
-  nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v2', datoFra=datoFra, datoTil=datoTil,
+  nraFigAndeler(RegData=RegData, valgtVar='TidlBeh_v3', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
                 valgtShus = valgtShus, forlopstype1=1:2, forlopstype2=c(1,2,5,NA))

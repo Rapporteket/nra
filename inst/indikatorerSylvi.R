@@ -2,7 +2,7 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
-RegData <- read.table('I:/nra/alleVarNum2021-09-02 10-37-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/alleVarNum2021-09-03 12-07-14.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -18,7 +18,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre", "KirurgiForRectumprolaps_v2",
                        "KunstigLukkMuskel")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2021-09-02 10-37-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2021-09-03 12-07-14.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -116,6 +116,34 @@ nraFigIndikator(plotdata, tittel = c('Andel med utført ultralyd'), terskel = 5,
 ind2_ultralyd <- indikator
 # write.csv2(indikator,
 #            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind2_ultralyd.csv', row.names = F)
+
+# Andel forløp med tidligere konservativ behandling
+# RegData <- RegDataAlle[RegDataAlle$Aar <= rap_aar, ]
+indikator <- RegDataAlle[RegDataAlle$Aar <= rap_aar, ]
+indikator <- indikator[indikator$ForlopsType1Num %in% c(1,2) & indikator$ForlopsType2Num %in% c(1,2,5, NA), ]
+
+indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
+indikator$ind <- indikator$Konservativ_v2
+indikator <- indikator[!is.na(indikator$ind), ]
+indikator$nevner <- 1
+indikator$Index <- 'Ind18'
+indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
+indikator <- indikator[, c("AvdRESH", "Aar", "ind", "nevner", "Index", "AarID")]
+Indikatorer <- bind_rows(Indikatorer, indikator)
+# Indikatorer <- indikator
+names(indikator) <- c('ReshId', 'Aar', 'Teller Ind18', 'Nevner Ind18', 'Indikator', 'AarID')
+
+plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind18')]
+names(plotdata) <- c('ReshId', 'Aar', 'Teller')
+plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
+outfile <- paste0(figfolder, paste0("indikator18.", utformat))
+nraFigIndikator(plotdata, tittel = c('Andel med tidligere', 'konservativ behandling'), terskel = 5, maal = 90, outfile=outfile)
+
+
+
+
+
+
 
 # Sårinfeksjon innen 30 dager
 RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)
