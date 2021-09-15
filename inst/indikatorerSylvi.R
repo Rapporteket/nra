@@ -438,7 +438,7 @@ names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
 outfile <- paste0(figfolder, paste0("indikator11.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=12', '5 år etter sfinkterplastikk'), terskel = 5,
-                maal = 30, outfile=outfile)
+                maal = 50, outfile=outfile)
 
 ind11_stmarks_12_5aar_sfinkt <- indikator
 # write.csv2(indikator,
