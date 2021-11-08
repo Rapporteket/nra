@@ -16,7 +16,7 @@ lastshinydata <- function() {
     RegData <- nra::nraHentRegData()
     Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
   } else {
-    RegData <- read.table('I:/nra/alleVarNum2021-05-27 09-43-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+    RegData <- read.table('I:/nra/alleVarNum2021-09-03 12-07-14.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
     RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                            'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                            'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -24,10 +24,13 @@ lastshinydata <- function() {
                            "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter", "GenQol",
                            "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje", "Komplikasjon",
                            "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
-                           "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
-                           "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
+                           "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyFoerTest", "UrgencyUnderTest",
+                           "UrgencyFoerTestUtenLekkasje", "UrgencyFoerTestMedLekkasje", "UrgencyFoerPassivLekkasje", "UrgencyUnderPassivLekkasje",
+                           "UrgencyUnderUtenTestMedLekkasje", "UrgencyUnderTestLekkasje", #"LekasjeFriFoerTest", "LekasjeFriUnderTest",
+                           "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig', "ICIQ_hyppighet",
                            'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
-                           "WexLivsstilsendring", "WexnerTotalScore", "Testprosedyre")]
+                           "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre", "KirurgiForRectumprolaps_v2",
+                           "KunstigLukkMuskel")]
 
     ForlopData <- read.table('I:/nra/ForlopsOversikt2021-05-27 09-43-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
     ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',

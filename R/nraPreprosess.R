@@ -49,6 +49,9 @@ nraPreprosess <- function(RegData)
   # RegData$Indikator1_lekk_red50_v1[is.nan(RegData$Indikator1_lekk_red50_v1)] <- 0
   # RegData$Indikator1_lekk_red50_v1 <- as.numeric(RegData$Indikator1_lekk_red50_v1 >= 50)
   #
+
+  ##### Fjernes foreløpig  05.11.2021
+
   RegData$Indikator1_lekk_red50_v2 <- pmax((RegData$InkontinensFoerTest - RegData$InkontinensUnderTest)/RegData$InkontinensFoerTest*100) #,
                                            # (RegData$UrgencyFoerTest - RegData$UrgencyUnderTest)/RegData$UrgencyFoerTest*100, na.rm = T)
   RegData$Indikator1_lekk_red50_v2[is.nan(RegData$Indikator1_lekk_red50_v2)] <- 0
