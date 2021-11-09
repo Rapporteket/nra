@@ -16,7 +16,7 @@ lastshinydata <- function() {
     RegData <- nra::nraHentRegData()
     Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
   } else {
-    RegData <- read.table('I:/nra/alleVarNum2021-09-03 12-07-14.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+    RegData <- read.table('I:/nra/alleVarNum2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
     RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                            'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                            'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -32,11 +32,11 @@ lastshinydata <- function() {
                            "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre", "KirurgiForRectumprolaps_v2",
                            "KunstigLukkMuskel")]
 
-    ForlopData <- read.table('I:/nra/ForlopsOversikt2021-09-03 12-07-14.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+    ForlopData <- read.table('I:/nra/ForlopsOversikt2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
     ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                                  'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
     RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
-    Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2021-09-03 12-07-14.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+    Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
   }
   # Skjemaoversikt$SistLagretDato <- as.Date(Skjemaoversikt$SistLagretDato, format="%Y-%m-%d")
   # RegData$HovedDato[RegData$HovedDato == ''] <- as.character(Skjemaoversikt$SistLagretDato[Skjemaoversikt$ForlopsID %in%
