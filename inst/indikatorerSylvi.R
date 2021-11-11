@@ -52,7 +52,7 @@ figfolder <- "C:/GIT/nra/inst/indikatorfig/"
 # RegData <- RegData[RegData$ForlopsType2Num == 2, ]
 # RegData <- RegData[!is.na(RegData$InkontinensFoerTest), ]
 
-nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
+nraUtvalg <- nraUtvalg(RegData=RegDataAlle, datoFra=datoFra, datoTil=datoTil,
                        minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
                        forlopstype1=2, forlopstype2=forlopstype2)
 RegData <- nraUtvalg$RegData
