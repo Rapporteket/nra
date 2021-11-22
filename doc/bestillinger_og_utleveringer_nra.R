@@ -2,6 +2,17 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
+##### Ny utkjøring, nå med EndeTilEndeSutur inkludert 22.11.2021 ###########################3
+registryName <- "nra"
+dbType <- "mysql"
+query <- "SELECT * FROM alleVarNum"
+RegData <- rapbase::LoadRegData(registryName, query, dbType)
+RegData_sfinkt <- RegData[RegData$ForlopsType1Num == 1, ]
+RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_sfinkt$ForlopsID, ]
+utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)
+
+write.csv2(utlevering, "/home/rstudio/.ssh/utlevering_nra_2021_11_22.csv", row.names = F, fileEncoding = "Latin1")
+
 ### Stid Norderval
 RegData <- read.table('I:/nra/alleVarNum2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 # ForlopData <- read.table('I:/nra/ForlopsOversikt2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
