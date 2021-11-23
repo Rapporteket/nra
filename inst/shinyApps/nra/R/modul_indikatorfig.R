@@ -9,7 +9,7 @@ indikatorfig_UI <- function(id){
   shiny::sidebarLayout(
     sidebarPanel(
       selectInput(inputId = ns("valgtVar"), label = "Velg variabel",
-                  choices = c("Indikator1_lekk_red50", "Ultralyd")),
+                  choices = c("Indikator1_lekk_red50", "Ultralyd", "tidl_konservativ")),
       uiOutput(outputId = ns('tilAar'))
       # dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
       #                max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),
@@ -61,7 +61,7 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
     indikator <- req(indikatorData())
     plotdata <- indikator[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
     names(plotdata) <- c('ReshId', 'Aar', 'Teller', "SenterKortNavn")
-    nraFigIndikator(plotdata, tittel = c('Andel med prosentvis reduksjon', 'i lekkasjeepisoder >= 50%')
+    nraFigIndikator(plotdata, tittel = "test"
                     , terskel = 5, maal = 70, outfile='')
   }, width = 700, height = 700)
 

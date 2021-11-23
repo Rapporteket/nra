@@ -51,6 +51,7 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData$Variabel <- RegData$Komplikasjon
     RegData <- RegData[RegData$ForlopsType1Num == 2, ]
     RegData <- RegData[!is.na(RegData$Variabel), ]
+    RegData <- RegData[RegData$Onestage != 1, ]  # Fjerner Onestage
     tittel <- 'Komplikasjoner SNM test innen 30 dager'
     gr <- c(0,1,2,9)
     grtxt <- c('Ingen', 'Sårinfeksjon mistenkt', 'Sårinfeksjon bekreftet','Annet')
@@ -63,7 +64,7 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData$Variabel <- RegData$KomplikasjonT2
     RegData <- RegData[RegData$ForlopsType1Num == 2, ]
     RegData <- RegData[!is.na(RegData$Variabel), ]
-    tittel <- 'Komplikasjoner SNM prosedyre innen 30 dager'
+    tittel <- 'Komplikasjoner SNM implantasjon innen 30 dager'
     gr <- c(0,1,2,9)
     grtxt <- c('Ingen', 'Sårinfeksjon mistenkt', 'Sårinfeksjon bekreftet','Annet')
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)

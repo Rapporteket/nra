@@ -24,6 +24,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$ind_id <- 'nra_50pst_lekkasjeredusjon'
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    tittel <- c('Andel med prosentvis reduksjon', 'i lekkasjeepisoder >= 50%')
   }
 
   if (valgtVar == "Ultralyd") {
@@ -39,6 +40,26 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- 'Andel med utført ultralyd'
+  }
+
+  if (valgtVar == "tidl_konservativ") {
+    indikator <- RegData[RegData$ForlopsType1Num %in% c(1,2) & RegData$ForlopsType2Num %in% c(1,2,5, NA), ]
+
+    indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
+    indikator$var <- indikator$Konservativ_v2
+    indikator <- indikator[!is.na(indikator$var), ]
+    indikator <- indikator %>% group_by(PasientID, Aar, AvdRESH) %>%
+      summarise(var = max(var),
+                ForlopsID = ForlopsID[var==max(var)][1])
+    indikator$denominator <- 1
+    indikator$ind_id <- 'nra_tidl_konservativ'
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator <- indikator[, c("AvdRESH", "year", "var", "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c('Andel med tidligere', 'konservativ behandling')
   }
 
 
