@@ -14,7 +14,8 @@ indikatorfig_UI <- function(id){
                               "stmarks_9_1aar_snm", "stmarks_9_5aar_snm",
                               "stmarks_12_1aar_snm", "stmarks_12_5aar_snm",
                               "stmarks_9_1aar_sfinkt", "stmarks_9_5aar_sfinkt",
-                              "stmarks_12_1aar_sfinkt", "stmarks_12_5aar_sfinkt")),
+                              "stmarks_12_1aar_sfinkt", "stmarks_12_5aar_sfinkt",
+                              "wexner_9_1aar_snm", "wexner_12_1aar_snm")),
       uiOutput(outputId = ns('tilAar'))
       # dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
       #                max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),

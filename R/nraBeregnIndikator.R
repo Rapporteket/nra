@@ -240,7 +240,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     Oppfolging <- Oppfolging[!is.na(Oppfolging$var), ]
     Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegDataStr12$ForlopsID[RegDataStr12$ForlopsType1Num == 1], ] # Bare inkluder oppfølginger der det finnes basisreg
     indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "var")]
-    indikator <- merge(indikator, RegDataStr12[RegDataStr12$ForlopsType1Num == 2, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+    indikator <- merge(indikator, RegDataStr12[RegDataStr12$ForlopsType1Num == 1, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- 'nra_stmarks_12_1aar_sfinkt'
@@ -262,7 +262,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     Oppfolging <- Oppfolging[!is.na(Oppfolging$var), ]
     Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegDataStr12$ForlopsID[RegDataStr12$ForlopsType1Num == 1], ] # Bare inkluder oppfølginger der det finnes basisreg
     indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "var")]
-    indikator <- merge(indikator, RegDataStr12[RegDataStr12$ForlopsType1Num == 2, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+    indikator <- merge(indikator, RegDataStr12[RegDataStr12$ForlopsType1Num == 1, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- 'nra_stmarks_12_5aar_sfinkt'
@@ -274,6 +274,52 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     maal <- 50
   }
 
+  if (valgtVar == "wexner_9_1aar_snm") {
+    RegDataStr9 <- RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
+    RegDataStr9 <- dplyr::bind_rows(RegDataStr9, RegData[RegData$KobletForlopsID %in% RegDataStr9$ForlopsID, ])
+    RegDataStr9$var <- NA
+    RegDataStr9$var[which(RegDataStr9$WexnerTotalScore<=9)] <- 1
+    RegDataStr9$var[which(RegDataStr9$WexnerTotalScore>9)] <- 0
+    Oppfolging <- RegDataStr9[RegDataStr9$ForlopsType1Num == 3, ]
+    Oppfolging <- Oppfolging[!is.na(Oppfolging$var), ]
+    Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegDataStr9$ForlopsID[RegDataStr9$ForlopsType1Num == 2], ] # Bare inkluder oppfølginger der det finnes basisreg
+    indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "var")]
+    indikator <- merge(indikator, RegDataStr9[RegDataStr9$ForlopsType1Num == 2, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+    indikator$denominator <- 1
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$ind_id <- 'nra_wexner_9_1aar_snm'
+    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c('Wexnerskår <=9', '1 år etter operasjon med SNM')
+    maal <- 30
+  }
+
+  if (valgtVar == "wexner_12_1aar_snm") {
+    RegDataStr12 <- RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
+    RegDataStr12 <- dplyr::bind_rows(RegDataStr12, RegData[RegData$KobletForlopsID %in% RegDataStr12$ForlopsID, ])
+    RegDataStr12$var <- NA
+    RegDataStr12$var[which(RegDataStr12$WexnerTotalScore<=12)] <- 1
+    RegDataStr12$var[which(RegDataStr12$WexnerTotalScore>12)] <- 0
+    Oppfolging <- RegDataStr12[RegDataStr12$ForlopsType1Num == 3, ]
+    Oppfolging <- Oppfolging[!is.na(Oppfolging$var), ]
+    Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegDataStr12$ForlopsID[RegDataStr12$ForlopsType1Num == 2], ] # Bare inkluder oppfølginger der det finnes basisreg
+    indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "var")]
+    indikator <- merge(indikator, RegDataStr12[RegDataStr12$ForlopsType1Num == 2, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+    indikator$denominator <- 1
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$ind_id <- 'nra_wexner_12_1aar_snm'
+    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c('Wexnerskår <=12', '1 år etter operasjon med SNM')
+    maal <- 50
+  }
+
+
+
 indikator$context <- "caregiver"
 
 utputt <- list(indikator=indikator, tittel=tittel, maal=maal, terskel=terskel,
@@ -282,7 +328,6 @@ utputt <- list(indikator=indikator, tittel=tittel, maal=maal, terskel=terskel,
 return(utputt)
 
 }
-
 
 #
 # names(Indikatorer) <- c("orgnr",	"year",	"var",	"denominator",	"ind_id")
