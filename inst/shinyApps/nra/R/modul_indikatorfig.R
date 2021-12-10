@@ -9,7 +9,12 @@ indikatorfig_UI <- function(id){
   shiny::sidebarLayout(
     sidebarPanel(
       selectInput(inputId = ns("valgtVar"), label = "Velg variabel",
-                  choices = c("Indikator1_lekk_red50", "Ultralyd", "tidl_konservativ")),
+                  choices = c("Indikator1_lekk_red50", "Ultralyd",
+                              "tidl_konservativ", "saarinfeksjon",
+                              "stmarks_9_1aar_snm", "stmarks_9_5aar_snm",
+                              "stmarks_12_1aar_snm", "stmarks_12_5aar_snm",
+                              "stmarks_9_1aar_sfinkt", "stmarks_9_5aar_sfinkt",
+                              "stmarks_12_1aar_sfinkt", "stmarks_12_5aar_sfinkt")),
       uiOutput(outputId = ns('tilAar'))
       # dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
       #                max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),
@@ -53,22 +58,27 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
 
 
   indikatorData <- reactive({
-    TabellData <- nraBeregnIndikator(RegData=RegData, valgtVar=input$valgtVar)
+    indikatordata <- nraBeregnIndikator(RegData=RegData, valgtVar=input$valgtVar)
+    TabellData <- indikatordata$indikator
     TabellData <- TabellData[which(TabellData$year <= as.numeric(req(input$tilAar_verdi))), ]
+    indikatordata$indikator <- TabellData
+    indikatordata
   })
 
   output$Figur1 <- renderPlot({
-    indikator <- req(indikatorData())
+    indikator <- req(indikatorData()$indikator)
     plotdata <- indikator[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
     names(plotdata) <- c('ReshId', 'Aar', 'Teller', "SenterKortNavn")
-    nraFigIndikator(plotdata, tittel = "test"
-                    , terskel = 5, maal = 70, outfile='')
+    nraFigIndikator(plotdata, tittel = indikatorData()$tittel
+                    , terskel = indikatorData()$terskel, maal = indikatorData()$maal,
+                    maalretn = indikatorData()$maalRetn, xmax = indikatorData()$xmax,
+                    outfile='')
   }, width = 700, height = 700)
 
   output$Tabell1 <- renderTable(
 
-    Tabell <- req(indikatorData()) %>% dplyr::group_by(SenterKortNavn, year) %>%
-      dplyr::summarise(Antall = sum(var),
+    Tabell <- req(indikatorData()$indikator) %>% dplyr::group_by(SenterKortNavn, year) %>%
+      dplyr::summarise(Antall = as.integer(sum(var)),
                        N = n(),
                        Andel = Antall/N*100)
   )

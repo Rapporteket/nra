@@ -16,6 +16,7 @@ nraPreprosess <- function(RegData)
   RegData$Mnd <- as.numeric(format(RegData$HovedDato, format="%m"))
   RegData$SenterKortNavn <- trimws(RegData$SenterKortNavn)
   RegData$SenterKortNavn[RegData$SenterKortNavn=="Helse Ber"] <- "Haukeland"
+  RegData$SenterKortNavn[RegData$AvdRESH==601233] <- "UNN Narvik" # Foreløpig, må fikses i registeret
 
   RegData$Sfinktervurdering <- NA
   RegData$Sfinktervurdering[RegData$Ultralyd==1 & RegData$PartiellDefekt==0 &

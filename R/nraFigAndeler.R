@@ -114,6 +114,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       if (flerevar == 0 ) {
         PlotParams <- nraPrepVar(RegData, valgtVar, enhetsUtvalg, reshID=reshID)
         RegData <- PlotParams$RegData; medSml <- PlotParams$medSml;
+
         indHoved <- PlotParams$indHoved; indRest <- PlotParams$indRest;
         PlotParams$RegData <- NA
         AntHoved <- table(RegData$VariabelGr[indHoved])

@@ -95,7 +95,7 @@ nraHentRegData <- function() {
                   FROM alleVarNum INNER JOIN ForlopsOversikt
                   ON alleVarNum.ForlopsID = ForlopsOversikt.ForlopsID")
 
-  RegData <- rapbase::LoadRegData(registryName, query, dbType)
+  RegData <- rapbase::loadRegData(registryName, query, dbType)
 
   return(RegData)
 }
@@ -115,7 +115,7 @@ nraHentTabell <- function(tabnavn) {
 
   query <- paste0("SELECT * FROM ", tabnavn)
 
-  RegData <- rapbase::LoadRegData(registryName, query, dbType)
+  RegData <- rapbase::loadRegData(registryName, query, dbType)
 
   return(RegData)
 }
