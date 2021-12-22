@@ -21,6 +21,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
   terskel <- 5 # minste antall man viser avdelingens resultater for
   maalRetn <- "hoy"
   xmax <- NA
+  decreasing <- FALSE
 
   if (valgtVar == "Indikator1_lekk_red50") {
     nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=2)
@@ -95,6 +96,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     tittel <- c('Andel bekreftet sårinfeksjon innen', '30 dager etter implantasjon')
     maal <- 4
     maalRetn <- "lav"
+    decreasing <- TRUE
     xmax <- 5
   }
 
@@ -323,7 +325,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
 indikator$context <- "caregiver"
 
 utputt <- list(indikator=indikator, tittel=tittel, maal=maal, terskel=terskel,
-               maalRetn=maalRetn, xmax=xmax)
+               maalRetn=maalRetn, xmax=xmax, decreasing=decreasing)
 
 return(utputt)
 

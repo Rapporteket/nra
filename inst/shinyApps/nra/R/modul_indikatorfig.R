@@ -9,29 +9,21 @@ indikatorfig_UI <- function(id){
   shiny::sidebarLayout(
     sidebarPanel(
       selectInput(inputId = ns("valgtVar"), label = "Velg variabel",
-                  choices = c("Indikator1_lekk_red50", "Ultralyd",
-                              "tidl_konservativ", "saarinfeksjon",
-                              "stmarks_9_1aar_snm", "stmarks_9_5aar_snm",
-                              "stmarks_12_1aar_snm", "stmarks_12_5aar_snm",
-                              "stmarks_9_1aar_sfinkt", "stmarks_9_5aar_sfinkt",
-                              "stmarks_12_1aar_sfinkt", "stmarks_12_5aar_sfinkt",
-                              "wexner_9_1aar_snm", "wexner_12_1aar_snm")),
+                  choices = c("Prosentvis reduksjon i lekkasjeepisoder >= 50%" = "Indikator1_lekk_red50",
+                              "Utført ultralyd" = "Ultralyd",
+                              "Tidligere konservativ behandling" = "tidl_konservativ",
+                              "Bekreftet sårinfeksjon innen 30 dager etter implantasjon" = "saarinfeksjon",
+                              "St. Mark’s Inkontinensskår <=9 1 år etter operasjon med SNM" = "stmarks_9_1aar_snm",
+                              "St. Mark’s Inkontinensskår <=9 5 år etter operasjon med SNM" = "stmarks_9_5aar_snm",
+                              "St. Mark’s Inkontinensskår <=12 1 år etter operasjon med SNM" = "stmarks_12_1aar_snm",
+                              "St. Mark’s Inkontinensskår <=12 5 år etter operasjon med SNM" = "stmarks_12_5aar_snm",
+                              "St. Mark’s Inkontinensskår <=9 1 år etter sfinkterplastikk" = "stmarks_9_1aar_sfinkt",
+                              "St. Mark’s Inkontinensskår <=9 5 år etter sfinkterplastikk" = "stmarks_9_5aar_sfinkt",
+                              "St. Mark’s Inkontinensskår <=12 1 år etter sfinkterplastikk" = "stmarks_12_1aar_sfinkt",
+                              "St. Mark’s Inkontinensskår <=12 5 år etter sfinkterplastikk" = "stmarks_12_5aar_sfinkt",
+                              "Wexnerskår <=9 1 år etter operasjon med SNM" = "wexner_9_1aar_snm",
+                              "Wexnerskår <=12 1 år etter operasjon med SNM" = "wexner_12_1aar_snm")),
       uiOutput(outputId = ns('tilAar'))
-      # dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
-      #                max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),
-      # selectInput(inputId = ns("enhetsUtvalg"), label = "Lag figur for",
-      #             choices = c('Hele landet'=0, 'Egen avd. mot landet forøvrig'=1, 'Egen avd.'=2)),
-      # selectInput(inputId = ns("valgtShus"), label = "Velg sykehus",
-      #             choices = BrValg$sykehus, multiple = TRUE),
-      # sliderInput(inputId=ns("alder"), label = "Alder", min = 0,
-      #             max = 130, value = c(0, 130)),
-      # selectInput(inputId = ns("erMann"), label = "Kjønn",
-      #             choices = c('Begge'=99, 'Kvinne'=0, 'Mann'=1)),
-      # selectInput(inputId = ns("forlopstype1"), label = "Velg operasjonstype",
-      #             choices = c('--'=99, 'Sfinkterplastikk'=1, 'SNM'=2)),
-      # uiOutput(outputId = ns('forlopstype2')),
-      # selectInput(inputId = ns("bildeformat"), label = "Velg bildeformat",
-      #             choices = c('pdf', 'png', 'jpg', 'bmp', 'tif', 'svg'))
     ),
     # Show a plot of the generated distribution
     mainPanel(
@@ -41,6 +33,10 @@ indikatorfig_UI <- function(id){
                   tabPanel("Tabell", value = "tab",
                            # uiOutput(ns("utvalg")),
                            tableOutput(ns("Tabell1")), downloadButton(ns("lastNed"), "Last ned tabell")
+                  ),
+                  tabPanel("DT_Tabell", value = "tab2",
+                           # uiOutput(ns("utvalg")),
+                           DTOutput(ns("Tabell2"))
                   )
       )
     )
@@ -59,7 +55,7 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
 
 
   indikatorData <- reactive({
-    indikatordata <- nraBeregnIndikator(RegData=RegData, valgtVar=input$valgtVar)
+    indikatordata <- nra::nraBeregnIndikator(RegData=RegData, valgtVar=input$valgtVar)
     TabellData <- indikatordata$indikator
     TabellData <- TabellData[which(TabellData$year <= as.numeric(req(input$tilAar_verdi))), ]
     indikatordata$indikator <- TabellData
@@ -69,11 +65,11 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
   output$Figur1 <- renderPlot({
     indikator <- req(indikatorData()$indikator)
     plotdata <- indikator[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
-    names(plotdata) <- c('ReshId', 'Aar', 'Teller', "SenterKortNavn")
-    nraFigIndikator(plotdata, tittel = indikatorData()$tittel
-                    , terskel = indikatorData()$terskel, maal = indikatorData()$maal,
+    # names(plotdata) <- c('ReshId', 'Aar', 'Teller', "SenterKortNavn")
+    nra::nraFigIndikator_v2(plotdata, tittel = indikatorData()$tittel,
+                            terskel = indikatorData()$terskel, maal = indikatorData()$maal,
                     maalretn = indikatorData()$maalRetn, xmax = indikatorData()$xmax,
-                    outfile='')
+                    decreasing =indikatorData()$decreasing, outfile='')
   }, width = 700, height = 700)
 
   output$Tabell1 <- renderTable(
@@ -82,6 +78,14 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
       dplyr::summarise(Antall = as.integer(sum(var)),
                        N = n(),
                        Andel = Antall/N*100)
+  )
+
+  output$Tabell2 <- renderDT(
+
+    Tabell <- req(indikatorData()$indikator) %>% dplyr::group_by(SenterKortNavn, year) %>%
+      dplyr::summarise(Antall = as.integer(sum(var)),
+                       N = n(),
+                       Andel = round(Antall/N*100, 1))
   )
 
 
