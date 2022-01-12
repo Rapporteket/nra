@@ -146,7 +146,61 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
   })
 
 
+  admtab_forlop <- function() {
+
+    skjemaoversikt <- merge(skjemaoversikt, RegData[, c("ForlopsID", "KobletForlopsID")], by = "ForlopsID", all.x = T)
+
+    skjemaoversikt_forlop <-
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "1A Anamnese",
+                           c("ForlopsID", "HovedDato", "Sykehusnavn", "AvdRESH", "SkjemaStatus")],
+            skjemaoversikt[skjemaoversikt$Skjemanavn == "1B Symptom",
+                           c("SkjemaStatus", "ForlopsID")],
+            by = "ForlopsID", suffixes = c("_1A", "_1B"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "2B Sfinkter",
+                           c("SkjemaStatus", "ForlopsID")],
+            by = "ForlopsID", suffixes = c("", "_2B"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "2A SNM-1",
+                           c("SkjemaStatus", "ForlopsID")],
+            by = "ForlopsID", suffixes = c("", "_2A1"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "2A SNM-2",
+                           c("SkjemaStatus", "ForlopsID")],
+            by = "ForlopsID", suffixes = c("", "_2A2"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "1B Oppfølging 1 år",
+                           c("SkjemaStatus", "KobletForlopsID")],
+            by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf_1aar"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "1B Oppfølging 5 år",
+                           c("SkjemaStatus", "KobletForlopsID")],
+            by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf_5aar"), all = T)
+    names(skjemaoversikt_forlop)[names(skjemaoversikt_forlop) == "SkjemaStatus"] <- "SkjemaStatus_2B"
+
+    skjemaoversikt_forlop <- merge(skjemaoversikt_forlop, RegData[, c("ForlopsID", "ForlopsType1", "ForlopsType2", "PasientID")],
+                                   by = "ForlopsID", all.x = T)
 
 
+    skjemaoversikt_forlop$statusbasis <- 0
+    # skjemaoversikt_forlop$statusbasis[skjemaoversikt_forlop$SkjemaStatus_1A == 1 &
+    #                                     skjemaoversikt_forlop$SkjemaStatus_1B == 1 &
+    #                                     (skjemaoversikt_forlop$SkjemaStatus == 1 |
+    #                                        (skjemaoversikt_forlop$SkjemaStatus_2A1 == 1 &
+    #                                        skjemaoversikt_forlop$SkjemaStatus_2A2 == 1))] <- 1
+
+    skjemaoversikt_forlop$statusbasis[skjemaoversikt_forlop$SkjemaStatus_1A == 1 &
+                                        skjemaoversikt_forlop$SkjemaStatus_1B == 1 &
+                                        (skjemaoversikt_forlop$SkjemaStatus_2B == 1 |
+                                           skjemaoversikt_forlop$SkjemaStatus_2A1 == 1 |
+                                           skjemaoversikt_forlop$ForlopsType2 %in%
+                                           c("Eksplantasjon", "Revisjon"))] <- 1
+
+
+    # tmp <- skjemaoversikt_forlop[skjemaoversikt_forlop$statusbasis==0, ]
+    # tmp2 <- skjemaoversikt_forlop[skjemaoversikt_forlop$statusbasis==1, ]
+  }
+
+  # tmp <- skjemaoversikt[is.na(skjemaoversikt$KobletForlopsID), ]
+  # # tmp$ForlopsID[!is.na(tmp$KobletForlopsID)] <- tmp$KobletForlopsID[!is.na(tmp$KobletForlopsID)]
+  # tmp <- tmp %>% dplyr::group_by(ForlopsID) %>%
+  #   dplyr::summarise(hvd_dato_min = min(HovedDato, na.rm = T),
+  #                    hvd_dato_max = max(HovedDato, na.rm = T))
+  # tmp <- tmp[tmp$hvd_dato_min!=tmp$hvd_dato_max, ]
 
 }

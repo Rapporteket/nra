@@ -6,7 +6,7 @@ rm(list = ls())
 registryName <- "nra"
 dbType <- "mysql"
 query <- "SELECT * FROM alleVarNum"
-RegData <- rapbase::LoadRegData(registryName, query, dbType)
+RegData <- rapbase::loadRegData(registryName, query, dbType)
 RegData_sfinkt <- RegData[RegData$ForlopsType1Num == 1, ]
 RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_sfinkt$ForlopsID, ]
 utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)
