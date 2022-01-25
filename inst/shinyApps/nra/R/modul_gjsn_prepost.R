@@ -14,7 +14,7 @@ gjsn_prepost_UI <- function(id){
     sidebarPanel(
       selectInput(inputId = ns("valgtVar"), label = "Velg variabel", choices =
                     c('St. Marks score'='StMarksTotalScore', 'Wexner score'='WexnerTotalScore', 'Generell livskvalitet'='GenQol',
-                      'Påvirkning seksualliv'='QolSexualitet', 'Andel urininkontinente'='Urinlekkasje')),
+                      'Påvirkning seksualliv'='QolSexualitet', 'Andel urininkontinente'='Urinlekkasje_v2')),
       selectInput(inputId = ns("sammenlign"), label = "Sammenlign med oppfølging", choices =
                     c('Kun pre'=0, 'Pre og 1-årsoppfølging'=1, 'Pre 1- og 5-årsoppfølging'=2)),
       dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
@@ -85,7 +85,7 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
 
   output$Tabell1 <- function() {
     TabellData <- tabellReager()
-    if (input$valgtVar == 'Urinlekkasje') {
+    if (input$valgtVar == 'Urinlekkasje_v2') {
       if (as.numeric(input$sammenlign) == 0) {
         Tabell1 <- tibble(Sykehus = TabellData$grtxt, Antall = round(as.numeric(TabellData$PlotMatrise)*TabellData$Ngr/100),
                           'Andel (%)' = as.numeric(TabellData$PlotMatrise), N = TabellData$Ngr) %>%

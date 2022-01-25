@@ -241,16 +241,17 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     if(!is.null(input$forlopstype1)){
       skjemaoversikt_forlop <- skjemaoversikt_forlop[skjemaoversikt_forlop$ForlopsType1Num %in%
                                                        as.numeric(input$forlopstype1), ]
-    }
-    if(!is.null(input$forlopstype2_verdi)){
-      skjemaoversikt_forlop <- skjemaoversikt_forlop[skjemaoversikt_forlop$ForlopsType2Num %in%
-                                                       as.numeric(input$forlopstype2_verdi), ]
+    } else {
+      if(!is.null(input$forlopstype2_verdi)){
+        skjemaoversikt_forlop <- skjemaoversikt_forlop[skjemaoversikt_forlop$ForlopsType2Num %in%
+                                                         as.numeric(input$forlopstype2_verdi), ]
+      }
     }
 
     adm_tab <- skjemaoversikt_forlop %>% dplyr::group_by(Sykehusnavn, tid) %>%
       dplyr::summarise(antall = sum(statusbasis == as.numeric("1" %in% input$regstatus) &
-                               SkjemaStatus_oppf_1aar == as.numeric("2" %in% input$regstatus) &
-                               SkjemaStatus_oppf_5aar == as.numeric("3" %in% input$regstatus))
+                                      SkjemaStatus_oppf_1aar == as.numeric("2" %in% input$regstatus) &
+                                      SkjemaStatus_oppf_5aar == as.numeric("3" %in% input$regstatus))
       )
 
     adm_tab <- adm_tab[!is.na(adm_tab$tid), ] %>%
