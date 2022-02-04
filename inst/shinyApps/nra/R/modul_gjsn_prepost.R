@@ -26,6 +26,8 @@ gjsn_prepost_UI <- function(id){
       selectInput(inputId = ns("forlopstype1"), label = "Velg operasjonstype",
                   choices = c('--'=99, 'Sfinkterplastikk'=1, 'SNM'=2)),
       uiOutput(outputId = ns('forlopstype2')),
+      selectInput(inputId = ns("gr_var"), label = "Grupperingsvariabel",
+                  choices = c('SenterKortNavn', 'Aar')),
       selectInput(inputId = ns("bildeformat"), label = "Velg bildeformat",
                   choices = c('pdf', 'png', 'jpg', 'bmp', 'tif', 'svg'))
     ),
@@ -60,7 +62,7 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
   output$Figur1 <- renderPlot({
     nraGjsnPrePost(RegData = RegData, valgtVar = input$valgtVar, minald=as.numeric(input$alder[1]),
                    maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-                   grvar='SenterKortNavn', outfile = '', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
+                   grvar=input$gr_var, outfile = '', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
                    reshID = reshID, hentData=F, forlopstype1=as.numeric(input$forlopstype1),
                    forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99})
   }, width = 700, height = 700)

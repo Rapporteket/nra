@@ -93,8 +93,8 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     N <- length(unique(union(Ukjente, unique(RegData$PasientID))))
 
     SamletPrPID <- aggregate(RegData[, c("AnnenBekkenKirurgi", 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom',
-                                 'ObsteriskSkade','PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi')],
-                     by=list(RegData$PasientID), max, na.rm = TRUE)
+                                         'ObsteriskSkade','PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi')],
+                             by=list(RegData$PasientID), max, na.rm = TRUE)
     SamletPrPID[SamletPrPID==-Inf] <- NA
     AntVar <- c(colSums(SamletPrPID[,-1], na.rm = T), Ukjent=length(Ukjente))
     NVar<-rep(N, length(AntVar))
@@ -102,6 +102,37 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
                'Obsterisk skade','Perifer nerveskade', 'Perineal abscess', 'Rectumreseksjon', 'Sfinkterotomi', 'Annet', 'Ukjent')
     tittel <- 'Etiologi'
   }
+
+  if (valgtVar == 'Etiologi_v2') {
+    retn <- 'H'
+    # Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)]) # Bør man sjekke om PasientID også finnes
+    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]                        # i RegData?
+    N <- dim(RegData)[1]
+    RegData$TidlKirurgEndetarm_samlet <- RegData$PerinealAbscess | RegData$Hemoroidereksjon |
+      RegData$Rectumreseksjon | RegData$Sfinkterotomi
+    RegData$TidlKirurgEndetarm_samlet[!is.na(RegData$TidlKirurgEndetarm)] <-
+      RegData$TidlKirurgEndetarm[!is.na(RegData$TidlKirurgEndetarm)]
+    # RegData$etio_bool <- RegData$ObsteriskSkade | RegData$AnnetTraume | RegData$TidlKirurgEndetarm_samlet |
+    #   RegData$AnnenBekkenKirurgi | RegData$NevrologiskSykdom | RegData$PeriferNervskade | RegData$AnnetEtiologi |
+    #   RegData$KraftBehandling
+    AntVar <- colSums(RegData[, c("ObsteriskSkade", "AnnetTraume","TidlKirurgEndetarm_samlet",
+                        "AnnenBekkenKirurgi", "NevrologiskSykdom",  "KraftBehandling",
+                        "AnnetEtiologi", "Ukjent")], na.rm = TRUE)
+    # AntVar <- c(colSums(RegData[which(RegData$Ukjent == 0),
+    #                             c("ObsteriskSkade", "AnnetTraume","TidlKirurgEndetarm_samlet",
+    #                               "AnnenBekkenKirurgi", "NevrologiskSykdom",  "KraftBehandling",
+    #                               "AnnetEtiologi")], na.rm = TRUE)
+    # NVar<-c(colSums(!is.na(RegData[which(RegData$Ukjent == 0),
+    #                              c("ObsteriskSkade", "AnnetTraume","TidlKirurgEndetarm_samlet",
+    #                                "AnnenBekkenKirurgi", "NevrologiskSykdom",  "KraftBehandling",
+    #                                "AnnetEtiologi")])), Ukjent = sum(RegData$Ukjent %in% 0:1))
+
+    NVar<-rep(N, length(AntVar))
+    grtxt <- c('Obsterisk skade', 'Annet traume', 'Tidligere kirurgi', 'Annen bekkenkirurgi', 'Nevrologisk sykdom',
+               'Kreftbehandling', 'Annet', 'Ukjent')
+    tittel <- 'Etiologi'
+  }
+
 
   if (valgtVar == 'TidlBeh') {
     retn <- 'H'
@@ -130,9 +161,6 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     SamletPrPID <- aggregate(RegData[, c("Konservativ_v2", "AnalInjection", "SNM", "Sfinkterplastikk",
                                          "Prolapskirurgi", "Stomi", "KunstigLukkMuskel", "AnnetTidligereBeh")],
                              by=list(RegData$PasientID), max, na.rm = TRUE)
-    # RegData[, c("Konservativ", "Irrigasjon", "Tibialisstimulering", "AnalInjection", "SNM", "Sfinkterplastikk",
-    #             "Rectopexi", "KirurgiForRectumprolaps", "Gracilisplastikk", "Stomi", "AnnetTidligereBeh", "PasientID")] %>% group_by(PasientID) %>%
-    #   summarise_all(max, na.rm=T)
     SamletPrPID[SamletPrPID==-Inf] <- NA
     AntVar <- colSums(SamletPrPID[,-1], na.rm = T)
     NVar<-rep(N, length(AntVar))
@@ -186,8 +214,8 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     retn <- 'H'
     RegData$Variabel <- RegData[, valgtVar]
     RegData <- RegData[which(RegData$Ultralyd %in% 0:2), ]
-#     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
-#     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
+    #     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
+    #     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
     gr <- c(0:5, 9, 99)
     grtxt <- c('Ingen skade', 'Partiell defekt ytre sfinkter', 'Partiell ytre og fullvegg indre',
                'Fullveggsdefekt ytre sfinkter', 'Fullvegg ytre og indre sfinkter', 'Fullveggsdefekt indre sfinkter',

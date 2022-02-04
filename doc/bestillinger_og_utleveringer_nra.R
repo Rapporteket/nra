@@ -7,6 +7,18 @@ registryName <- "nra"
 dbType <- "mysql"
 query <- "SELECT * FROM alleVarNum"
 RegData <- rapbase::loadRegData(registryName, query, dbType)
+RegData_snm <- RegData[RegData$ForlopsType1Num == 2 & RegData$AvdRESH == 601225, ]
+RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_snm$ForlopsID, ]
+utlevering <- dplyr::bind_rows(RegData_snm, RegData_oppf)
+
+write.csv2(utlevering, "/home/rstudio/.ssh/utlevering_nra_snm_2022_02_02.csv", row.names = F, fileEncoding = "Latin1")
+
+
+##### Ny utkjøring, nå med EndeTilEndeSutur inkludert 22.11.2021 ###########################3
+registryName <- "nra"
+dbType <- "mysql"
+query <- "SELECT * FROM alleVarNum"
+RegData <- rapbase::loadRegData(registryName, query, dbType)
 RegData_sfinkt <- RegData[RegData$ForlopsType1Num == 1, ]
 RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_sfinkt$ForlopsID, ]
 utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)

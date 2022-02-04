@@ -10,7 +10,8 @@
 #'
 BrValg <- function(RegData) {
 
-  varvalg = c('Alder'= 'PasientAlder', 'Etiologi'= 'Etiologi', 'Tidligere behandling'= 'TidlBeh_v3',
+  varvalg = c('Alder'= 'PasientAlder', 'Etiologi (gml)'= 'Etiologi', 'Etiologi (ny)'= 'Etiologi_v2',
+              'Tidligere behandling'= 'TidlBeh_v3',
               'Symtomvarighet'= 'Symtomvarighet', 'Ultralydvurdering av sfinkterskade'= 'Sfinktervurdering',
               'Pasientens tilfredshet'= 'Tilfredshet', 'Komplikasjoner SNM test'= 'Komplikasjon',
               'Komplikasjoner SNM implantasjon'= 'KomplikasjonT2', 'Komplikasjoner SNM totalt'= 'KomplSNMtot',

@@ -52,7 +52,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                            erMann=99, reshID, enhetsUtvalg=0, hentData=F, forlopstype1=99, forlopstype2=99, onestage=99)
 {
   if (valgtVar == 'SNMdagbok') {
-    nraSNMdagbok(RegData=RegData, datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=enhetsUtvalg, valgtShus = valgtShus,
+    nraSNMdagbok_v2(RegData=RegData, datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=enhetsUtvalg, valgtShus = valgtShus,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
   } else {
@@ -104,7 +104,7 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     NRest <- 0
     AntRest <- 0
 
-    if (valgtVar %in% c('Etiologi', 'TidlBeh', 'TidlBeh_v2', 'TidlBeh_v3', 'KomplSfinkter')) {
+    if (valgtVar %in% c('Etiologi','Etiologi_v2' , 'TidlBeh', 'TidlBeh_v2', 'TidlBeh_v3', 'KomplSfinkter')) {
       flerevar <- 1
     } else {
       flerevar <- 0

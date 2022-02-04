@@ -21,6 +21,7 @@ nraHentRegData <- function() {
                   alleVarNum.PerinealAbscess,
                   alleVarNum.Rectumreseksjon,
                   alleVarNum.Sfinkterotomi,
+                  alleVarNum.KraftBehandling,
                   alleVarNum.AnnetEtiologi,
                   alleVarNum.Konservativ,
                   alleVarNum.Irrigasjon,
