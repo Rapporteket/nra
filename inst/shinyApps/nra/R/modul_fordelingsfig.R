@@ -26,6 +26,8 @@ fordelingsfig_UI <- function(id, BrValg){
       selectInput(inputId = ns("forlopstype1"), label = "Velg operasjonstype",
                   choices = c('--'=99, 'Sfinkterplastikk'=1, 'SNM'=2)),
       uiOutput(outputId = ns('forlopstype2')),
+      shiny::selectInput(inputId = ns("onestage"), label = "One stage",
+                         choices = c('--'=99, 'Ja'=1, 'Nei'=0), selected = 99),
       selectInput(inputId = ns("bildeformat"), label = "Velg bildeformat",
                   choices = c('pdf', 'png', 'jpg', 'bmp', 'tif', 'svg'))
     ),
@@ -58,12 +60,17 @@ fordelingsfig <- function(input, output, session, reshID, RegData, hvd_session){
 
 
   output$Figur1 <- renderPlot({
-    nraFigAndeler(RegData = RegData, valgtVar = input$valgtVar, minald=as.numeric(input$alder[1]),
-                  maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-                  valgtShus = if (!is.null(input$valgtShus)) {input$valgtShus} else {''}, outfile = '', preprosess=F,
-                  erMann = as.numeric(input$erMann), reshID = reshID, enhetsUtvalg = input$enhetsUtvalg, hentData=F,
-                  forlopstype1=as.numeric(input$forlopstype1), forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)}
-                  else {99})
+    nraFigAndeler(RegData = RegData, valgtVar = input$valgtVar,
+                  minald=as.numeric(input$alder[1]),
+                  maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1],
+                  datoTil = input$datovalg[2],
+                  valgtShus = if (!is.null(input$valgtShus)) {input$valgtShus} else {''},
+                  outfile = '', preprosess=F,
+                  erMann = as.numeric(input$erMann), reshID = reshID,
+                  enhetsUtvalg = input$enhetsUtvalg, hentData=F,
+                  forlopstype1=as.numeric(input$forlopstype1),
+                  forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)}
+                  else {99}, onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
   }, width = 700, height = 700)
 
 
@@ -73,7 +80,7 @@ fordelingsfig <- function(input, output, session, reshID, RegData, hvd_session){
                                 valgtShus = if (!is.null(input$valgtShus)) {input$valgtShus} else {''}, outfile = '', preprosess=F,
                                 erMann = as.numeric(input$erMann), reshID = reshID, enhetsUtvalg = input$enhetsUtvalg, hentData=F,
                                 forlopstype1=as.numeric(input$forlopstype1), forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)}
-                                else {99})
+                                else {99}, onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
   })
 
   output$utvalg <- renderUI({
@@ -137,7 +144,7 @@ fordelingsfig <- function(input, output, session, reshID, RegData, hvd_session){
                     valgtShus = if (!is.null(input$valgtShus)) {input$valgtShus} else {''}, preprosess=F,
                     erMann = as.numeric(input$erMann), reshID = reshID, enhetsUtvalg = input$enhetsUtvalg, hentData=F,
                     forlopstype1=as.numeric(input$forlopstype1), forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)}
-                    else {99}, outfile = file)
+                    else {99}, outfile = file, onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
     }
   )
 

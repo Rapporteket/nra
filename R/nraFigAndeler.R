@@ -51,10 +51,17 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                            valgtShus='', outfile = '', preprosess=TRUE, minald=0, maxald=130,
                            erMann=99, reshID, enhetsUtvalg=0, hentData=F, forlopstype1=99, forlopstype2=99, onestage=99)
 {
-  if (valgtVar == 'SNMdagbok') {
+  if (valgtVar %in% c('SNMdagbok', 'SNMdagbok_v2')) {
+    if (valgtVar == 'SNMdagbok_v2') {
     nraSNMdagbok_v2(RegData=RegData, datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=enhetsUtvalg, valgtShus = valgtShus,
                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
+    }
+    if (valgtVar == 'SNMdagbok') {
+      nraSNMdagbok(RegData=RegData, datoFra=datoFra, datoTil=datoTil, enhetsUtvalg=enhetsUtvalg, valgtShus = valgtShus,
+                      outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                      erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
+    }
   } else {
 
 
@@ -86,8 +93,10 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       RegData$AvdRESH[RegData$AvdRESH %in% valgtShus] <- reshID
       shtxt <- 'Ditt utvalg'
     }
-    if (valgtVar == 'Tilfredshet') {
-      RegData <- merge(RegData, RegData[which(RegData$ForlopsType1Num==3), c("Tilfredshet", "KobletForlopsID")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+    if (valgtVar %in% c('Tilfredshet', 'PGICEndring', 'PGICEndringLekkasje')) {
+      RegData <- merge(RegData, RegData[which(RegData$ForlopsType1Num==3),
+                                        c("Tilfredshet", "PGICEndring", "PGICEndringLekkasje", "KobletForlopsID")],
+                       by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                        suffixes = c('', 'Post1'), all.x = TRUE)
     }
 
@@ -114,7 +123,10 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       if (flerevar == 0 ) {
         PlotParams <- nraPrepVar(RegData, valgtVar, enhetsUtvalg, reshID=reshID)
         RegData <- PlotParams$RegData; medSml <- PlotParams$medSml;
-
+        nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
+                               minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
+                               forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
+        utvalgTxt <- nraUtvalg$utvalgTxt
         indHoved <- PlotParams$indHoved; indRest <- PlotParams$indRest;
         PlotParams$RegData <- NA
         AntHoved <- table(RegData$VariabelGr[indHoved])
@@ -144,6 +156,11 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
           indHoved <-which(as.numeric(RegData$AvdRESH)==reshID)
           indRest <- which(as.numeric(RegData$AvdRESH) != reshID)
         }
+        nraUtvalg <- nraUtvalg(RegData=nraPrepVar(RegData, valgtVar, enhetsUtvalg, reshID=reshID)$RegData,
+                               datoFra=datoFra, datoTil=datoTil,
+                               minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
+                               forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
+        utvalgTxt <- nraUtvalg$utvalgTxt
 
         PlotParams <- nraPrepVar(RegData[indHoved, ], valgtVar, enhetsUtvalg, reshID=reshID)
         AntHoved <- PlotParams$AntVar

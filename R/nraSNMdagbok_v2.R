@@ -8,7 +8,7 @@
 
 nraSNMdagbok_v2 <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', valgtShus='',
                            outfile = '', preprosess=TRUE, minald=0, maxald=130, enhetsUtvalg=0,
-                           erMann='', reshID, hentData=F, forlopstype1='', forlopstype2='', onestage=99)
+                           erMann=99, reshID, hentData=F, forlopstype1='', forlopstype2='', onestage=99)
 
 {
 

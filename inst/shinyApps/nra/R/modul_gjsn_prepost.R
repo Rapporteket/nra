@@ -13,8 +13,13 @@ gjsn_prepost_UI <- function(id){
   shiny::sidebarLayout(
     sidebarPanel(
       selectInput(inputId = ns("valgtVar"), label = "Velg variabel", choices =
-                    c('St. Marks score'='StMarksTotalScore', 'Wexner score'='WexnerTotalScore', 'Generell livskvalitet'='GenQol',
-                      'Påvirkning seksualliv'='QolSexualitet', 'Andel urininkontinente'='Urinlekkasje_v2')),
+                    c('St. Marks score'='StMarksTotalScore',
+                      'Wexner score'='WexnerTotalScore',
+                      'Generell livskvalitet'='GenQol',
+                      'Påvirkning seksualliv'='QolSexualitet',
+                      'Andel urininkontinente'='Urinlekkasje_v2',
+                      'EQ5D Skore' = 'EQ5DSkore',
+                      'EQ5D Helsetilstand' = 'EQ5DHelsetilstand')),
       selectInput(inputId = ns("sammenlign"), label = "Sammenlign med oppfølging", choices =
                     c('Kun pre'=0, 'Pre og 1-årsoppfølging'=1, 'Pre 1- og 5-årsoppfølging'=2)),
       dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
@@ -26,6 +31,8 @@ gjsn_prepost_UI <- function(id){
       selectInput(inputId = ns("forlopstype1"), label = "Velg operasjonstype",
                   choices = c('--'=99, 'Sfinkterplastikk'=1, 'SNM'=2)),
       uiOutput(outputId = ns('forlopstype2')),
+      shiny::selectInput(inputId = ns("onestage"), label = "One stage",
+                         choices = c('--'=99, 'Ja'=1, 'Nei'=0), selected = 99),
       selectInput(inputId = ns("gr_var"), label = "Grupperingsvariabel",
                   choices = c('SenterKortNavn', 'Aar')),
       selectInput(inputId = ns("bildeformat"), label = "Velg bildeformat",
@@ -64,7 +71,8 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
                    maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
                    grvar=input$gr_var, outfile = '', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
                    reshID = reshID, hentData=F, forlopstype1=as.numeric(input$forlopstype1),
-                   forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99})
+                   forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99},
+                   onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
   }, width = 700, height = 700)
 
 
@@ -73,7 +81,8 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
                                  maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
                                  grvar='SenterKortNavn', outfile = '', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
                                  reshID = reshID, hentData=F, forlopstype1=as.numeric(input$forlopstype1),
-                                 forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99})
+                                 forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99},
+                                 onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
   })
 
   output$utvalg <- renderUI({
@@ -218,7 +227,8 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
                      maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
                      grvar='SenterKortNavn', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
                      reshID = reshID, hentData=F, forlopstype1=as.numeric(input$forlopstype1),
-                     forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99}, outfile = file)
+                     forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99}, outfile = file,
+                     onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
     }
   )
 

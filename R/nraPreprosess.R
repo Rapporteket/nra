@@ -79,5 +79,8 @@ nraPreprosess <- function(RegData)
 
   RegData$Prolapskirurgi <- pmax(RegData$KirurgiForRectumprolaps, RegData$KirurgiForRectumprolaps_v2, RegData$Rectopexi, na.rm = T)
 
+  # Lager ny variabel for nyere komplikasjoner
+
+
   return(invisible(RegData))
 }

@@ -21,7 +21,8 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   RegData$Grvar <- RegData[, grvar]
   if (valgtShus != '') {RegData <- RegData[which(RegData$AvdRESH %in% valgtShus), ]}
 
-  if (valgtVar %in% c('StMarksTotalScore', 'GenQol', 'QolSexualitet', 'WexnerTotalScore', 'InkontinensScore')) {
+  if (valgtVar %in% c('StMarksTotalScore', 'GenQol', 'QolSexualitet', 'WexnerTotalScore',
+                      'InkontinensScore', 'EQ5DSkore', 'EQ5DHelsetilstand')) {
     inkl_konf <- 1
   }
 
@@ -160,7 +161,9 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                      'Urinlekkasje' = paste0('Andel med urinlekkasje ', tittel2),
                      'Urinlekkasje_v2' = paste0('Andel med urinlekkasje ', tittel2),
                      'WexnerTotalScore' = paste0('Wexner ', tittel2, ', inkl. 95 % konf.int.'),
-                     'InkontinensScore' = paste0('InkontinensScore ', tittel2, ', inkl. 95 % konf.int.')
+                     'InkontinensScore' = paste0('InkontinensScore ', tittel2, ', inkl. 95 % konf.int.'),
+                     'EQ5DSkore' = paste0('EQ5D-Score ', tittel2, ', inkl. 95 % konf.int.'),
+                     'EQ5DHelsetilstand' = paste0('EQ5D-Helsetilstand ', tittel2, ', inkl. 95 % konf.int.')
     )
 
     ytekst <- switch(valgtVar,
@@ -170,7 +173,9 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                      'Urinlekkasje' = 'Andel i prosent',
                      'Urinlekkasje_v2' = 'Andel i prosent',
                      'WexnerTotalScore' = 'Gjennomsnittsscore',
-                     'InkontinensScore' = 'Gjennomsnittsscore'
+                     'InkontinensScore' = 'Gjennomsnittsscore',
+                     'EQ5DSkore' ='Gjennomsnittsscore',
+                     'EQ5DHelsetilstand' = 'Gjennomsnittsscore'
     )
     cexgr<-0.9
     cexleg <- 0.9	#Størrelse på legendtekst

@@ -15,6 +15,8 @@ admtab_UI <- function(id){
       shiny::uiOutput(ns("tab_aar")),
       shiny::uiOutput(ns("forlopstype1_ui")),
       shiny::uiOutput(outputId = ns('forlopstype2')),
+      shiny::selectInput(inputId = ns("onestage"), label = "One stage",
+                         choices = c('--'=99, 'Ja'=1, 'Nei'=0), selected = 99),
       shiny::uiOutput(outputId = ns('regstatus_ui')),
       tags$hr(),
       actionButton(ns("reset_input"), "Nullstill valg")
@@ -105,7 +107,8 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
     aux <- nraUtvalg(RegData = RegData, datoFra = '2012-01-01', datoTil = '2100-01-01',
                      forlopstype1=if(!is.null(input$forlopstype1)){as.numeric(input$forlopstype1)} else {99},
-                     forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99})
+                     forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99},
+                     onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
     aux <- aux$RegData
 
     if (input$adm_tidsenhet == 1) {
@@ -205,7 +208,7 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     names(skjemaoversikt_forlop)[names(skjemaoversikt_forlop) == "SkjemaStatus"] <- "SkjemaStatus_2B"
 
     skjemaoversikt_forlop <- merge(skjemaoversikt_forlop,
-                                   RegData[, c("ForlopsID", "ForlopsType1Num", "ForlopsType2Num", "PasientID")],
+                                   RegData[, c("ForlopsID", "ForlopsType1Num", "ForlopsType2Num", "PasientID", "Onestage")],
                                    by = "ForlopsID", all.x = T)
 
 
@@ -241,10 +244,21 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     if(!is.null(input$forlopstype1)){
       skjemaoversikt_forlop <- skjemaoversikt_forlop[skjemaoversikt_forlop$ForlopsType1Num %in%
                                                        as.numeric(input$forlopstype1), ]
-    } else {
-      if(!is.null(input$forlopstype2_verdi)){
-        skjemaoversikt_forlop <- skjemaoversikt_forlop[skjemaoversikt_forlop$ForlopsType2Num %in%
-                                                         as.numeric(input$forlopstype2_verdi), ]
+    }
+    # else {
+    #   if(!is.null(input$forlopstype2_verdi)){
+    #     skjemaoversikt_forlop <- skjemaoversikt_forlop[skjemaoversikt_forlop$ForlopsType2Num %in%
+    #                                                      as.numeric(input$forlopstype2_verdi), ]
+    #   }
+    # }
+    if(!is.null(input$forlopstype2_verdi)){
+      skjemaoversikt_forlop <- skjemaoversikt_forlop[skjemaoversikt_forlop$ForlopsType2Num %in%
+                                                       as.numeric(input$forlopstype2_verdi), ]
+    }
+    if (!is.null(input$onestage)) {
+      if (as.numeric(input$onestage) %in% c(0, 1)) {
+        skjemaoversikt_forlop <- skjemaoversikt_forlop[skjemaoversikt_forlop$Onestage %in%
+                                                       as.numeric(input$onestage), ]
       }
     }
 
