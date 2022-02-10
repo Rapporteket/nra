@@ -21,7 +21,8 @@ gjsn_prepost_UI <- function(id){
                       'EQ5D Skore' = 'EQ5DSkore',
                       'EQ5D Helsetilstand' = 'EQ5DHelsetilstand')),
       selectInput(inputId = ns("sammenlign"), label = "Sammenlign med oppfølging", choices =
-                    c('Kun pre'=0, 'Pre og 1-årsoppfølging'=1, 'Pre 1- og 5-årsoppfølging'=2)),
+                    c('Kun pre'=0, 'Pre og 1-årsoppfølging'=1,
+                      'Pre 1- og 5-årsoppfølging'=2, 'Pre og 5-årsoppfølging'=3)),
       dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),
       sliderInput(inputId=ns("alder"), label = "Alder", min = 0,

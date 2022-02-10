@@ -79,6 +79,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       Ngr <- table(as.character(RegData$Grvar))  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
       Ngr <- c(Ngr, sum(Ngr))
       tittel2 <- 'før operasjon'
+      preog5 <- FALSE
     }
 
     if (sammenlign == 1) {
@@ -106,9 +107,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('VariabelPre', "VariabelPost1")]))
       Ngr <- table(as.character(RegData$Grvar)) ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
       Ngr <- c(Ngr, sum(Ngr))
-
-
-
+      preog5 <- FALSE
       tittel2 <- 'før og etter (12mnd) operasjon'
     }
 
@@ -147,6 +146,43 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       Ngr <- table(as.character(RegData$Grvar))  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
       Ngr <- c(Ngr, sum(Ngr))
       tittel2 <- 'før og etter (1 og 5 år) operasjon'
+      preog5 <- FALSE
+    }
+
+    if (sammenlign == 3) {
+      # RegData <- RegData[which(RegData$OppflgRegStatus %in% 1:2), ]
+      # Oppfolging1 <- Oppfolging1[Oppfolging1$KobletForlopsID %in% RegData$ForlopsID, ]
+      # RegData <- RegData[RegData$ForlopsID %in% Oppfolging1$KobletForlopsID, ]
+      # RegData <- merge(RegData[,c("PasientID", "Variabel", "Grvar", "ForlopsID", "ForlopsType1Num")],
+      #                  Oppfolging1[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+      #                  suffixes = c('Pre', 'Post1'))
+      Oppfolging2 <- Oppfolging2[Oppfolging2$KobletForlopsID %in% RegData$ForlopsID, ]
+      RegData <- RegData[RegData$ForlopsID %in% Oppfolging2$KobletForlopsID, ]
+      RegData <- merge(RegData[,c("PasientID", "Variabel", "Grvar", "ForlopsID", "ForlopsType1Num")],
+                       Oppfolging2[,c("Variabel", "KobletForlopsID", "ForlopsType1Num")], by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+                       suffixes = c('Pre', 'Post1'))
+      if (valgtVar=='QolSexualitet') {
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre %in% c(98,99) | RegData$VariabelPost1 %in% c(98,99)])
+        RegData <- RegData[!(RegData$VariabelPre  %in% c(98,99)), ]
+        RegData <- RegData[!(RegData$VariabelPost1 %in% c(98,99)), ]
+      }
+      nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
+                             datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
+      utvalgTxt <- nraUtvalg$utvalgTxt
+      PrePost <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
+                           by=list(RegData$Grvar), mean, na.rm = TRUE)
+      PrePostSD <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
+                             by=list(RegData$Grvar), sd, na.rm = TRUE)
+      PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), apply(RegData[, c('VariabelPre', "VariabelPost1")], 2, sd, na.rm=T))
+      PlotMatrise <- as.matrix(t(PrePost[,-1]))
+      PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('VariabelPre', "VariabelPost1")]))
+      Ngr <- table(as.character(RegData$Grvar)) ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
+      Ngr <- c(Ngr, sum(Ngr))
+      preog5 <- TRUE
+      sammenlign <- 1
+
+      tittel2 <- 'før og etter (5 år) operasjon'
     }
 
     ############## Lag figur  ###############################
@@ -236,7 +272,7 @@ soylefarger[, which(grtxt %in% graa)] <- c('gray40', 'gray70', 'gray80')[1:(samm
     mtext(utvalgTxt, side=3, las=1, cex=0.9, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
 
     if (sammenlign > 0){
-      legend('top', c('Pre', 'Oppflg. 1 år', 'Oppflg. 5 år')[1:(sammenlign+1)],
+      legend('top', if (preog5) {c('Pre', 'Oppflg. 5 år')} else {c('Pre', 'Oppflg. 1 år', 'Oppflg. 5 år')[1:(sammenlign+1)]},
              border=c(fargeHoved,NA), col=farger[1:(sammenlign+1)], bty='n', pch=c(15,15), pt.cex=2,
              lwd=3,	lty=NA, ncol=2, cex=cexleg)
     }
