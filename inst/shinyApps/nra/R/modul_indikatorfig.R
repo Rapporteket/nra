@@ -33,11 +33,11 @@ indikatorfig_UI <- function(id){
                   tabPanel("Tabell", value = "tab",
                            # uiOutput(ns("utvalg")),
                            tableOutput(ns("Tabell1")), downloadButton(ns("lastNed"), "Last ned tabell")
-                  ),
-                  tabPanel("DT_Tabell", value = "tab2",
-                           # uiOutput(ns("utvalg")),
-                           DTOutput(ns("Tabell2"))
-                  )
+                  )#,
+                  # tabPanel("DT_Tabell", value = "tab2",
+                  #          # uiOutput(ns("utvalg")),
+                  #          DTOutput(ns("Tabell2"))
+                  # )
       )
     )
   )
@@ -68,116 +68,31 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
     # names(plotdata) <- c('ReshId', 'Aar', 'Teller', "SenterKortNavn")
     nra::nraFigIndikator_v2(plotdata, tittel = indikatorData()$tittel,
                             terskel = indikatorData()$terskel, maal = indikatorData()$maal,
-                    maalretn = indikatorData()$maalRetn, xmax = indikatorData()$xmax,
-                    decreasing =indikatorData()$decreasing, outfile='')
+                            maalretn = indikatorData()$maalRetn, xmax = indikatorData()$xmax,
+                            decreasing =indikatorData()$decreasing, outfile='')
   }, width = 700, height = 700)
 
-  output$Tabell1 <- renderTable(
+  output$Tabell1 <- renderTable({
 
-    Tabell <- req(indikatorData()$indikator) %>% dplyr::group_by(SenterKortNavn, year) %>%
+    Tabell <- req(indikatorData()$indikator) %>%
+      dplyr::filter(year <= as.numeric(input$tilAar_verdi)) %>%
+      dplyr::filter(year >= (as.numeric(input$tilAar_verdi)-2)) %>%
+      dplyr::group_by(SenterKortNavn, year) %>%
       dplyr::summarise(Antall = as.integer(sum(var)),
                        N = n(),
                        Andel = Antall/N*100)
-  )
+    Tabell$Antall[Tabell$N < 5] <- NA
+    Tabell$Andel[Tabell$N < 5] <- NA
+    Tabell
+  }, digits = 0, na = "")
 
-  output$Tabell2 <- renderDT(
-
-    Tabell <- req(indikatorData()$indikator) %>% dplyr::group_by(SenterKortNavn, year) %>%
-      dplyr::summarise(Antall = as.integer(sum(var)),
-                       N = n(),
-                       Andel = round(Antall/N*100, 1))
-  )
-
-
-
-  # plotdata <- indikator[, c('AvdRESH', 'year', 'var')]
-  # names(plotdata) <- c('ReshId', 'Aar', 'Teller')
-  # plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-
-  # output$Figur1 <- renderPlot({
-  #   nraFigAndeler(RegData = RegData, valgtVar = input$valgtVar, minald=as.numeric(input$alder[1]),
-  #                 maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-  #                 valgtShus = if (!is.null(input$valgtShus)) {input$valgtShus} else {''}, outfile = '', preprosess=F,
-  #                 erMann = as.numeric(input$erMann), reshID = reshID, enhetsUtvalg = input$enhetsUtvalg, hentData=F,
-  #                 forlopstype1=as.numeric(input$forlopstype1), forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)}
-  #                 else {99})
-  # }, width = 700, height = 700)
-
-
-  # tabellReager <- reactive({
-  #   TabellData <- nraFigAndeler(RegData = RegData, valgtVar = input$valgtVar, minald=as.numeric(input$alder[1]),
-  #                               maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-  #                               valgtShus = if (!is.null(input$valgtShus)) {input$valgtShus} else {''}, outfile = '', preprosess=F,
-  #                               erMann = as.numeric(input$erMann), reshID = reshID, enhetsUtvalg = input$enhetsUtvalg, hentData=F,
-  #                               forlopstype1=as.numeric(input$forlopstype1), forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)}
-  #                               else {99})
-  # })
+  # output$Tabell2 <- renderDT(
   #
-  # output$utvalg <- renderUI({
-  #   TabellData <- tabellReager()
-  #   tagList(
-  #     h3(HTML(paste0(TabellData$tittel, '<br />'))),
-  #     h5(HTML(paste0(TabellData$utvalgTxt, '<br />')))
-  #   )})
-
-
-
-  # output$Tabell1 <- function() {
-  #
-  #   TabellData <- tabellReager()
-  #   if (input$enhetsUtvalg == 1) {
-  #     Tabell1 <- as_tibble(TabellData$TabellData) %>%
-  #       mutate('Kategori'=TabellData$grtxt, 'AndelHoved'=AntHoved/NHoved*100, 'AndelRest'=AntRest/NRest*100) %>%
-  #       select(Kategori, 1:2, AndelHoved, 3:4, AndelRest) %>%
-  #       rename(Antall=AntHoved, N=NHoved, Andel=AndelHoved, Antall=AntRest, N=NRest, Andel=AndelRest) %>%
-  #       knitr::kable("html", digits = c(0,0,0,1,0,0,1)) %>%
-  #       kable_styling("hover", full_width = F) %>%
-  #       add_header_above(c(" ", "Din avdeling" = 3, "Landet forøvrig" = 3))
-  #   } else {
-  #     Tabell1 <- as_tibble(TabellData$TabellData) %>%
-  #       mutate('Kategori'=TabellData$grtxt, 'Andel'=AntHoved/NHoved*100) %>%
-  #       select(Kategori, 1:2, Andel) %>%
-  #       rename(Antall=AntHoved, N=NHoved) %>%
-  #       knitr::kable("html", digits = c(0,0,0,1)) %>%
-  #       kable_styling("hover", full_width = F)
-  #   }
-  # }
-
-  # output$lastNed <- downloadHandler(
-  #   filename = function(){
-  #     paste0(input$valgtVar, Sys.time(), '.csv')
-  #   },
-  #
-  #   content = function(file){
-  #     TabellData <- tabellReager()
-  #     if (input$enhetsUtvalg == 1) {
-  #       Tabell1 <- as_tibble(TabellData$TabellData) %>%
-  #         mutate('Kategori'=TabellData$grtxt, 'AndelHoved'=AntHoved/NHoved*100, 'AndelRest'=AntRest/NRest*100) %>%
-  #         select(Kategori, 1:2, AndelHoved, 3:4, AndelRest)
-  #     } else {
-  #       Tabell1 <- as_tibble(TabellData$TabellData) %>%
-  #         mutate('Kategori'=TabellData$grtxt, 'Andel'=AntHoved/NHoved*100) %>%
-  #         select(Kategori, 1:2, Andel)
-  #     }
-  #     write.csv2(Tabell1, file, row.names = F)
-  #   }
+  #   Tabell <- req(indikatorData()$indikator) %>% dplyr::group_by(SenterKortNavn, year) %>%
+  #     dplyr::summarise(Antall = as.integer(sum(var)),
+  #                      N = n(),
+  #                      Andel = round(Antall/N*100, 1))
   # )
-  #
-  # output$lastNedBilde <- downloadHandler(
-  #   filename = function(){
-  #     paste0(input$valgtVar, Sys.time(), '.', input$bildeformat)
-  #   },
-  #
-  #   content = function(file){
-  #     nra::nraFigAndeler(RegData = RegData, valgtVar = input$valgtVar, minald=as.numeric(input$alder[1]),
-  #                        maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-  #                        valgtShus = if (!is.null(input$valgtShus)) {input$valgtShus} else {''}, preprosess=F,
-  #                        erMann = as.numeric(input$erMann), reshID = reshID, enhetsUtvalg = input$enhetsUtvalg, hentData=F,
-  #                        forlopstype1=as.numeric(input$forlopstype1), forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)}
-  #                        else {99}, outfile = file)
-  #   }
-  # )
-
 
   # shiny::observe({
   #   if (rapbase::isRapContext()) {

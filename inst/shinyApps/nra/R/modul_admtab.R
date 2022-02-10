@@ -9,29 +9,40 @@ admtab_UI <- function(id){
   shiny::sidebarLayout(
     sidebarPanel(
       id = ns("id_adm_panel"),
-      shiny::selectInput(inputId = ns("adm_tidsenhet"), label = "Velg tidsenhet",
-                         choices = c('Måneder'=1, 'År'=2), selected = 2),
-      shiny::uiOutput(ns("tab_mnd")),
-      shiny::uiOutput(ns("tab_aar")),
-      shiny::uiOutput(ns("forlopstype1_ui")),
+      shiny::uiOutput(outputId = ns('datovalg_ui')),
+      shiny::uiOutput(outputId = ns('velg_datovar_ui')),
+      shiny::uiOutput(outputId = ns("adm_tidsenhet_ui")),
+      shiny::uiOutput(outputId = ns("tab_mnd")),
+      shiny::uiOutput(outputId = ns("tab_aar")),
+      shiny::uiOutput(outputId = ns("forlopstype1_ui")),
       shiny::uiOutput(outputId = ns('forlopstype2')),
-      shiny::selectInput(inputId = ns("onestage"), label = "One stage",
-                         choices = c('--'=99, 'Ja'=1, 'Nei'=0), selected = 99),
+      shiny::uiOutput(outputId = ns('onestage_ui')),
       shiny::uiOutput(outputId = ns('regstatus_ui')),
-      tags$hr(),
-      actionButton(ns("reset_input"), "Nullstill valg")
+      shiny::uiOutput(outputId = ns('skjemastatus_ui')),
+      shiny::tags$hr(),
+      shiny::actionButton(ns("reset_input"), "Nullstill valg")
     ),
-    mainPanel(tabsetPanel(id= ns("admtabeller"),
-                          tabPanel("Antall forløp", value = "id_ant_forlop",
-                                   h4('Her kan få en oversikt over antall forløp i registeret basert på dato for prosedyre.
+    shiny::mainPanel(
+      shiny::tabsetPanel(
+        id= ns("admtabeller"),
+        shiny::tabPanel("Antall forløp",
+                        value = "id_ant_forlop",
+                        shiny::h4('Her kan få en oversikt over antall forløp i registeret basert på dato for prosedyre.
                                    Man kan velge type forløp og registreringsstatus for de ulike delene av forløpet.'),
-                                   DTOutput(ns("Tabell_adm_forlop")), downloadButton(ns("lastNed_adm_forlop"), "Last ned tabell")),
-                          tabPanel("Antall skjema", value = "id_ant_skjema",
-                                   h4('Her kan du velge om du vil se registreringer per måned eller per år og for hvor
+                        DT::DTOutput(ns("Tabell_adm_forlop")), downloadButton(ns("lastNed_adm_forlop"), "Last ned tabell")),
+        shiny::tabPanel("Antall registreringer etter forløpstype", value = "id_ant_forlopstype",
+                        shiny::h4('Her kan du velge om du vil se registreringer per måned eller per år og for hvor
                                              lang periode. For sfinkterplastikk og SNM gjøres datofiltreringen på prosedyredato,
                                              mens for oppfølginger er det dato for siste utfylling som brukes.'),
-                                   DTOutput(ns("Tabell_adm")), downloadButton(ns("lastNed_adm"), "Last ned tabell"))
-    )
+                        DT::DTOutput(ns("Tabell_adm")), downloadButton(ns("lastNed_adm"), "Last ned tabell")),
+        shiny::tabPanel("Antall skjema", value = "id_ant_skjema",
+                        shiny::h2('Innregistreringer i NRA etter skjematype',
+                                  align='center'),
+                        shiny::br(),
+                        shiny::br(),
+                        DT::DTOutput(ns("Tabell_adm1"))
+        )
+      )
     )
 
   )
@@ -46,7 +57,7 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
   output$forlopstype1_ui <- renderUI({
     ns <- session$ns
-    if (input$admtabeller == "id_ant_skjema") {
+    if (input$admtabeller == "id_ant_forlopstype") {
       selectInput(inputId = ns("forlopstype1"), label = "Velg forløpstype",
                   choices = c('Sfinkterplastikk'=1, 'SNM'=2,
                               'Oppfølging 1 år'=3, 'Oppfølging 5 år'=4),
@@ -57,6 +68,20 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
                     choices = c('Sfinkterplastikk'=1, 'SNM'=2),
                     multiple = TRUE)}
     }
+  })
+
+  output$adm_tidsenhet_ui <- renderUI({
+    ns <- session$ns
+    req(input$admtabeller %in% c("id_ant_forlop", "id_ant_forlopstype"))
+    shiny::selectInput(inputId = ns("adm_tidsenhet"), label = "Velg tidsenhet",
+                       choices = c('Måneder'=1, 'År'=2), selected = 2)
+  })
+
+  output$velg_datovar_ui <- renderUI({
+    ns <- session$ns
+    req(input$admtabeller %in% c("id_ant_skjema"))
+    shiny::selectInput(inputId = ns("velg_datovar"), label = "Datovariabel",
+                       choices = c('HovedDato', 'OpprettetDato', 'SistLagretDato'))
   })
 
   output$regstatus_ui <- renderUI({
@@ -71,6 +96,28 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     )
   })
 
+  output$skjemastatus_ui <- renderUI({
+    ns <- session$ns
+    req(input$admtabeller == "id_ant_skjema")
+    shiny::checkboxGroupInput(
+      inputId=ns("skjemastatus"),
+      label="Skjemastatus:",
+      choices = c("Ferdigstilt"=1, "I kladd"=0, "Opprettet"=-1),
+      selected = 1,
+      inline = FALSE
+    )
+  })
+
+  output$datovalg_ui <- renderUI({
+    ns <- session$ns
+    req(input$admtabeller == "id_ant_skjema")
+    shiny::dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
+                          min = '2015-01-01', language = "nb",
+                          max = Sys.Date(), start  = Sys.Date() %m-% months(12),
+                          end = Sys.Date(), separator = " til ")
+  })
+
+
   output$forlopstype2 <- renderUI({
     ns <- session$ns
     if (2 %in% as.numeric(req(input$forlopstype1))) {
@@ -81,8 +128,16 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     }
   })
 
+  output$onestage_ui <- shiny::renderUI({
+    ns <- session$ns
+    req(input$admtabeller %in% c("id_ant_forlop", "id_ant_forlopstype"))
+    shiny::selectInput(inputId = ns("onestage"), label = "One stage",
+                       choices = c('--'=99, 'Ja'=1, 'Nei'=0), selected = 99)
+  })
+
   output$tab_mnd <- shiny::renderUI({
     ns <- session$ns
+    req(input$admtabeller %in% c("id_ant_forlop", "id_ant_forlopstype"))
     req(input$adm_tidsenhet == '1')
     tagList(
       shinyWidgets::airDatepickerInput(inputId=ns("datovalg_adm_tid_mnd"), label = "Vis til og med måned: ", minDate = '2014-01-01',
@@ -94,6 +149,7 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
   output$tab_aar <- shiny::renderUI({
     ns <- session$ns
+    req(input$admtabeller %in% c("id_ant_forlop", "id_ant_forlopstype"))
     req(input$adm_tidsenhet == '2')
     tagList(
       shinyWidgets::airDatepickerInput(inputId=ns("datovalg_adm_tid_aar"), label = "Vis til og med år: ", minDate = '2014-01-01',
@@ -102,6 +158,52 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
       sliderInput(inputId= ns("ant_aar"), label = "Antall år", min = 1, max = 10, value = 5, step = 1)
     )
   })
+
+
+
+
+  antskjema <- function() {
+    ant_skjema <- skjemaoversikt %>%
+      dplyr::mutate(SenterKortNavn = RegData$SenterKortNavn[match(AvdRESH, RegData$AvdRESH)]) %>%
+      dplyr::mutate(Skjemanavn = factor(Skjemanavn, levels = Skjemanavn[match(sort(unique(SkjemaRekkeflg)), SkjemaRekkeflg)])) %>%
+      dplyr::rename(Dato = req(input$velg_datovar)) %>%
+      dplyr::filter(Dato >= input$datovalg[1] & Dato <= input$datovalg[2]) %>%
+      dplyr::filter(SkjemaStatus %in% as.numeric(input$skjemastatus)) %>%
+      dplyr::select("SenterKortNavn", "Skjemanavn") %>%
+      table() %>%
+      addmargins(1) %>%
+      as.data.frame.matrix() %>%
+      tidyr::as_tibble(rownames = "Sykehusnavn")
+
+    sketch <- htmltools::withTags(table(
+      DT::tableHeader(ant_skjema[-dim(ant_skjema)[1], ]),
+      DT::tableFooter(c('Sum' , as.numeric(ant_skjema[dim(ant_skjema)[1], 2:dim(ant_skjema)[2]])))))
+    list(ant_skjema=ant_skjema, sketch=sketch)
+  }
+
+  output$Tabell_adm1 = DT::renderDT(
+    DT::datatable(antskjema()$ant_skjema[-dim(antskjema()$ant_skjema)[1], ],
+                  container = antskjema()$sketch,
+                  rownames = F,
+                  extensions = 'Buttons',
+
+                  options = list(
+                    paging = TRUE,
+                    pageLength = 40,
+                    searching = TRUE,
+                    fixedColumns = TRUE,
+                    autoWidth = TRUE,
+                    ordering = TRUE,
+                    dom = 'tB',
+                    buttons = c('copy', 'csv', 'excel')
+                  ),
+
+                  class = "display"
+    )
+  )
+
+
+
 
   andre_adm_tab <- function() {
 
@@ -258,7 +360,7 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     if (!is.null(input$onestage)) {
       if (as.numeric(input$onestage) %in% c(0, 1)) {
         skjemaoversikt_forlop <- skjemaoversikt_forlop[skjemaoversikt_forlop$Onestage %in%
-                                                       as.numeric(input$onestage), ]
+                                                         as.numeric(input$onestage), ]
       }
     }
 

@@ -69,16 +69,43 @@ ui <- tagList(
     tabPanel("Administrative tabeller",
              admtab_UI(id = "admtab_id")
     ),
-    shiny::tabPanel(
-      "Eksport",
-      shiny::sidebarLayout(
-        shiny::sidebarPanel(
-          rapbase::exportUCInput("nraExport")
-        ),
-        shiny::mainPanel(
-          rapbase::exportGuideUI("nraExportGuide")
-        )
-      )
+
+    shiny::navbarMenu("Verktøy",
+                      # shiny::tabPanel(
+                      #   "Utsending",
+                      #   shiny::sidebarLayout(
+                      #     shiny::sidebarPanel(
+                      #       rapbase::autoReportOrgInput("norgastDispatch"),
+                      #       rapbase::autoReportInput("norgastDispatch")
+                      #     ),
+                      #     shiny::mainPanel(
+                      #       rapbase::autoReportUI("norgastDispatch")
+                      #     )
+                      #   )
+                      # ),
+
+                      shiny::tabPanel(
+                        "Eksport",
+                        shiny::sidebarLayout(
+                          shiny::sidebarPanel(
+                            rapbase::exportUCInput("nraExport")
+                          ),
+                          shiny::mainPanel(
+                            rapbase::exportGuideUI("nraExportGuide")
+                          )
+                        )
+                      ),
+
+                      shiny::tabPanel(
+                        "Bruksstatistikk",
+                        shiny::sidebarLayout(
+                          shiny::sidebarPanel(rapbase::statsInput("nraStats")),
+                          shiny::mainPanel(
+                            rapbase::statsUI("nraStats"),
+                            rapbase::statsGuideUI("nraStatsGuide")
+                          )
+                        )
+                      )
     )
 
 
@@ -111,6 +138,11 @@ server <- function(input, output, session) {
   rapbase::exportUCServer("nraExport", "nra")
   ## veileding
   rapbase::exportGuideServer("nraExportGuide", "nra")
+
+  ## Stats
+  rapbase::statsServer("nraStats", registryName = "nra",
+                       eligible = (userRole == "SC"))
+  rapbase::statsGuideServer("nraStatsGuide", registryName = "nra")
 
   #################################################################################################################################
 

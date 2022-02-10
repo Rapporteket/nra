@@ -16,7 +16,8 @@ nraPreprosess <- function(RegData)
   RegData$Mnd <- as.numeric(format(RegData$HovedDato, format="%m"))
   RegData$SenterKortNavn <- trimws(RegData$SenterKortNavn)
   RegData$SenterKortNavn[RegData$SenterKortNavn=="Helse Ber"] <- "Haukeland"
-  RegData$SenterKortNavn[RegData$AvdRESH==601233] <- "UNN Narvik" # Foreløpig, må fikses i registeret
+  RegData$AvdRESH[which(RegData$AvdRESH==601233)] <- 601225
+  # RegData$SenterKortNavn[RegData$AvdRESH==601233] <- "UNN Narvik" # Foreløpig, må fikses i registeret
 
   RegData$Sfinktervurdering <- NA
   RegData$Sfinktervurdering[RegData$Ultralyd==1 & RegData$PartiellDefekt==0 &
@@ -59,9 +60,9 @@ nraPreprosess <- function(RegData)
   RegData$red75_v2 <- as.numeric(RegData$Indikator1_lekk_red50_v2 >= 75)
   RegData$Indikator1_lekk_red50_v2 <- as.numeric(RegData$Indikator1_lekk_red50_v2 >= 50)
 
-  RegData$Indikator1_lekk_red50_v3 <- pmax(# (RegData$UrgencyFoerTestUtenLekkasje - RegData$UrgencyUnderUtenTestMedLekkasje)/RegData$UrgencyFoerTestUtenLekkasje*100,
-                                           (RegData$UrgencyFoerTestMedLekkasje - RegData$UrgencyUnderTestLekkasje)/RegData$UrgencyFoerTestMedLekkasje*100,
+  RegData$Indikator1_lekk_red50_v3 <- pmax((RegData$UrgencyFoerTestMedLekkasje - RegData$UrgencyUnderTestLekkasje)/RegData$UrgencyFoerTestMedLekkasje*100,
                                            (RegData$UrgencyFoerPassivLekkasje - RegData$UrgencyUnderPassivLekkasje)/RegData$UrgencyFoerPassivLekkasje*100,
+                                           (RegData$UrgencyFoerTestUtenLekkasje - RegData$UrgencyUnderUtenTestMedLekkasje)/RegData$UrgencyFoerTestUtenLekkasje*100,
                                            na.rm = T)
   RegData$Indikator1_lekk_red50_v3[is.nan(RegData$Indikator1_lekk_red50_v3)] <- 0
   RegData$red75_v3 <- as.numeric(RegData$Indikator1_lekk_red50_v3 >= 75)

@@ -181,7 +181,7 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     tittel <- 'Etiologi'
   }
 
-  if (valgtVar == 'Etiologi_v2') {
+  if (valgtVar == 'Etiologi_v2') { ############ SKAL OGSÅ GJØRES PÅ INDIVIDNIVÅ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
     retn <- 'H'
     # Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)]) # Bør man sjekke om PasientID også finnes
     RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]                        # i RegData?
