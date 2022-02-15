@@ -44,6 +44,7 @@ BrValg <- BrValg(RegData=RegData)
 # Define UI for application
 ui <- tagList(
   shinyalert::useShinyalert(),
+  shinyjs::useShinyjs(),
   navbarPage(
     title = div(a(includeHTML(system.file('www/logo.svg', package='rapbase'))),
                 regTitle),
@@ -53,7 +54,6 @@ ui <- tagList(
     tabPanel("Startside",
              startside_UI(id = "startside_id")
     ),
-
     tabPanel("Fordelingsfigurer",
              fordelingsfig_UI(id = "fordelingsfig_id", BrValg = BrValg)
     ),
@@ -133,7 +133,8 @@ server <- function(input, output, session) {
   callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData, hvd_session = session)
   callModule(indikatorfig, "indikator_id", RegData = RegData, hvd_session = session)
   callModule(datadump, "datadump_id", reshID = reshID, userRole = userRole, hvd_session = session)
-  callModule(admtab, "admtab_id", reshID = reshID, RegData = RegData, userRole = userRole, hvd_session = session, skjemaoversikt=Skjemaoversikt)
+  callModule(admtab, "admtab_id", reshID = reshID, RegData = RegData, userRole = userRole,
+             hvd_session = session, skjemaoversikt=Skjemaoversikt)
   # Eksport  #
   rapbase::exportUCServer("nraExport", "nra")
   ## veileding

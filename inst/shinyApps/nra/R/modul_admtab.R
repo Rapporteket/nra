@@ -29,18 +29,21 @@ admtab_UI <- function(id){
                         value = "id_ant_forlop",
                         shiny::h4('Her kan få en oversikt over antall forløp i registeret basert på dato for prosedyre.
                                    Man kan velge type forløp og registreringsstatus for de ulike delene av forløpet.'),
-                        DT::DTOutput(ns("Tabell_adm_forlop"))),
+                        DT::DTOutput(ns("Tabell_adm_forlop")),
+                        downloadButton(ns("lastNed_adm_forlop"), "Last ned tabell")),
         shiny::tabPanel("Antall registreringer etter forløpstype", value = "id_ant_forlopstype",
                         shiny::h4('Her kan du velge om du vil se registreringer per måned eller per år og for hvor
                                              lang periode. For sfinkterplastikk og SNM gjøres datofiltreringen på prosedyredato,
                                              mens for oppfølginger er det dato for siste utfylling som brukes.'),
-                        DT::DTOutput(ns("Tabell_adm")), downloadButton(ns("lastNed_adm"), "Last ned tabell")),
+                        DT::DTOutput(ns("Tabell_adm")),
+                        downloadButton(ns("lastNed_adm_forlopstype"), "Last ned tabell")),
         shiny::tabPanel("Antall skjema", value = "id_ant_skjema",
                         shiny::h2('Innregistreringer i NRA etter skjematype',
                                   align='center'),
                         shiny::br(),
                         shiny::br(),
-                        DT::DTOutput(ns("Tabell_adm1"))
+                        DT::DTOutput(ns("Tabell_adm1")),
+                        downloadButton(ns("lastNed_adm_skjematype"), "Last ned tabell")
         )
       )
     )
@@ -187,25 +190,21 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     DT::datatable(antskjema()$ant_skjema[-dim(antskjema()$ant_skjema)[1], ],
                   container = antskjema()$sketch,
                   rownames = F,
-                  extensions = 'Buttons',
-
-                  options = list(
-                    paging = TRUE,
-                    pageLength = 40,
-                    searching = TRUE,
-                    fixedColumns = TRUE,
-                    autoWidth = TRUE,
-                    ordering = TRUE,
-                    dom = 'tB',
-                    buttons = c('copy', 'csv', 'excel')
-                  ),
-
-                  class = "display"
+                  options = list(pageLength = 40)
     )
   )
 
 
+  output$lastNed_adm_skjematype <- downloadHandler(
+    filename = function(){
+      paste0('Regoversikt_skjematype_', Sys.time(), '.csv')
+    },
 
+    content = function(file){
+      TabellData <- antskjema()$ant_skjema
+      write.csv2(TabellData, file, row.names = F, fileEncoding = "Latin1")
+    }
+  )
 
   andre_adm_tab <- function() {
 
@@ -241,22 +240,22 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
   }
 
-  output$Tabell_adm = renderDT(
-    datatable(andre_adm_tab()$ant_skjema[-dim(andre_adm_tab()$ant_skjema)[1], ],
+  output$Tabell_adm = DT::renderDT(
+    DT::datatable(andre_adm_tab()$ant_skjema[-dim(andre_adm_tab()$ant_skjema)[1], ],
               container = andre_adm_tab()$sketch,
               rownames = F,
               options = list(pageLength = 40)
     )
   )
 
-  output$lastNed_adm <- downloadHandler(
+  output$lastNed_adm_forlopstype <- downloadHandler(
     filename = function(){
-      paste0('Regoversikt_tid', Sys.time(), '.csv')
+      paste0('Regoversikt_forlopstype_', Sys.time(), '.csv')
     },
 
     content = function(file){
       TabellData <- andre_adm_tab()$ant_skjema
-      write.csv2(TabellData, file, row.names = F)
+      write.csv2(TabellData, file, row.names = F, fileEncoding = "Latin1")
     }
   )
 
@@ -363,25 +362,26 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
   }
 
-  output$Tabell_adm_forlop = renderDT(
-    datatable(admtab_forlop()$ant_skjema[-dim(admtab_forlop()$ant_skjema)[1], ],
+  output$Tabell_adm_forlop = DT::renderDT(
+    DT::datatable(admtab_forlop()$ant_skjema[-dim(admtab_forlop()$ant_skjema)[1], ],
               container = admtab_forlop()$sketch,
               rownames = F,
-              extensions = 'Buttons',
-
-              options = list(
-                paging = TRUE,
-                pageLength = 40,
-                searching = TRUE,
-                fixedColumns = TRUE,
-                autoWidth = TRUE,
-                ordering = TRUE,
-                dom = 'tB',
-                buttons = c('copy', 'csv', 'excel')
-              ),
-              class = "display"
+              options = list(pageLength = 40)
     )
   )
+
+  output$lastNed_adm_forlop <- downloadHandler(
+    filename = function(){
+      paste0('Regoversikt_forlop_', Sys.time(), '.csv')
+    },
+
+    content = function(file){
+      TabellData <- admtab_forlop()$ant_skjema
+      write.csv2(TabellData, file, row.names = F, fileEncoding = "Latin1")
+    }
+  )
+
+
 
   shiny::observe({
     if (rapbase::isRapContext()) {
@@ -391,10 +391,26 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
       )
 
       shinyjs::onclick(
-        "lastNed_adm",
+        "lastNed_adm_forlopstype",
         rapbase::repLogger(
           session = hvd_session,
-          msg = "NRA: nedlasting adm. tabell."
+          msg = "NRA: nedlasting adm. tabell. forlopstype"
+        )
+      )
+
+      shinyjs::onclick(
+        "lastNed_adm_forlop",
+        rapbase::repLogger(
+          session = hvd_session,
+          msg = "NRA: nedlasting adm. tabell. forlopsbasert"
+        )
+      )
+
+      shinyjs::onclick(
+        "lastNed_adm_skjematype",
+        rapbase::repLogger(
+          session = hvd_session,
+          msg = "NRA: nedlasting adm. tabell. etter skjematype"
         )
       )
     }

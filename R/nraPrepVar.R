@@ -18,6 +18,86 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
 
   RegData$Variabel <- NA
 
+  if (valgtVar == 'EQ5DAngst') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Angst og depresjon')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg er hverken engstelig eller deprimert",
+                   "Jeg er litt engstelig eller deprimert",
+                   "Jeg er middels engstelig eller deprimert",
+                   "Jeg er svært engstelig eller deprimert",
+                   "Jeg er ekstremt engstelig eller deprimert"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'EQ5DPersonligStell') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Personlig stell')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg har ingen problemer med personlig stell",
+                   "Jeg har litt problemer med å vaske meg eller kle meg",
+                   "Jeg har middels store problemer med å vaske meg eller kle meg",
+                   "Jeg har store problemer med å vaske meg eller kle meg",
+                   "Jeg er ute av stand til å vaske meg eller kle meg"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'EQ5DSmerte') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Smerte og ubehag')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg har hverken smerte eller ubehag",
+                   "Jeg har litt smerte eller ubehag",
+                   "Jeg har middels sterke smerte eller ubehag",
+                   "Jeg har sterk smerte eller ubehag",
+                   "Jeg har svært sterke smerte eller ubehag"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'EQ5DGange') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Gange')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg har ingen problemer med å gå omkring",
+                   "Jeg har litt problemer med å gå omkring",
+                   "Jeg har middels store problemer med å gå omkring",
+                   "Jeg har store problemer med å gå omkring",
+                   "Jeg er ute av stand til å gå omkring"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'EQ5DVanligeGjoeremaal') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Vanlige gjøremål')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg har ingen problemer med å utføre mine vanlige gjøremål",
+                   "Jeg har litt problemer med å utføre mine vanlige gjøremål",
+                   "Jeg har middels store problemer med å utføre mine vanlige gjøremål",
+                   "Jeg har store problemer med å utføre mine vanlige gjøremål",
+                   "Jeg er ute av stand til å utføre mine vanlige gjøremål"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
   if (valgtVar == 'PGICEndring') {
     retn <- 'H'
     RegData$Variabel <- RegData$PGICEndringPost1

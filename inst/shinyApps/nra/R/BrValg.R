@@ -27,7 +27,12 @@ BrValg <- function(RegData) {
               'SNM-dagbok (gml)'= 'SNMdagbok',
               'SNM-dagbok (ny)'= 'SNMdagbok_v2',
               "PGIC Endring" = "PGICEndring",
-              "PGIC Endring lekkasje" = "PGICEndringLekkasje")
+              "PGIC Endring lekkasje" = "PGICEndringLekkasje",
+              "EQ5D: Angst og depresjon" = "EQ5DAngst",
+              "EQ5D: Personlig stell" = "EQ5DPersonligStell",
+              "EQ5D: Smerte og ubehag" = "EQ5DSmerte",
+              "EQ5D: Gange" = "EQ5DGange",
+              "EQ5D: Vanlige gjøremål" = "EQ5DVanligeGjoeremaal")
 
   sykehus <- RegData$AvdRESH[match(sort(unique(RegData$SenterKortNavn)), RegData$SenterKortNavn)]
   names(sykehus) <- sort(unique(RegData$SenterKortNavn))

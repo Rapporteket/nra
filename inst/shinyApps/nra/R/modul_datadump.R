@@ -9,18 +9,11 @@ datadump_UI <- function(id){
   shiny::sidebarLayout(
     sidebarPanel(
       id = ns("id_dump_panel"),
-      # uiOutput(outputId = ns('valgtevar_dump')),
       dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til", language = "nb",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), separator = " til "),
       selectInput(inputId = ns("dumptype"), label = "Velg type datadump",
                   choices = c('alleVar', 'alleVarNum', 'ForlopsOversikt', 'SkjemaOversikt')),
-      # selectInput(inputId = ns("op_gruppe"), label = "Velg reseksjonsgruppe(r)",
-      #             choices = BrValg$reseksjonsgrupper, multiple = TRUE),
-      # uiOutput(outputId = ns('ncsp')),
-      # selectInput(inputId = ns("valgtShus"), label = "Velg sykehus",
-      #             choices = BrValg$sykehus, multiple = TRUE),
       tags$hr(),
-      # actionButton(ns("reset_input"), "Nullstill valg"),
       downloadButton(ns("lastNed_dump"), "Last ned datadump")
     ),
     mainPanel(
@@ -40,16 +33,6 @@ datadump_UI <- function(id){
 
 datadump <- function(input, output, session, reshID, userRole, hvd_session){
 
-  # observeEvent(input$reset_input, {
-  #   shinyjs::reset("id_dump_panel")
-  # })
-
-  # observe(
-  #   if (userRole != 'SC') {
-  #     shinyjs::hide(id = 'valgtShus')
-  #   })
-
-
   output$lastNed_dump <- downloadHandler(
     filename = function(){
       paste0(input$dumptype, '_NRA', Sys.time(), '.csv')
@@ -65,13 +48,6 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
       if (userRole != 'SC') {
         dumpdata <- dumpdata[dumpdata$AvdRESH == reshID, ]
       }
-      # } else {
-      #   if (!is.null(input$valgtShus)) {dumpdata <- dumpdata[dumpdata$AvdRESH %in% as.numeric(input$valgtShus), ]}
-      # }
-
-      # if (!is.null(input$op_gruppe)) {dumpdata <- dumpdata[which(dumpdata$Op_gr %in% as.numeric(input$op_gruppe)), ]}
-      # if (!is.null(input$ncsp_verdi)) {dumpdata <- dumpdata[which(substr(dumpdata$Hovedoperasjon, 1, 5) %in% ncsp_verdi), ]}
-      # if (!is.null(input$valgtevar_dump_verdi)) {dumpdata <- dumpdata[, input$valgtevar_dump_verdi]}
       if (input$dumptype == "ForlopsOversikt") {
         dumpdata <- apply(dumpdata, 2, as.character)
         dumpdata <- as.data.frame(dumpdata)
@@ -88,7 +64,7 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
         "lastNed_dump",
         rapbase::repLogger(
           session = hvd_session,
-          msg = paste0("NRA: nedlasting datadump", input$dumptype)
+          msg = paste0("NRA: nedlasting datadump: ", input$dumptype)
         )
       )
     }

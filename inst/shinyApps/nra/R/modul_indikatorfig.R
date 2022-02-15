@@ -94,46 +94,46 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
   #                      Andel = round(Antall/N*100, 1))
   # )
 
-  # shiny::observe({
-  #   if (rapbase::isRapContext()) {
-  #     if (req(input$tab) == "fig") {
-  #       mld_fordeling <- paste0(
-  #         "NRA: Figur - fordeling, variabel - ",
-  #         input$valgtVar)
-  #     }
-  #     if (req(input$tab) == "tab") {
-  #       mld_fordeling <- paste(
-  #         "NRA: tabell - fordeling. variabel - ",
-  #         input$valgtVar)
-  #     }
-  #     rapbase::repLogger(
-  #       session = hvd_session,
-  #       msg = mld_fordeling
-  #     )
-  #     mldLastNedFig <- paste(
-  #       "NRA: nedlasting figur - fordeling. variabel -",
-  #       input$valgtVar
-  #     )
-  #     mldLastNedTab <- paste(
-  #       "NRA: nedlasting tabell - fordeling. variabel -",
-  #       input$valgtVar
-  #     )
-  #     shinyjs::onclick(
-  #       "lastNedBilde",
-  #       rapbase::repLogger(
-  #         session = hvd_session,
-  #         msg = mldLastNedFig
-  #       )
-  #     )
-  #     shinyjs::onclick(
-  #       "lastNed",
-  #       rapbase::repLogger(
-  #         session = hvd_session,
-  #         msg = mldLastNedTab
-  #       )
-  #     )
-  #   }
-  # })
+  shiny::observe({
+    if (rapbase::isRapContext()) {
+      if (req(input$tab) == "fig") {
+        mld_fordeling <- paste0(
+          "NRA: indikatorfig. variabel - ",
+          input$valgtVar)
+      }
+      if (req(input$tab) == "tab") {
+        mld_fordeling <- paste(
+          "NRA: indikatortab. variabel - ",
+          input$valgtVar)
+      }
+      rapbase::repLogger(
+        session = hvd_session,
+        msg = mld_fordeling
+      )
+      mldLastNedFig <- paste(
+        "NRA: nedlasting indikatorfig. variabel -",
+        input$valgtVar
+      )
+      mldLastNedTab <- paste(
+        "NRA: nedlasting indikatortab. variabel -",
+        input$valgtVar
+      )
+      shinyjs::onclick(
+        "lastNedBilde",
+        rapbase::repLogger(
+          session = hvd_session,
+          msg = mldLastNedFig
+        )
+      )
+      shinyjs::onclick(
+        "lastNed",
+        rapbase::repLogger(
+          session = hvd_session,
+          msg = mldLastNedTab
+        )
+      )
+    }
+  })
 
 
 
