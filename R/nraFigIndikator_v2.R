@@ -27,11 +27,11 @@ nraFigIndikator_v2 <- function(indikatordata, tittel='', terskel=30, minstekrav 
 
 
   AntTilfeller <- tidyr::spread(Tabell[, -c(4,5)], 'year', 'Antall')
-  AntTilfeller <- dplyr::bind_cols(SenterKortNavn=c(AntTilfeller$SenterKortNavn, "Nasjonalt"),
+  AntTilfeller <- dplyr::bind_cols(SenterKortNavn=c(AntTilfeller[["SenterKortNavn"]], "Nasjonalt"),
                                    dplyr::bind_rows(AntTilfeller[,-1], colSums(AntTilfeller[,-1], na.rm = T)))
 
   N <- tidyr::spread(Tabell[, -c(3,5)], 'year', 'N')
-  N <- dplyr::bind_cols(SenterKortNavn=c(N$SenterKortNavn, "Nasjonalt"),
+  N <- dplyr::bind_cols(SenterKortNavn=c(N[["SenterKortNavn"]], "Nasjonalt"),
                         dplyr::bind_rows(N[,-1], colSums(N[,-1], na.rm = T)))
   N[is.na(N)] <- 0
 
@@ -39,13 +39,13 @@ nraFigIndikator_v2 <- function(indikatordata, tittel='', terskel=30, minstekrav 
     rowSums(AntTilfeller[,-1], na.rm = T)
   AntTilfeller <- AntTilfeller[, c(1, (dim(AntTilfeller)[2]-1):dim(AntTilfeller)[2])]
   AntTilfeller <- as.data.frame(AntTilfeller)
-  row.names(AntTilfeller) <- AntTilfeller$SenterKortNavn
+  row.names(AntTilfeller) <- AntTilfeller[["SenterKortNavn"]]
   AntTilfeller <- AntTilfeller[, -1]
   N[,paste0(names(N)[2], '-', names(N)[dim(N)[2]])] <-
     rowSums(N[,-1], na.rm = T)
   N <- N[, c(1, (dim(N)[2]-1):dim(N)[2])]
   N <- as.data.frame(N)
-  row.names(N) <- N$SenterKortNavn
+  row.names(N) <- N[["SenterKortNavn"]]
   N <- N[, -1]
 
   andeler <- AntTilfeller/N * 100
