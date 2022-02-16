@@ -320,14 +320,120 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     maal <- 50
   }
 
+  if (valgtVar == "nra_inkontinensscore_9_1aar_snm") {
+    komboStr9 <- RegData[which(RegData$InkontinensScore>9 & RegData$ForlopsType1Num %in% 1:2 &
+                                 RegData$ForlopsType2Num %in% c(2, NA)), ]
+    komboStr9 <- dplyr::bind_rows(komboStr9, RegData[RegData$KobletForlopsID %in% komboStr9$ForlopsID, ])
+    komboStr9$var <- NA
+    komboStr9$var[which(komboStr9$InkontinensScore<=9)] <- 1
+    komboStr9$var[which(komboStr9$InkontinensScore>9)] <- 0
 
+    Oppfolging <- komboStr9[komboStr9$ForlopsType1Num == 3, ]
+    Oppfolging <- Oppfolging[!is.na(Oppfolging$var), ]
+    Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in%
+                               komboStr9$ForlopsID[komboStr9$ForlopsType1Num == 2], ] # Bare inkluder oppfølginger der det finnes basisreg
 
-indikator$context <- "caregiver"
+    indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "var")]
+    indikator <- merge(indikator, komboStr9[komboStr9$ForlopsType1Num == 2, c("ForlopsID", "Aar")],
+                       by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+    indikator$denominator <- 1
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$ind_id <- 'nra_inkontinensscore_9_1aar_snm'
+    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c('Inkontinensscore <=9', '1 år etter operasjon med SNM')
+    maal <- 30
+  }
 
-utputt <- list(indikator=indikator, tittel=tittel, maal=maal, terskel=terskel,
-               maalRetn=maalRetn, xmax=xmax, decreasing=decreasing)
+  if (valgtVar == "nra_inkontinensscore_9_1aar_sfinkt") {
+    komboStr9 <- RegData[which(RegData$InkontinensScore>9 & RegData$ForlopsType1Num %in% 1:2 &
+                                 RegData$ForlopsType2Num %in% c(2, NA)), ]
+    komboStr9 <- dplyr::bind_rows(komboStr9, RegData[RegData$KobletForlopsID %in% komboStr9$ForlopsID, ])
+    komboStr9$var <- NA
+    komboStr9$var[which(komboStr9$InkontinensScore<=9)] <- 1
+    komboStr9$var[which(komboStr9$InkontinensScore>9)] <- 0
 
-return(utputt)
+    Oppfolging <- komboStr9[komboStr9$ForlopsType1Num == 3, ]
+    Oppfolging <- Oppfolging[!is.na(Oppfolging$var), ]
+    Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in%
+                               komboStr9$ForlopsID[komboStr9$ForlopsType1Num == 1], ] # Bare inkluder oppfølginger der det finnes basisreg
+
+    indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "var")]
+    indikator <- merge(indikator, komboStr9[komboStr9$ForlopsType1Num == 1, c("ForlopsID", "Aar")],
+                       by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+    indikator$denominator <- 1
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$ind_id <- 'nra_inkontinensscore_9_1aar_sfinkt'
+    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c('Inkontinensscore <=9', '1 år etter sfinkterplastikk')
+    maal <- 30
+  }
+
+  if (valgtVar == "nra_inkontinensscore_12_1aar_snm") {
+    komboStr9 <- RegData[which(RegData$InkontinensScore>9 & RegData$ForlopsType1Num %in% 1:2 &
+                                 RegData$ForlopsType2Num %in% c(2, NA)), ]
+    komboStr9 <- dplyr::bind_rows(komboStr9, RegData[RegData$KobletForlopsID %in% komboStr9$ForlopsID, ])
+    komboStr9$var <- NA
+    komboStr9$var[which(komboStr9$InkontinensScore<=12)] <- 1
+    komboStr9$var[which(komboStr9$InkontinensScore>12)] <- 0
+
+    Oppfolging <- komboStr9[komboStr9$ForlopsType1Num == 3, ]
+    Oppfolging <- Oppfolging[!is.na(Oppfolging$var), ]
+    Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in%
+                               komboStr9$ForlopsID[komboStr9$ForlopsType1Num == 2], ] # Bare inkluder oppfølginger der det finnes basisreg
+
+    indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "var")]
+    indikator <- merge(indikator, komboStr9[komboStr9$ForlopsType1Num == 2, c("ForlopsID", "Aar")],
+                       by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+    indikator$denominator <- 1
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$ind_id <- 'nra_inkontinensscore_12_1aar_snm'
+    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c('Inkontinensscore <=12', '1 år etter operasjon med SNM')
+    maal <- 50
+  }
+
+  if (valgtVar == "nra_inkontinensscore_12_1aar_sfinkt") {
+    komboStr9 <- RegData[which(RegData$InkontinensScore>9 & RegData$ForlopsType1Num %in% 1:2 &
+                                 RegData$ForlopsType2Num %in% c(2, NA)), ]
+    komboStr9 <- dplyr::bind_rows(komboStr9, RegData[RegData$KobletForlopsID %in% komboStr9$ForlopsID, ])
+    komboStr9$var <- NA
+    komboStr9$var[which(komboStr9$InkontinensScore<=12)] <- 1
+    komboStr9$var[which(komboStr9$InkontinensScore>12)] <- 0
+
+    Oppfolging <- komboStr9[komboStr9$ForlopsType1Num == 3, ]
+    Oppfolging <- Oppfolging[!is.na(Oppfolging$var), ]
+    Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in%
+                               komboStr9$ForlopsID[komboStr9$ForlopsType1Num == 1], ] # Bare inkluder oppfølginger der det finnes basisreg
+
+    indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "var")]
+    indikator <- merge(indikator, komboStr9[komboStr9$ForlopsType1Num == 1, c("ForlopsID", "Aar")],
+                       by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+    indikator$denominator <- 1
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$ind_id <- 'nra_inkontinensscore_12_1aar_sfinkt'
+    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c('Inkontinensscore <=12', '1 år etter sfinkterplastikk')
+    maal <- 50
+  }
+
+  indikator$context <- "caregiver"
+
+  utputt <- list(indikator=indikator, tittel=tittel, maal=maal, terskel=terskel,
+                 maalRetn=maalRetn, xmax=xmax, decreasing=decreasing)
+
+  return(utputt)
 
 }
 

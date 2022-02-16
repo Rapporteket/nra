@@ -52,6 +52,9 @@ ui <- tagList(
     theme = "rap/bootstrap.css",
 
     tabPanel("Startside",
+             rapbase::appNavbarUserWidget(user = uiOutput("appUserName"),
+                                          organization = uiOutput("appOrgName"),
+                                          addUserInfo = TRUE),
              startside_UI(id = "startside_id")
     ),
     tabPanel("Fordelingsfigurer",

@@ -41,18 +41,19 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
       if (rapbase::isRapContext()) {
         tmpData <- nraHentTabell(input$dumptype)
       } else {
-        tmpData <- read.table(paste0('I:/nra/', input$dumptype, '2020-09-08.txt'), header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+        tmpData <- read.table(paste0('I:/nra/', input$dumptype, '2020-09-08.txt'),
+                              header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
       }
-      dumpdata <- tmpData[as.Date(tmpData$HovedDato) >= input$datovalg[1] &
-                            as.Date(tmpData$HovedDato) <= input$datovalg[2], ]
+      dumpdata <- tmpData[which(as.Date(tmpData$HovedDato) >= input$datovalg[1] &
+                                  as.Date(tmpData$HovedDato) <= input$datovalg[2]), ]
       if (userRole != 'SC') {
-        dumpdata <- dumpdata[dumpdata$AvdRESH == reshID, ]
+        dumpdata <- dumpdata[dumpdata$AvdRESH %in% reshID, ]
       }
       if (input$dumptype == "ForlopsOversikt") {
         dumpdata <- apply(dumpdata, 2, as.character)
         dumpdata <- as.data.frame(dumpdata)
         dumpdata <- dumpdata[which(dumpdata$PasientID != ""), ]
-        }
+      }
       write.csv2(dumpdata, file, row.names = F, na = '', fileEncoding = 'Latin1')
     }
   )
