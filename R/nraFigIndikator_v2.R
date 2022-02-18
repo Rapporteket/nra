@@ -27,11 +27,11 @@ nraFigIndikator_v2 <- function(indikatordata, tittel='', terskel=30, minstekrav 
 
 
   AntTilfeller <- tidyr::spread(Tabell[, -c(4,5)], 'year', 'Antall')
-  AntTilfeller <- dplyr::bind_cols(SenterKortNavn=c(AntTilfeller[["SenterKortNavn"]], "Nasjonalt"),
+  AntTilfeller <- dplyr::bind_cols(SenterKortNavn=c(as.character(AntTilfeller[["SenterKortNavn"]]), "Nasjonalt"),
                                    dplyr::bind_rows(AntTilfeller[,-1], colSums(AntTilfeller[,-1], na.rm = T)))
 
   N <- tidyr::spread(Tabell[, -c(3,5)], 'year', 'N')
-  N <- dplyr::bind_cols(SenterKortNavn=c(N[["SenterKortNavn"]], "Nasjonalt"),
+  N <- dplyr::bind_cols(SenterKortNavn=c(as.character(N[["SenterKortNavn"]]), "Nasjonalt"),
                         dplyr::bind_rows(N[,-1], colSums(N[,-1], na.rm = T)))
   N[is.na(N)] <- 0
 
