@@ -48,6 +48,7 @@ nraFigIndikator_v2 <- function(indikatordata, tittel='', terskel=30, minstekrav 
   row.names(N) <- N[["SenterKortNavn"]]
   N <- N[, -1]
 
+  AntTilfeller <- AntTilfeller[,c(2,1)]; N <- N[,c(2,1)]
   andeler <- AntTilfeller/N * 100
 
   andeler[N < terskel] <- NA
@@ -80,14 +81,14 @@ nraFigIndikator_v2 <- function(indikatordata, tittel='', terskel=30, minstekrav 
   oldpar_oma <- par()$oma
 
   cexgr <- skriftStr
-  rownames(andeler) <- paste0(rownames(andeler), ' (', N[, dim(N)[2]], ')')
+  rownames(andeler) <- paste0(rownames(andeler), ' (', N[, dim(N)[2]], ') ')
   andeler <- rbind(andeler, c(NA,NA,NA))
-  rownames(andeler)[dim(andeler)[1]] <- paste0('(N, ', names(andeler)[dim(andeler)[2]], ')')
+  rownames(andeler)[dim(andeler)[1]] <- paste0('(N, ', names(andeler)[dim(andeler)[2]], ') ')
   KI <- cbind(c(NA, NA), KI, c(NA, NA))
 
   vmarg <- max(0, strwidth(rownames(andeler), units='figure', cex=cexgr)*0.75)
   par('fig'=c(vmarg, 1, 0, 1))
-  par('mar'=c(5.1, 4.1, 5.1, 9.1))
+  # par('mar'=c(5.1, 4.1, 5.1, 9.1))
   par('oma'=c(0,1,0,0))
 
   par('mar'=c(5.1, 4.1, 5.1, 2.1))
@@ -121,7 +122,7 @@ nraFigIndikator_v2 <- function(indikatordata, tittel='', terskel=30, minstekrav 
            horiz=T, axes=F, space=c(0,0.3),
            col=soyleFarger, border=NA, xlab = 'Andel (%)', add=TRUE)
 
-  title(main = tittel)
+  title(main = tittel, cex.main=skriftStr*1.1)
   ypos <- as.numeric(ypos) #as.vector(ypos)
   yposOver <- max(ypos)-2 + 0.5*diff(ypos)[1]
   if (!is.na(minstekrav)) {
@@ -160,9 +161,14 @@ nraFigIndikator_v2 <- function(indikatordata, tittel='', terskel=30, minstekrav 
              lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
              legend=names(N), ncol = 1)}
     if (legPlass=='top'){
+      # legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
+      #        lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
+      #        legend=names(N), ncol = dim(andeler)[2])
       legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
              lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-             legend=names(N), ncol = dim(andeler)[2])}
+             legend=paste0(names(N), " (", as.character(round(as.numeric(andeler[substr(rownames(andeler), 1, 9) == "Nasjonalt", ]), 1)),
+                           "%, N = ", N[rownames(N) == "Nasjonalt", ], ")"),
+             ncol = 1)}
     if (legPlass=='topleft'){
       legend('topleft', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
              lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
@@ -188,7 +194,7 @@ nraFigIndikator_v2 <- function(indikatordata, tittel='', terskel=30, minstekrav 
              legend=names(N), ncol = dim(andeler)[2])
     }
   }
-  text(x=0, y=ypos, labels = pst_txt, cex=0.75, pos=4)#
+  text(x=0, y=ypos, labels = pst_txt, cex=skriftStr, pos=4)#
 
   par('mar'= oldpar_mar)
   par('fig'= oldpar_fig)

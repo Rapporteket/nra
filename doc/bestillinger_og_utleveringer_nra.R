@@ -2,6 +2,15 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
+###### Registreringer med både St. Marks og Wexner #########################################
+RegData <- nra::nraHentRegData()
+RegData <- nra::nraPreprosess(RegData=RegData)
+RegData <- RegData[!is.na(RegData$StMarksTotalScore) & !is.na(RegData$WexnerTotalScore), ]
+
+forlop <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, c("ForlopsID", "HovedDato", "ForlopsType1Num", "StMarksTotalScore", "WexnerTotalScore")],
+                RegData[RegData$ForlopsType1Num %in% 3, c("KobletForlopsID", "HovedDato", "ForlopsType1Num", "StMarksTotalScore", "WexnerTotalScore")],
+                by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf"))
+
 ##### Ny utkjøring, nå med EndeTilEndeSutur inkludert 22.11.2021 ###########################3
 registryName <- "nra"
 dbType <- "mysql"
