@@ -1,3 +1,47 @@
+
+rm(list = ls())
+library(nra)
+library(tidyverse)
+
+RegData <- nra::nraHentRegData()
+Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
+RegData <- nra::nraPreprosess(RegData=RegData)
+
+allevar <- nraHentTabell("alleVarNum")
+basisdata <- allevar[allevar$ForlopsType1Num %in% 1:2, ]
+basisdata <- basisdata[, colSums(is.na(basisdata)) != dim(basisdata)[1]]
+oppfdata <- allevar[allevar$ForlopsType1Num %in% 3:4, ]
+oppfdata <- oppfdata[, colSums(is.na(oppfdata)) != dim(oppfdata)[1]]
+oppf1 <- oppfdata[oppfdata$ForlopsType1Num==3, ]
+oppf5 <- oppfdata[oppfdata$ForlopsType1Num==4, ]
+names(oppf1) <- paste0(names(oppf1), "_oppf1")
+names(oppf5) <- paste0(names(oppf5), "_oppf5")
+RegData_flat <- basisdata %>%
+  merge(oppf1, by.x = "ForlopsID", by.y = "KobletForlopsID_oppf1", all.x = T) %>%
+  merge(oppf5, by.x = "ForlopsID", by.y = "KobletForlopsID_oppf5", all.x = T)
+
+
+
+
+
+
+dim(RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), ])
+RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), "EQ5DSkore"]
+RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), "PasientID"]
+RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), "ForlopsType1"]
+RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), "SenterKortNavn"]
+tmp <- RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), ]
+
+RegData$PasientID[which(!is.na(RegData$EQ5DSmerte[RegData$HovedDato < "2020-11-16"]))]
+RegData$ForlopsType1[which(!is.na(RegData$EQ5DSmerte[RegData$HovedDato < "2020-11-16"]))]
+RegData$EQ5DSkore[which(!is.na(RegData$EQ5DSkore[RegData$HovedDato < "2020-11-16"]))]
+
+
+
+
+
+
+
 setwd('c:/GIT/nra/doc')
 
 rm(list = ls())
@@ -99,9 +143,9 @@ valgtShus <- '' #c('601225', '700116')
 
 if (outfile == '') {x11()}
 tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
-              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 
 ###############  St. Marks osv... ########################
 ##########
@@ -115,9 +159,9 @@ sammenlign <- 2
 
 if (outfile == '') {x11()}
 utdata2 <- nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
-               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-               reshID=reshID, preprosess=preprosess, hentData=hentData,
-               forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign)
+                          minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                          reshID=reshID, preprosess=preprosess, hentData=hentData,
+                          forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign)
 
 
 tibble(Sykehus = utdata0$grtxt, gj.sn = as.numeric(utdata0$PlotMatrise), KI_nedre = as.numeric(utdata0$KIned),
@@ -172,7 +216,7 @@ table(RegData$KomplikasjonT2[RegData$ForlopsType1Num==2 & RegData$ForlopsType2Nu
 
 
 tmp <- RegData[RegData$PatientID %in% as.numeric(names(sort(table(RegData$PatientID[!is.na(RegData$Symtomvarighet)], useNA = 'ifany'),
-            decreasing = T))[1:15]) & RegData$ForlopsType1Num %in% 1:2, c("PatientID", "HovedDato", "TestSluttDato", "FyllDato1A", "FyllDato1B", "ForlopsType1", "ForlopsType2")]
+                                                            decreasing = T))[1:15]) & RegData$ForlopsType1Num %in% 1:2, c("PatientID", "HovedDato", "TestSluttDato", "FyllDato1A", "FyllDato1B", "ForlopsType1", "ForlopsType2")]
 
 tmp[order(tmp$PatientID), ]
 

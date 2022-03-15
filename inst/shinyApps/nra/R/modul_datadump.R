@@ -12,7 +12,7 @@ datadump_UI <- function(id){
       dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til", language = "nb",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), separator = " til "),
       selectInput(inputId = ns("dumptype"), label = "Velg type datadump",
-                  choices = c('alleVar', 'alleVarNum', 'ForlopsOversikt', 'SkjemaOversikt')),
+                  choices = c('alleVar', 'alleVarNum', 'ForlopsOversikt', 'SkjemaOversikt', 'alleVarNum_utflatet')),
       tags$hr(),
       downloadButton(ns("lastNed_dump"), "Last ned datadump")
     ),
@@ -25,7 +25,9 @@ datadump_UI <- function(id){
       h4(tags$b('alleVar '), 'inneholder alle kliniske variabler i registeret og benytter etikettene til kategoriske variabler.'),
       h4(tags$b('alleVarNum '), 'inneholder alle kliniske variabler i registeret og benytter tallkodene til kategoriske variabler.'),
       h4(tags$b('ForlopsOversikt '), 'inneholder en del administrative data relevant for forløpene.'),
-      h4(tags$b('SkjemaOversikt '), 'er en oversikt over status til alle registreringer i registreret, også uferdige.')
+      h4(tags$b('SkjemaOversikt '), 'er en oversikt over status til alle registreringer i registreret, også uferdige.'),
+      h4(tags$b('alleVarNum_utflatet '), 'inneholder alle kliniske variabler i registeret og benytter tallkodene til kategoriske variabler.
+         At tabellen er utflatet innebærer at oppfølginger er koblet til sine respective basisregistreringer slik at en linje utgjør et forløp.')
     )
   )
 }
@@ -39,7 +41,22 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
     },
     content = function(file){
       if (rapbase::isRapContext()) {
-        tmpData <- nraHentTabell(input$dumptype)
+        if (input$dumptype == c('alleVarNum_utflatet')) {
+          allevar <- nraHentTabell("alleVarNum")
+          basisdata <- allevar[allevar$ForlopsType1Num %in% 1:2, ]
+          basisdata <- basisdata[, colSums(is.na(basisdata)) != dim(basisdata)[1]]
+          oppfdata <- allevar[allevar$ForlopsType1Num %in% 3:4, ]
+          oppfdata <- oppfdata[, colSums(is.na(oppfdata)) != dim(oppfdata)[1]]
+          oppf1 <- oppfdata[oppfdata$ForlopsType1Num==3, ]
+          oppf5 <- oppfdata[oppfdata$ForlopsType1Num==4, ]
+          names(oppf1) <- paste0(names(oppf1), "_oppf1")
+          names(oppf5) <- paste0(names(oppf5), "_oppf5")
+          tmpData <- basisdata %>%
+            merge(oppf1, by.x = "ForlopsID", by.y = "KobletForlopsID_oppf1", all.x = T) %>%
+            merge(oppf5, by.x = "ForlopsID", by.y = "KobletForlopsID_oppf5", all.x = T)
+        } else {
+          tmpData <- nraHentTabell(input$dumptype)
+        }
       } else {
         tmpData <- read.table(paste0('I:/nra/', input$dumptype, '2020-09-08.txt'),
                               header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
