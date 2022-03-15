@@ -17,6 +17,124 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
 
 
   RegData$Variabel <- NA
+
+  if (valgtVar == 'EQ5DAngst') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Angst og depresjon')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg er hverken engstelig eller deprimert",
+                   "Jeg er litt engstelig eller deprimert",
+                   "Jeg er middels engstelig eller deprimert",
+                   "Jeg er svært engstelig eller deprimert",
+                   "Jeg er ekstremt engstelig eller deprimert"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'EQ5DPersonligStell') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Personlig stell')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg har ingen problemer med personlig stell",
+                   "Jeg har litt problemer med å vaske meg eller kle meg",
+                   "Jeg har middels store problemer med å vaske meg eller kle meg",
+                   "Jeg har store problemer med å vaske meg eller kle meg",
+                   "Jeg er ute av stand til å vaske meg eller kle meg"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'EQ5DSmerte') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Smerte og ubehag')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg har hverken smerte eller ubehag",
+                   "Jeg har litt smerte eller ubehag",
+                   "Jeg har middels sterke smerte eller ubehag",
+                   "Jeg har sterk smerte eller ubehag",
+                   "Jeg har svært sterke smerte eller ubehag"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'EQ5DGange') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Gange')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg har ingen problemer med å gå omkring",
+                   "Jeg har litt problemer med å gå omkring",
+                   "Jeg har middels store problemer med å gå omkring",
+                   "Jeg har store problemer med å gå omkring",
+                   "Jeg er ute av stand til å gå omkring"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'EQ5DVanligeGjoeremaal') {
+    retn <- 'H'
+    RegData$Variabel <- RegData[, valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('EQ5D - Vanlige gjøremål')
+    gr <- rev(c(9, 1:5))
+    grtxt <- rev(c("Ikke utfylt",
+                   "Jeg har ingen problemer med å utføre mine vanlige gjøremål",
+                   "Jeg har litt problemer med å utføre mine vanlige gjøremål",
+                   "Jeg har middels store problemer med å utføre mine vanlige gjøremål",
+                   "Jeg har store problemer med å utføre mine vanlige gjøremål",
+                   "Jeg er ute av stand til å utføre mine vanlige gjøremål"))
+    grtxt <- nra::wrap.it(grtxt, 27)
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'PGICEndring') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$PGICEndringPost1
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('Endring i aktivitetsbegrensninger, symptomer,', 'følelser og generell livskvalitet ')
+    gr <- rev(c(99, 0:6))
+    grtxt <- rev(c("Ukjent", "Ingen endring (eller tilstanden \n har blitt verre)",
+                   "Har det omtrent som før, nesten ingen \n endring i tilstand i det hele tatt",
+                   "Noe bedring, men ingen merkbar \n endring har skjedd",
+                   "Litt bedring, men denne endringen har \n ikke utgjort noen større forskjell",
+                   "Moderat bedring og en liten, \n men merkbar forskjell",
+                   "Bedre. Det har skjedd en definitiv endring \n som utgjør en verdifull forskjell",
+                   "Mye bedre. Det har skjedd en betydelig endring \n til det bedre som utgjør all verdens forskjell"))
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'PGICEndringLekkasje') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$PGICEndringLekkasjePost1
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- 'Endring i lekkasjeplager'
+    gr <- rev(c(99, 0:10))
+    grtxt <- rev(c("99 = Ukjent",
+                   "0 = Mye verre",
+                   "1",
+                   "2",
+                   "3",
+                   "4",
+                   "5 = Ingen endring",
+                   "6",
+                   "7",
+                   "8",
+                   "9",
+                   "10 = Mye bedre"))
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
   if (valgtVar == 'PasientAlder') {
     RegData$Variabel <- RegData[, valgtVar]
     RegData$Variabel <- as.numeric(RegData$Variabel)
@@ -49,30 +167,32 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
   if (valgtVar == 'Komplikasjon') {
     retn <- 'H'
     RegData$Variabel <- RegData$Komplikasjon
+    RegData <- RegData[RegData$HovedDato <= "2020-11-15", ]
     RegData <- RegData[RegData$ForlopsType1Num == 2, ]
     RegData <- RegData[!is.na(RegData$Variabel), ]
+    RegData <- RegData[RegData$Onestage != 1, ]  # Fjerner Onestage
     tittel <- 'Komplikasjoner SNM test innen 30 dager'
     gr <- c(0,1,2,9)
     grtxt <- c('Ingen', 'Sårinfeksjon mistenkt', 'Sårinfeksjon bekreftet','Annet')
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
-    # subtxt <- 'Aldersgrupper'
   }
 
   if (valgtVar == 'KomplikasjonT2') {
     retn <- 'H'
     RegData$Variabel <- RegData$KomplikasjonT2
+    RegData <- RegData[RegData$HovedDato <= "2020-11-15", ]
     RegData <- RegData[RegData$ForlopsType1Num == 2, ]
     RegData <- RegData[!is.na(RegData$Variabel), ]
-    tittel <- 'Komplikasjoner SNM prosedyre innen 30 dager'
+    tittel <- 'Komplikasjoner SNM implantasjon innen 30 dager'
     gr <- c(0,1,2,9)
     grtxt <- c('Ingen', 'Sårinfeksjon mistenkt', 'Sårinfeksjon bekreftet','Annet')
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
-    # subtxt <- 'Aldersgrupper'
   }
 
   if (valgtVar == 'KomplSNMtot') {
     retn <- 'H'
     RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)
+    RegData <- RegData[RegData$HovedDato <= "2020-11-15", ]
     RegData <- RegData[RegData$ForlopsType1Num == 2, ]
     RegData <- RegData[!is.na(RegData$Variabel), ]
     RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
@@ -85,6 +205,45 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 
+  if (valgtVar == 'Komplikasjon_ny') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$Komplikasjon
+    RegData <- RegData[RegData$HovedDato > "2020-11-15", ]
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    RegData <- RegData[RegData$Onestage != 1, ]  # Fjerner Onestage
+    tittel <- 'Komplikasjoner SNM test innen 30 dager'
+    gr <- c(0,2,3,98)
+    grtxt <- c('Ingen', 'Sårinfeksjon bekreftet', 'Hematom som krever intervensjon', 'Ukjent')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'KomplikasjonT2_ny') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$KomplikasjonT2
+    RegData <- RegData[RegData$HovedDato > "2020-11-15", ]
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- 'Komplikasjoner SNM implantasjon innen 30 dager'
+    gr <- c(0,2,3,98)
+    grtxt <- c('Ingen', 'Sårinfeksjon bekreftet', 'Hematom som krever intervensjon', 'Ukjent')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'KomplSNMtot_ny') {
+    retn <- 'H'
+    RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)
+    RegData <- RegData[RegData$HovedDato <= "2020-11-15", ]
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    RegData$Variabel[which(RegData$Variabel==98 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
+    RegData$Variabel[which(RegData$Variabel==98 & (RegData$Komplikasjon==3 | RegData$KomplikasjonT2==3))] <- 3
+    tittel <- 'Komplikasjoner SNM innen 30 dager'
+    gr <- c(0,2,3,98)
+    grtxt <- c('Ingen', 'Sårinfeksjon bekreftet', 'Hematom som krever intervensjon', 'Ukjent')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
   if (valgtVar == 'Etiologi') {
     retn <- 'H'
     Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)]) # Bør man sjekke om PasientID også finnes
@@ -92,8 +251,8 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     N <- length(unique(union(Ukjente, unique(RegData$PasientID))))
 
     SamletPrPID <- aggregate(RegData[, c("AnnenBekkenKirurgi", 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom',
-                                 'ObsteriskSkade','PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi')],
-                     by=list(RegData$PasientID), max, na.rm = TRUE)
+                                         'ObsteriskSkade','PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi')],
+                             by=list(RegData$PasientID), max, na.rm = TRUE)
     SamletPrPID[SamletPrPID==-Inf] <- NA
     AntVar <- c(colSums(SamletPrPID[,-1], na.rm = T), Ukjent=length(Ukjente))
     NVar<-rep(N, length(AntVar))
@@ -101,6 +260,37 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
                'Obsterisk skade','Perifer nerveskade', 'Perineal abscess', 'Rectumreseksjon', 'Sfinkterotomi', 'Annet', 'Ukjent')
     tittel <- 'Etiologi'
   }
+
+  if (valgtVar == 'Etiologi_v2') { ############ SKAL OGSÅ GJØRES PÅ INDIVIDNIVÅ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+    retn <- 'H'
+    # Ukjente <- unique(RegData$PasientID[which(RegData$ForlopsType1Num %in% 1:2 & RegData$Ukjent==1)]) # Bør man sjekke om PasientID også finnes
+    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]                        # i RegData?
+    N <- dim(RegData)[1]
+    RegData$TidlKirurgEndetarm_samlet <- RegData$PerinealAbscess | RegData$Hemoroidereksjon |
+      RegData$Rectumreseksjon | RegData$Sfinkterotomi
+    RegData$TidlKirurgEndetarm_samlet[!is.na(RegData$TidlKirurgEndetarm)] <-
+      RegData$TidlKirurgEndetarm[!is.na(RegData$TidlKirurgEndetarm)]
+    # RegData$etio_bool <- RegData$ObsteriskSkade | RegData$AnnetTraume | RegData$TidlKirurgEndetarm_samlet |
+    #   RegData$AnnenBekkenKirurgi | RegData$NevrologiskSykdom | RegData$PeriferNervskade | RegData$AnnetEtiologi |
+    #   RegData$KraftBehandling
+    AntVar <- colSums(RegData[, c("ObsteriskSkade", "AnnetTraume","TidlKirurgEndetarm_samlet",
+                                  "AnnenBekkenKirurgi", "NevrologiskSykdom",  "KraftBehandling",
+                                  "AnnetEtiologi", "Ukjent")], na.rm = TRUE)
+    # AntVar <- c(colSums(RegData[which(RegData$Ukjent == 0),
+    #                             c("ObsteriskSkade", "AnnetTraume","TidlKirurgEndetarm_samlet",
+    #                               "AnnenBekkenKirurgi", "NevrologiskSykdom",  "KraftBehandling",
+    #                               "AnnetEtiologi")], na.rm = TRUE)
+    # NVar<-c(colSums(!is.na(RegData[which(RegData$Ukjent == 0),
+    #                              c("ObsteriskSkade", "AnnetTraume","TidlKirurgEndetarm_samlet",
+    #                                "AnnenBekkenKirurgi", "NevrologiskSykdom",  "KraftBehandling",
+    #                                "AnnetEtiologi")])), Ukjent = sum(RegData$Ukjent %in% 0:1))
+
+    NVar<-rep(N, length(AntVar))
+    grtxt <- c('Obsterisk skade', 'Annet traume', 'Tidligere kirurgi', 'Annen bekkenkirurgi', 'Nevrologisk sykdom',
+               'Kreftbehandling', 'Annet', 'Ukjent')
+    tittel <- 'Etiologi'
+  }
+
 
   if (valgtVar == 'TidlBeh') {
     retn <- 'H'
@@ -110,11 +300,46 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     SamletPrPID <- aggregate(RegData[, c("Konservativ", "Irrigasjon", "Tibialisstimulering", "AnalInjection", "SNM", "Sfinkterplastikk",
                                          "Rectopexi", "KirurgiForRectumprolaps", "Gracilisplastikk", "Stomi", "AnnetTidligereBeh")],
                              by=list(RegData$PasientID), max, na.rm = TRUE)
-    # SamletPrPID[SamletPrPID==-Inf] <- NA
+    # RegData[, c("Konservativ", "Irrigasjon", "Tibialisstimulering", "AnalInjection", "SNM", "Sfinkterplastikk",
+    #             "Rectopexi", "KirurgiForRectumprolaps", "Gracilisplastikk", "Stomi", "AnnetTidligereBeh", "PasientID")] %>% group_by(PasientID) %>%
+    #   summarise_all(max, na.rm=T)
+    SamletPrPID[SamletPrPID==-Inf] <- NA
     AntVar <- colSums(SamletPrPID[,-1], na.rm = T)
     NVar<-rep(N, length(AntVar))
     grtxt <- c("Konservativ", "Irrigasjon", "Tibialisstimulering", "Analinjeksjon", "SNM", "Sfinkterplastikk",
                "Rectopexi", "Kirurgi for Rektumprolaps", "Gracilisplastikk", "Stomi", "Annen")
+    tittel <- 'Tidligere behandling'
+  }
+
+  if (valgtVar == 'TidlBeh_v2') {
+    retn <- 'H'
+    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
+    N <- length(unique(RegData$PasientID))
+
+    SamletPrPID <- aggregate(RegData[, c("Konservativ_v2", "AnalInjection", "SNM", "Sfinkterplastikk",
+                                         "Prolapskirurgi", "Stomi", "KunstigLukkMuskel", "AnnetTidligereBeh")],
+                             by=list(RegData$PasientID), max, na.rm = TRUE)
+    SamletPrPID[SamletPrPID==-Inf] <- NA
+    AntVar <- colSums(SamletPrPID[,-1], na.rm = T)
+    NVar<-rep(N, length(AntVar))
+    grtxt <- c("Konservativ behandling", "Anal injeksjon", "SNM", "Rekonstruksjon av lukkemuskelen",
+               "Kirurgi for endetarmsprolaps", "Stomi", "Kunstig lukkemuskel", "Annen")
+    tittel <- 'Tidligere behandling'
+  }
+
+  if (valgtVar == 'TidlBeh_v3') {
+    retn <- 'H'
+    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
+    N <- length(unique(RegData$PasientID))
+
+    SamletPrPID <- aggregate(RegData[, c("Konservativ_v2", "AnalInjection", "SNM", "Sfinkterplastikk",
+                                         "Prolapskirurgi", "Stomi", "KunstigLukkMuskel", "AnnetTidligereBeh")],
+                             by=list(RegData$PasientID), max, na.rm = TRUE)
+    SamletPrPID[SamletPrPID==-Inf] <- NA
+    AntVar <- colSums(SamletPrPID[,-1], na.rm = T)
+    NVar<-colSums(!is.na(SamletPrPID[,-1]))
+    grtxt <- c("Konservativ behandling", "Anal injeksjon", "SNM", "Rekonstruksjon av lukkemuskelen",
+               "Kirurgi for endetarmsprolaps", "Stomi", "Kunstig lukkemuskel", "Annen")
     tittel <- 'Tidligere behandling'
   }
 
@@ -147,8 +372,8 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     retn <- 'H'
     RegData$Variabel <- RegData[, valgtVar]
     RegData <- RegData[which(RegData$Ultralyd %in% 0:2), ]
-#     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
-#     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
+    #     RegData <- RegData[order(RegData$HovedDato, decreasing = T), ]
+    #     RegData <- RegData[match(unique(RegData$PasientID), RegData$PasientID), ]
     gr <- c(0:5, 9, 99)
     grtxt <- c('Ingen skade', 'Partiell defekt ytre sfinkter', 'Partiell ytre og fullvegg indre',
                'Fullveggsdefekt ytre sfinkter', 'Fullvegg ytre og indre sfinkter', 'Fullveggsdefekt indre sfinkter',

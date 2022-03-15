@@ -33,6 +33,7 @@ source(system.file("shinyApps/nra/R/modul_fordelingsfig.R", package = "nra"), en
 source(system.file("shinyApps/nra/R/modul_gjsn_prepost.R", package = "nra"), encoding = 'UTF-8')
 source(system.file("shinyApps/nra/R/modul_datadump.R", package = "nra"), encoding = 'UTF-8')
 source(system.file("shinyApps/nra/R/modul_admtab.R", package = "nra"), encoding = 'UTF-8')
+source(system.file("shinyApps/nra/R/modul_indikatorfig.R", package = "nra"), encoding = 'UTF-8')
 
 AllData <- lastshinydata()
 RegData <- AllData$RegData
@@ -43,6 +44,7 @@ BrValg <- BrValg(RegData=RegData)
 # Define UI for application
 ui <- tagList(
   shinyalert::useShinyalert(),
+  shinyjs::useShinyjs(),
   navbarPage(
     title = div(a(includeHTML(system.file('www/logo.svg', package='rapbase'))),
                 regTitle),
@@ -50,65 +52,65 @@ ui <- tagList(
     theme = "rap/bootstrap.css",
 
     tabPanel("Startside",
-             mainPanel(
-               shinyjs::useShinyjs(),
-               shinyalert::useShinyalert(),
-               rapbase::appNavbarUserWidget(user = uiOutput("appUserName"),
-                                            organization = uiOutput("appOrgName"),
-                                            addUserInfo = TRUE),
-
-               h2('Velkommen til Rapporteket - NRA', align='center'),
-               br(),
-               # h4(tags$b('Her skal Tone og Stig formulere kloke og reflekterte meldinger til Rapportekets brukere. En foreløpig variant er gitt under:')),
-               # br(),
-               h4('Du er nå inne på Rapporteket for NRA, registerets resultattjeneste.
-                Disse sidene inneholder en samling av figurer og tabeller som viser resultater fra registeret.
-                På hver av sidene kan man gjøre utvalg i menyene til venstre. Alle resultater er basert
-                på ferdigstilte registreringer. Merk at data er hentet direkte fra registerets database.
-                Dette medfører at nyere data ikke er kvalitetssikret ennå.'),
-               h4('Du kan se på resultater for eget sykehus, nasjonale data og eget sykehus sett opp mot landet for øvrig.
-                Alle figurer og
-                tabeller kan lastes ned.'),
-               br(),
-               h4(tags$b(tags$u('Innhold i de ulike fanene:'))),
-               h4(tags$b('Fordelinger '), 'viser fordelinger (figur/tabell) av ulike variabler.
-                Man kan velge hvilken variabel man vil se på, og man kan gjøre ulike filtreringer.'),
-               br(),
-               h4(tags$b('Gjennomsnitt/andeler før og etter operasjon '), 'viser gjennomsnitt eller andel av en variabel. Kan vise enten kun pre-data,
-                pre og 1-årsoppfølgingsdata, eller pre-og 1 og 5-årsoppfølgingsdata'),
-               br(),
-               h4(tags$b('Datadump '), 'gir mulighet til å laste ned din egen avdelings registreringer.'),
-               br(),
-               h4(tags$b('Administrative tabeller '), 'er en samling oversikter over antall registreringer.'),
-               br(),
-               # br(),
-               # h3('HER KAN MAN F.EKS. VISE ANTALL REGISTRERINGER SISTE X MND.'),
-               # br(),
-               br(),
-               h4('Oversikt over registerets kvalitetsindikatorer og resultater finner du på www.kvalitetsregistre.no:', #helpText
-                  a("NRA", href="https://www.kvalitetsregistre.no/registers/541/resultater"),
-                  target="_blank", align='center'),
-               br(),
-               h4('Mer informasjon om registeret finnes på NRA sin ',
-                  a("hjemmeside", href="https://unn.no/fag-og-forskning/medisinske-kvalitetsregistre/nra-norsk-register-for-analinkontinens", target="_blank"),
-                  align='center')
-             )
-
+             rapbase::appNavbarUserWidget(user = uiOutput("appUserName"),
+                                          organization = uiOutput("appOrgName"),
+                                          addUserInfo = TRUE),
+             startside_UI(id = "startside_id")
     ),
-
-
     tabPanel("Fordelingsfigurer",
              fordelingsfig_UI(id = "fordelingsfig_id", BrValg = BrValg)
     ),
     tabPanel("Gjennomsnitt/andeler før og etter operasjon",
              gjsn_prepost_UI(id = "gjsn_prepost_id")
     ),
+    tabPanel("Indikatorer",
+             indikatorfig_UI(id = "indikator_id")
+    ),
     tabPanel("Datadump",
              datadump_UI(id = "datadump_id")
     ),
     tabPanel("Administrative tabeller",
              admtab_UI(id = "admtab_id")
+    ),
+
+    shiny::navbarMenu("Verktøy",
+                      # shiny::tabPanel(
+                      #   "Utsending",
+                      #   shiny::sidebarLayout(
+                      #     shiny::sidebarPanel(
+                      #       rapbase::autoReportOrgInput("norgastDispatch"),
+                      #       rapbase::autoReportInput("norgastDispatch")
+                      #     ),
+                      #     shiny::mainPanel(
+                      #       rapbase::autoReportUI("norgastDispatch")
+                      #     )
+                      #   )
+                      # ),
+
+                      shiny::tabPanel(
+                        "Eksport",
+                        shiny::sidebarLayout(
+                          shiny::sidebarPanel(
+                            rapbase::exportUCInput("nraExport")
+                          ),
+                          shiny::mainPanel(
+                            rapbase::exportGuideUI("nraExportGuide")
+                          )
+                        )
+                      ),
+
+                      shiny::tabPanel(
+                        "Bruksstatistikk",
+                        shiny::sidebarLayout(
+                          shiny::sidebarPanel(rapbase::statsInput("nraStats")),
+                          shiny::mainPanel(
+                            rapbase::statsUI("nraStats"),
+                            rapbase::statsGuideUI("nraStatsGuide")
+                          )
+                        )
+                      )
     )
+
 
   )
 )
@@ -117,7 +119,7 @@ ui <- tagList(
 server <- function(input, output, session) {
 
   if (rapbase::isRapContext()) {
-    raplog::appLogger(session = session, msg = 'Starter NRA')
+    rapbase::appLogger(session = session, msg = 'Starter NRA')
     reshID <- rapbase::getUserReshId(session)
     userRole <- rapbase::getUserRole(session)
   } else {
@@ -129,11 +131,24 @@ server <- function(input, output, session) {
   #   shiny::hideTab("norgast_app_id", target = "Sykehusvisning")
   # }
 
-
+  # callModule(startside, "startside_id")
   callModule(fordelingsfig, "fordelingsfig_id", reshID = reshID, RegData = RegData, hvd_session = session)
   callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData, hvd_session = session)
+  callModule(indikatorfig, "indikator_id", RegData = RegData, hvd_session = session)
   callModule(datadump, "datadump_id", reshID = reshID, userRole = userRole, hvd_session = session)
-  callModule(admtab, "admtab_id", reshID = reshID, RegData = RegData, userRole = userRole, hvd_session = session, skjemaoversikt=Skjemaoversikt)
+  callModule(admtab, "admtab_id", reshID = reshID, RegData = RegData, userRole = userRole,
+             hvd_session = session, skjemaoversikt=Skjemaoversikt)
+  # Eksport  #
+  rapbase::exportUCServer("nraExport", "nra")
+  ## veileding
+  rapbase::exportGuideServer("nraExportGuide", "nra")
+
+  ## Stats
+  rapbase::statsServer("nraStats", registryName = "nra",
+                       eligible = (userRole == "SC"))
+  rapbase::statsGuideServer("nraStatsGuide", registryName = "nra")
+
+  #################################################################################################################################
 
   #Navbarwidget
   output$appUserName <- renderText(rapbase::getUserFullName(session))

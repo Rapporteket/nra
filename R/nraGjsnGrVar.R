@@ -10,7 +10,7 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
                          outfile = '', preprosess=TRUE, minald=0, maxald=130, decreasing=F, egen_mot_landet=F,
                          erMann=99, hentData=F, forlopstype1=99, forlopstype2=99, terskel=0, reshID=0,
                          inkl_konf=0, grvar='SenterKortNavn', width=600, height=600, xtekst='Gjennomsnitt',
-                         graa = '')
+                         graa = '', onestage=99)
 {
 
   egetShus <- RegData$SenterKortNavn[match(reshID, RegData$AvdRESH)]
@@ -51,7 +51,7 @@ nraGjsnGrVar <- function(RegData, valgtVar='Tilfredshet', datoFra='2012-04-01', 
 
   nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
                          minald=minald, maxald=maxald, erMann=erMann,
-                         forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                         forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
   RegData <- nraUtvalg$RegData
   utvalgTxt <- nraUtvalg$utvalgTxt
 

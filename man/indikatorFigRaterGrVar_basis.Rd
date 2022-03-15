@@ -26,7 +26,8 @@ indikatorFigRaterGrVar_basis(
   maxald = 130,
   erMann = "",
   forlopstype1 = 99,
-  forlopstype2 = 99
+  forlopstype2 = 99,
+  onestage = 99
 )
 }
 \value{

@@ -2,6 +2,47 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
+###### Registreringer med både St. Marks og Wexner #########################################
+RegData <- nra::nraHentRegData()
+RegData <- nra::nraPreprosess(RegData=RegData)
+RegData <- RegData[!is.na(RegData$StMarksTotalScore) & !is.na(RegData$WexnerTotalScore), ]
+
+forlop <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, c("ForlopsID", "HovedDato", "ForlopsType1Num", "StMarksTotalScore", "WexnerTotalScore")],
+                RegData[RegData$ForlopsType1Num %in% 3, c("KobletForlopsID", "HovedDato", "ForlopsType1Num", "StMarksTotalScore", "WexnerTotalScore")],
+                by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf"))
+
+##### Ny utkjøring, nå med EndeTilEndeSutur inkludert 22.11.2021 ###########################3
+registryName <- "nra"
+dbType <- "mysql"
+query <- "SELECT * FROM alleVarNum"
+RegData <- rapbase::loadRegData(registryName, query, dbType)
+RegData_snm <- RegData[RegData$ForlopsType1Num == 2 & RegData$AvdRESH == 601225, ]
+RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_snm$ForlopsID, ]
+utlevering <- dplyr::bind_rows(RegData_snm, RegData_oppf)
+
+write.csv2(utlevering, "/home/rstudio/.ssh/utlevering_nra_snm_2022_02_02.csv", row.names = F, fileEncoding = "Latin1")
+
+
+##### Ny utkjøring, nå med EndeTilEndeSutur inkludert 22.11.2021 ###########################3
+registryName <- "nra"
+dbType <- "mysql"
+query <- "SELECT * FROM alleVarNum"
+RegData <- rapbase::loadRegData(registryName, query, dbType)
+RegData_sfinkt <- RegData[RegData$ForlopsType1Num == 1, ]
+RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_sfinkt$ForlopsID, ]
+utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)
+
+write.csv2(utlevering, "/home/rstudio/.ssh/utlevering_nra_2021_11_22.csv", row.names = F, fileEncoding = "Latin1")
+
+### Stid Norderval
+RegData <- read.table('I:/nra/alleVarNum2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+# ForlopData <- read.table('I:/nra/ForlopsOversikt2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData_sfinkt <- RegData[RegData$ForlopsType1Num == 1, ]
+RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_sfinkt$ForlopsID, ]
+utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)
+
+write.csv2(utlevering, "I:/nra/utlevering_nra_2021_06_29.csv", row.names = F, fileEncoding = "Latin1")
+
 ### Mai Lisbeth 12.01.2021 ###############################
 Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 Skjemaoversikt$SistLagretDato <- as.Date(Skjemaoversikt$SistLagretDato)

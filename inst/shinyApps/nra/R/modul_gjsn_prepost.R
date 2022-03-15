@@ -13,12 +13,18 @@ gjsn_prepost_UI <- function(id){
   shiny::sidebarLayout(
     sidebarPanel(
       selectInput(inputId = ns("valgtVar"), label = "Velg variabel", choices =
-                    c('St. Marks score'='StMarksTotalScore', 'Wexner score'='WexnerTotalScore', 'Generell livskvalitet'='GenQol',
-                      'Påvirkning seksualliv'='QolSexualitet', 'Andel urininkontinente'='Urinlekkasje')),
-      selectInput(inputId = ns("sammenlign"), label = "Sammenlign med oppfølging", choices =
-                    c('Kun pre'=0, 'Pre og 1-årsoppfølging'=1, 'Pre 1- og 5-årsoppfølging'=2)),
+                    c('St. Marks score'='StMarksTotalScore',
+                      'Wexner score'='WexnerTotalScore',
+                      'Generell livskvalitet'='GenQol',
+                      'Påvirkning seksualliv'='QolSexualitet',
+                      'Andel urininkontinente'='Urinlekkasje_v2',
+                      'EQ5D Skore' = 'EQ5DSkore',
+                      'EQ5D Helsetilstand' = 'EQ5DHelsetilstand')),
       dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),
+      selectInput(inputId = ns("sammenlign"), label = "Sammenlign med oppfølging", choices =
+                    c('Kun pre'=0, 'Pre og 1-årsoppfølging'=1,
+                      'Pre 1- og 5-årsoppfølging'=2, 'Pre og 5-årsoppfølging'=3)),
       sliderInput(inputId=ns("alder"), label = "Alder", min = 0,
                   max = 130, value = c(0, 130)),
       selectInput(inputId = ns("erMann"), label = "Kjønn",
@@ -26,6 +32,10 @@ gjsn_prepost_UI <- function(id){
       selectInput(inputId = ns("forlopstype1"), label = "Velg operasjonstype",
                   choices = c('--'=99, 'Sfinkterplastikk'=1, 'SNM'=2)),
       uiOutput(outputId = ns('forlopstype2')),
+      shiny::selectInput(inputId = ns("onestage"), label = "One stage",
+                         choices = c('--'=99, 'Ja'=1, 'Nei'=0), selected = 99),
+      selectInput(inputId = ns("gr_var"), label = "Grupperingsvariabel",
+                  choices = c('SenterKortNavn', 'Aar')),
       selectInput(inputId = ns("bildeformat"), label = "Velg bildeformat",
                   choices = c('pdf', 'png', 'jpg', 'bmp', 'tif', 'svg'))
     ),
@@ -60,9 +70,10 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
   output$Figur1 <- renderPlot({
     nraGjsnPrePost(RegData = RegData, valgtVar = input$valgtVar, minald=as.numeric(input$alder[1]),
                    maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-                   grvar='SenterKortNavn', outfile = '', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
+                   grvar=input$gr_var, outfile = '', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
                    reshID = reshID, hentData=F, forlopstype1=as.numeric(input$forlopstype1),
-                   forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99})
+                   forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99},
+                   onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
   }, width = 700, height = 700)
 
 
@@ -71,7 +82,8 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
                                  maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
                                  grvar='SenterKortNavn', outfile = '', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
                                  reshID = reshID, hentData=F, forlopstype1=as.numeric(input$forlopstype1),
-                                 forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99})
+                                 forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99},
+                                 onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
   })
 
   output$utvalg <- renderUI({
@@ -85,7 +97,7 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
 
   output$Tabell1 <- function() {
     TabellData <- tabellReager()
-    if (input$valgtVar == 'Urinlekkasje') {
+    if (input$valgtVar == 'Urinlekkasje_v2') {
       if (as.numeric(input$sammenlign) == 0) {
         Tabell1 <- tibble(Sykehus = TabellData$grtxt, Antall = round(as.numeric(TabellData$PlotMatrise)*TabellData$Ngr/100),
                           'Andel (%)' = as.numeric(TabellData$PlotMatrise), N = TabellData$Ngr) %>%
@@ -216,7 +228,8 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
                      maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
                      grvar='SenterKortNavn', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
                      reshID = reshID, hentData=F, forlopstype1=as.numeric(input$forlopstype1),
-                     forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99}, outfile = file)
+                     forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99}, outfile = file,
+                     onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
     }
   )
 
@@ -232,7 +245,7 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
           "NRA: tabell - gj.sn. pre-post, variabel - ",
           input$valgtVar)
       }
-      raplog::repLogger(
+      rapbase::repLogger(
         session = hvd_session,
         msg = mld_fordeling
       )
@@ -246,14 +259,14 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
       )
       shinyjs::onclick(
         "lastNedBilde",
-        raplog::repLogger(
+        rapbase::repLogger(
           session = hvd_session,
           msg = mldLastNedFig
         )
       )
       shinyjs::onclick(
         "lastNed",
-        raplog::repLogger(
+        rapbase::repLogger(
           session = hvd_session,
           msg = mldLastNedTab
         )

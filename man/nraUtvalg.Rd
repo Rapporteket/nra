@@ -6,14 +6,15 @@
 \usage{
 nraUtvalg(
   RegData,
-  datoFra,
-  datoTil,
+  datoFra = "2011-01-01",
+  datoTil = "2100-01-01",
   valgtShus = "",
   minald = 0,
   maxald = 130,
   erMann = 99,
   forlopstype1 = 99,
   forlopstype2 = 99,
+  onestage = 99,
   fargepalett = "BlaaRapp"
 )
 }

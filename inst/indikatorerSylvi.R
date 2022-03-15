@@ -2,7 +2,7 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
-RegData <- read.table('I:/nra/alleVarNum2020-09-17 15-10-35.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/alleVarNum2021-09-03 12-07-14.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -10,12 +10,15 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter", "GenQol",
                        "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje", "Komplikasjon",
                        "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
-                       "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
-                       "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
+                       "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyFoerTest", "UrgencyUnderTest",
+                       "UrgencyFoerTestUtenLekkasje", "UrgencyFoerTestMedLekkasje", "UrgencyFoerPassivLekkasje", "UrgencyUnderPassivLekkasje",
+                       "UrgencyUnderUtenTestMedLekkasje", "UrgencyUnderTestLekkasje", #"LekasjeFriFoerTest", "LekasjeFriUnderTest",
+                       "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig', "ICIQ_hyppighet",
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
-                       "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre")]
+                       "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre", "KirurgiForRectumprolaps_v2",
+                       "KunstigLukkMuskel")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2020-09-17 15-10-35.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+ForlopData <- read.table('I:/nra/ForlopsOversikt2021-09-03 12-07-14.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -25,39 +28,46 @@ RegData$SenterKortNavn <- paste0(RegData$SenterKortNavn, ' ')
 
 RegDataAlle <- RegData
 
-# RegData$SenterKortNavn <- iconv(RegData$SenterKortNavn, from = 'UTF-8', to = '')
+# write.csv2(RegDataAlle, "utforsk.csv", row.names = F, fileEncoding = "Latin1")
 
+rap_aar <- 2020
 reshID <- 700116 #  #Må sendes med til funksjon
 minald <- 0  #alder, fra og med
 maxald <- 130	#alder, til og med
 erMann <- 99
 datoFra <- '2011-01-01'	 # min og max dato i utvalget vises alltid i figuren.
-datoTil <- '2019-12-31'
+datoTil <- paste0(rap_aar, "-12-31")
 enhetsUtvalg <- 0 #0-hele landet, 1-egen enhet mot resten av landet, 2-egen enhet
 preprosess<-F
 hentData <- F
 forlopstype1=99
 forlopstype2=99
 valgtShus <- '' #c('601225', '700116')
-utformat <- 'pdf'
-rap_aar <- 2019
+utformat <- 'wmf'
+figfolder <- "C:/GIT/nra/inst/indikatorfig/"
 
 # Suksessrate test-prosedyre SNM
 
-RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+# RegData <- RegData[RegData$ForlopsType1Num == 2, ]
 # RegData <- RegData[RegData$ForlopsType2Num == 2, ]
-RegData <- RegData[!is.na(RegData$InkontinensFoerTest), ]
+# RegData <- RegData[!is.na(RegData$InkontinensFoerTest), ]
 
-nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
+nraUtvalg <- nraUtvalg(RegData=RegDataAlle, datoFra=datoFra, datoTil=datoTil,
                        minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
-                       forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                       forlopstype1=2, forlopstype2=forlopstype2)
 RegData <- nraUtvalg$RegData
 rm(nraUtvalg)
-RegData <- RegData[-which(rowSums(is.na(RegData[, c("InkontinensFoerTest","InkontinensUnderTest")])) !=0 ), ]
-indikator <- RegData[, c("Aar", "AvdRESH", "InkontinensFoerTest", "InkontinensUnderTest", "PasientID", "ForlopsID")]
-indikator$ind <- (indikator$InkontinensFoerTest - indikator$InkontinensUnderTest)/indikator$InkontinensFoerTest*100
-indikator$ind[is.nan(indikator$ind)] <- 0
-indikator$ind <- as.numeric(indikator$ind >= 50)
+
+## Gammel versjon
+# RegData <- RegData[-which(rowSums(is.na(RegData[, c("InkontinensFoerTest","InkontinensUnderTest")])) !=0 ), ]
+# indikator <- RegData[, c("Aar", "AvdRESH", "InkontinensFoerTest", "InkontinensUnderTest", "PasientID", "ForlopsID")]
+# indikator$ind <- (indikator$InkontinensFoerTest - indikator$InkontinensUnderTest)/indikator$InkontinensFoerTest*100
+# indikator$ind[is.nan(indikator$ind)] <- 0
+# indikator$ind <- as.numeric(indikator$ind >= 50)
+## Ny versjon
+indikator <- RegData[!is.na(RegData$Indikator1_lekk_red50), c("Aar", "AvdRESH", "Indikator1_lekk_red50", "PasientID", "ForlopsID")]
+names(indikator)[names(indikator)=="Indikator1_lekk_red50"] <- "ind"
+
 indikator$nevner <- 1
 indikator$Index <- 'Ind1'
 indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
@@ -68,16 +78,17 @@ names(indikator) <- c('ReshId', 'Aar', 'Teller Ind1', 'Nevner Ind1', 'Indikator'
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind1')]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator1.", utformat)
-nraFigIndikator(plotdata, tittel = c('Andel med prosentvis reduksjon', 'i lekkasjeepisoper >= 50%'), terskel = 5, maal = 70,
+outfile <- paste0(figfolder, paste0("indikator1.", utformat))
+nraFigIndikator(plotdata, tittel = c('Andel med prosentvis reduksjon', 'i lekkasjeepisoder >= 50%')
+                , terskel = 5, maal = 70,
                 outfile=outfile)
 
 ind1_50pstlekkasjereduksjon <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind1_50pstlekkasjereduksjon.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind1_50pstlekkasjereduksjon.csv', row.names = F)
 
-# indikator1 %>% group_by(Aar, AvdRESH) %>% summarise("andel måloppnåelse" = mean(ind)*100,
-#                                           N = n())
+# indikator %>% group_by(Aar, ReshId) %>% summarise("andel måloppnåelse" = mean(`Teller Ind1`)*100,
+#                                           N = n()) %>% filter(Aar >= 2018)
 
 
 # Andel med utført ultralyd
@@ -93,22 +104,54 @@ indikator$Index <- 'Ind2'
 indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
 indikator <- indikator[, c("AvdRESH", "Aar", "ind", "nevner", "Index", "AarID")]
 Indikatorer <- bind_rows(Indikatorer, indikator)
+# Indikatorer <- indikator
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind2', 'Nevner Ind2', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind2')]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator2.", utformat)
+outfile <- paste0(figfolder, paste0("indikator2.", utformat))
 nraFigIndikator(plotdata, tittel = c('Andel med utført ultralyd'), terskel = 5, maal = 95, outfile=outfile)
 
 ind2_ultralyd <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind2_ultralyd.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind2_ultralyd.csv', row.names = F)
+
+# Andel forløp med tidligere konservativ behandling
+# RegData <- RegDataAlle[RegDataAlle$Aar <= rap_aar, ]
+indikator <- RegDataAlle[RegDataAlle$Aar <= rap_aar, ]
+indikator <- indikator[indikator$ForlopsType1Num %in% c(1,2) & indikator$ForlopsType2Num %in% c(1,2,5, NA), ]
+
+indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
+indikator$ind <- indikator$Konservativ_v2
+indikator <- indikator[!is.na(indikator$ind), ]
+indikator <- indikator %>% group_by(PasientID, Aar, AvdRESH) %>%
+  summarise(ind = max(ind),
+            ForlopsID = ForlopsID[ind==max(ind)][1])
+indikator$nevner <- 1
+indikator$Index <- 'Ind18'
+indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
+indikator <- indikator[, c("AvdRESH", "Aar", "ind", "nevner", "Index", "AarID")]
+Indikatorer <- bind_rows(Indikatorer, indikator)
+# Indikatorer <- indikator
+names(indikator) <- c('ReshId', 'Aar', 'Teller Ind18', 'Nevner Ind18', 'Indikator', 'AarID')
+
+plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind18')]
+names(plotdata) <- c('ReshId', 'Aar', 'Teller')
+plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
+outfile <- paste0(figfolder, paste0("indikator18.", utformat))
+nraFigIndikator(plotdata, tittel = c('Andel med tidligere', 'konservativ behandling'), terskel = 5, maal = 90, outfile=outfile)
+
+
+
+
+
+
 
 # Sårinfeksjon innen 30 dager
 RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)
 RegData <- RegData[RegData$ForlopsType1Num == 2, ] # Kun SNM
-RegData <- RegData[RegData$ForlopsType2Num %in% c(1,2,5), ] # Kun test positiv, test usikker, test negativ
+RegData <- RegData[RegData$ForlopsType2Num %in% c(1,2,5,3), ] # Kun test positiv, test usikker, test negativ
 RegData <- RegData[!is.na(RegData$Variabel), ]
 RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
 RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==1 | RegData$KomplikasjonT2==1))] <- 1
@@ -127,26 +170,39 @@ names(indikator) <- c('ReshId', 'Aar', 'Teller Ind3', 'Nevner Ind3', 'Indikator'
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind3')]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator3.", utformat)
+outfile <- paste0(figfolder, paste0("indikator3.", utformat))
 nraFigIndikator(plotdata, tittel = c('Andel bekreftet sårinfeksjon innen', '30 dager etter implantasjon'), terskel = 5,
                 maal = 4, maalretn = 'lav', decreasing = T, outfile = outfile, desimal = T, xmax=5)
 
 ind3_saarinfeksjon <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind3_saarinfeksjon.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind3_saarinfeksjon.csv', row.names = F)
 
 ##############################################
 
 RegData <- RegDataAlle
-RegDataStr9 <- rbind(RegData[which(RegData$StMarksTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ],
-                     RegData[which(RegData$ForlopsType1Num %in% 3:4),])
-RegDataStr12 <- rbind(RegData[which(RegData$StMarksTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ],
-                      RegData[which(RegData$ForlopsType1Num %in% 3:4),])
-WexDataStr9 <- rbind(RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ],
-                     RegData[which(RegData$ForlopsType1Num %in% 3:4),])
-WexDataStr12 <- rbind(RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ],
-                      RegData[which(RegData$ForlopsType1Num %in% 3:4),])
-
+# RegDataStr9 <- rbind(RegData[which(RegData$StMarksTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ],
+#                      RegData[which(RegData$ForlopsType1Num %in% 3:4),])
+# RegDataStr12 <- rbind(RegData[which(RegData$StMarksTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ],
+#                       RegData[which(RegData$ForlopsType1Num %in% 3:4),])
+RegDataStr9 <- RegData[which(RegData$StMarksTotalScore>9 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
+RegDataStr9 <- dplyr::bind_rows(RegDataStr9, RegData[RegData$KobletForlopsID %in% RegDataStr9$ForlopsID, ])
+RegDataStr12 <- RegData[which(RegData$StMarksTotalScore>12 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
+RegDataStr12 <- dplyr::bind_rows(RegDataStr12, RegData[RegData$KobletForlopsID %in% RegDataStr12$ForlopsID, ])
+# WexDataStr9 <- rbind(RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ],
+#                      RegData[which(RegData$ForlopsType1Num %in% 3:4),])
+# WexDataStr12 <- rbind(RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ],
+#                       RegData[which(RegData$ForlopsType1Num %in% 3:4),])
+WexDataStr9 <- RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
+WexDataStr9 <- dplyr::bind_rows(WexDataStr9, RegData[RegData$KobletForlopsID %in% WexDataStr9$ForlopsID, ])
+WexDataStr12 <- RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
+WexDataStr12 <- dplyr::bind_rows(WexDataStr12, RegData[RegData$KobletForlopsID %in% WexDataStr12$ForlopsID, ])
+# komboStr9 <- dplyr::bind_rows(RegDataStr9, RegData[which(RegData$WexnerTotalScore>9 & RegData$ForlopsType1Num %in% 1:2), ])
+# komboStr12 <- dplyr::bind_rows(RegDataStr12, RegData[which(RegData$WexnerTotalScore>12 & RegData$ForlopsType1Num %in% 1:2), ])
+komboStr9 <- dplyr::bind_rows(RegDataStr9, WexDataStr9)
+komboStr9 <- komboStr9[match(unique(komboStr9$ForlopsID), komboStr9$ForlopsID), ]
+komboStr12 <- dplyr::bind_rows(RegDataStr12, WexDataStr12)
+komboStr12 <- komboStr12[match(unique(komboStr12$ForlopsID), komboStr12$ForlopsID), ]
 
 # St. Mark’s Inkontinensskår <9 og 12, 1 og 5 år etter SNM
 RegData <- RegDataStr9
@@ -173,14 +229,12 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind4')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator4.", utformat)
+outfile <- paste0(figfolder, paste0("indikator4.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=9', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 30, outfile=outfile)
 
 ind4_stmarks_9_1aar_snm <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind4_stmarks_9_1aar_snm.csv', row.names = F)
-##
+
 
 Oppfolging <- RegData[RegData$ForlopsType1Num == 4, ]
 Oppfolging <- Oppfolging[!is.na(Oppfolging$Indikator), ]
@@ -197,16 +251,16 @@ Indikatorer <- bind_rows(Indikatorer, indikator)
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind5', 'Nevner Ind5', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind5')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator5.", utformat)
+outfile <- paste0(figfolder, paste0("indikator5.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=9', '5 år etter operasjon med SNM'), terskel = 5,
                 maal = 30, outfile=outfile)
 
 ind5_stmarks_9_5aar_snm <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind5_stmarks_9_5aar_snm.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind5_stmarks_9_5aar_snm.csv', row.names = F)
 
 ##
 
@@ -234,13 +288,13 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind6')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator6.", utformat)
+outfile <- paste0(figfolder, paste0("indikator6.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=12', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 50, outfile=outfile)
 
 ind6_stmarks_12_1aar_snm <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind6_stmarks_12_1aar_snm.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind6_stmarks_12_1aar_snm.csv', row.names = F)
 ##
 
 Oppfolging <- RegData[RegData$ForlopsType1Num == 4, ]
@@ -258,16 +312,16 @@ Indikatorer <- bind_rows(Indikatorer, indikator)
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind7', 'Nevner Ind7', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind7')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator7.", utformat)
+outfile <- paste0(figfolder, paste0("indikator7.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=12', '5 år etter operasjon med SNM'), terskel = 5,
                 maal = 50, outfile=outfile)
 
 ind7_stmarks_12_5aar_snm <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind7_stmarks_12_5aar_snm.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind7_stmarks_12_5aar_snm.csv', row.names = F)
 ##
 
 # St. Mark’s Inkontinensskår <9 og 12, 1 og 5 år etter Sfinkterplastikk
@@ -295,13 +349,13 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind8')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator8.", utformat)
+outfile <- paste0(figfolder, paste0("indikator8.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=9', '1 år etter sfinkterplastikk'), terskel = 5,
                 maal = 30, outfile=outfile)
 
 ind8_stmarks_9_1aar_sfinkt <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind8_stmarks_9_1aar_sfinkt.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind8_stmarks_9_1aar_sfinkt.csv', row.names = F)
 ##
 
 Oppfolging <- RegData[RegData$ForlopsType1Num == 4, ]
@@ -319,16 +373,16 @@ Indikatorer <- bind_rows(Indikatorer, indikator)
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind9', 'Nevner Ind9', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind9')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator9.", utformat)
+outfile <- paste0(figfolder, paste0("indikator9.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=9', '5 år etter sfinkterplastikk'), terskel = 5,
                 maal = 30, outfile=outfile)
 
 ind9_stmarks_9_5aar_sfinkt <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind9_stmarks_9_5aar_sfinkt.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind9_stmarks_9_5aar_sfinkt.csv', row.names = F)
 ##
 
 RegData <- RegDataStr12
@@ -355,13 +409,13 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind10')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator10.", utformat)
+outfile <- paste0(figfolder, paste0("indikator10.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=12', '1 år etter sfinkterplastikk'), terskel = 5,
                 maal = 50, outfile=outfile)
 
 ind10_stmarks_12_1aar_sfinkt <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind10_stmarks_12_1aar_sfinkt.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind10_stmarks_12_1aar_sfinkt.csv', row.names = F)
 ##
 
 Oppfolging <- RegData[RegData$ForlopsType1Num == 4, ]
@@ -379,16 +433,16 @@ Indikatorer <- bind_rows(Indikatorer, indikator)
 names(indikator) <- c('ReshId', 'Aar', 'Teller Ind11', 'Nevner Ind11', 'Indikator', 'AarID')
 
 plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind11')]
-plotdata <- plotdata[plotdata$Aar <= (rap_aar-4), ]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-5), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator11.", utformat)
+outfile <- paste0(figfolder, paste0("indikator11.", utformat))
 nraFigIndikator(plotdata, tittel = c('St. Mark’s Inkontinensskår <=12', '5 år etter sfinkterplastikk'), terskel = 5,
-                maal = 30, outfile=outfile)
+                maal = 50, outfile=outfile)
 
 ind11_stmarks_12_5aar_sfinkt <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind11_stmarks_12_5aar_sfinkt.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind11_stmarks_12_5aar_sfinkt.csv', row.names = F)
 ##
 
 # Wexner Inkontinensskår <9 og 12, 1 år etter SNM
@@ -417,13 +471,13 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind12')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator12.", utformat)
+outfile <- paste0(figfolder, paste0("indikator12.", utformat))
 nraFigIndikator(plotdata, tittel = c('Wexnerskår <=9', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 30, outfile=outfile)
 
 ind12_wexner_9_1aar_snm <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind12_wexner_9_1aar_snm.csv', row.names = F)
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind12_wexner_9_1aar_snm.csv', row.names = F)
 ##
 
 RegData <- WexDataStr12
@@ -450,19 +504,145 @@ plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind13')]
 plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
 names(plotdata) <- c('ReshId', 'Aar', 'Teller')
 plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
-outfile <- paste0("indikator13.", utformat)
+outfile <- paste0(figfolder, paste0("indikator13.", utformat))
 nraFigIndikator(plotdata, tittel = c('Wexnerskår <=12', '1 år etter operasjon med SNM'), terskel = 5,
                 maal = 50, outfile=outfile)
 
 ind13_wexner_12_1aar_snm <- indikator
-write.csv2(indikator,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind13_wexner_12_1aar_snm.csv', row.names = F)
+
+
+
+
+############ NYTT INKONTINENSSKÅR ##############################################################
+################################################################################################
+
+RegData <- komboStr9
+RegData$Indikator <- NA
+RegData$Indikator[which(RegData$InkontinensScore<=9)] <- 1
+RegData$Indikator[which(RegData$InkontinensScore>9)] <- 0
+
+Oppfolging <- RegData[RegData$ForlopsType1Num == 3, ]
+Oppfolging <- Oppfolging[!is.na(Oppfolging$Indikator), ]
+Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegData$ForlopsID[RegData$ForlopsType1Num == 2], ] # Bare inkluder oppfølginger der det finnes basisreg
+
+indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "Indikator")]
+indikator <- merge(indikator, RegData[RegData$ForlopsType1Num == 2, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+indikator$nevner <- 1
+indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
+indikator$Index <- 'Ind14'
+indikator <- indikator[ , c("AvdRESH", "Aar", "Indikator", "nevner", "Index", "AarID")]
+names(indikator)[names(indikator) == "Indikator"] <- "ind"
+Indikatorer <- bind_rows(Indikatorer, indikator)
+names(indikator) <- c('ReshId', 'Aar', 'Teller Ind14', 'Nevner Ind14', 'Indikator', 'AarID')
+
+plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind14')]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
+names(plotdata) <- c('ReshId', 'Aar', 'Teller')
+plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
+outfile <- paste0(figfolder, paste0("indikator14.", utformat))
+nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=9', '1 år etter operasjon med SNM'), terskel = 5,
+                maal = 30, outfile=outfile)
+
+RegData <- komboStr9
+RegData$Indikator <- NA
+RegData$Indikator[which(RegData$InkontinensScore<=9)] <- 1
+RegData$Indikator[which(RegData$InkontinensScore>9)] <- 0
+
+Oppfolging <- RegData[RegData$ForlopsType1Num == 3, ]
+Oppfolging <- Oppfolging[!is.na(Oppfolging$Indikator), ]
+Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegData$ForlopsID[RegData$ForlopsType1Num == 1], ] # Bare inkluder oppfølginger der det finnes basisreg
+
+indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "Indikator")]
+indikator <- merge(indikator, RegData[RegData$ForlopsType1Num == 1, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+indikator$nevner <- 1
+indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
+indikator$Index <- 'Ind15'
+indikator <- indikator[ , c("AvdRESH", "Aar", "Indikator", "nevner", "Index", "AarID")]
+names(indikator)[names(indikator) == "Indikator"] <- "ind"
+Indikatorer <- bind_rows(Indikatorer, indikator)
+names(indikator) <- c('ReshId', 'Aar', 'Teller ind15', 'Nevner Ind15', 'Indikator', 'AarID')
+
+plotdata <- indikator[, c('ReshId', 'Aar', 'Teller ind15')]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
+names(plotdata) <- c('ReshId', 'Aar', 'Teller')
+plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
+outfile <- paste0(figfolder, paste0("indikator15.", utformat))
+nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=9', '1 år etter sfinkterplastikk'), terskel = 5,
+                maal = 30, outfile=outfile)
+
+
+RegData <- komboStr12
+RegData$Indikator <- NA
+RegData$Indikator[which(RegData$InkontinensScore<=12)] <- 1
+RegData$Indikator[which(RegData$InkontinensScore>12)] <- 0
+
+Oppfolging <- RegData[RegData$ForlopsType1Num == 3, ]
+Oppfolging <- Oppfolging[!is.na(Oppfolging$Indikator), ]
+Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegData$ForlopsID[RegData$ForlopsType1Num == 2], ] # Bare inkluder oppfølginger der det finnes basisreg
+
+indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "Indikator")]
+indikator <- merge(indikator, RegData[RegData$ForlopsType1Num == 2, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+indikator$nevner <- 1
+indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
+indikator$Index <- 'Ind16'
+indikator <- indikator[ , c("AvdRESH", "Aar", "Indikator", "nevner", "Index", "AarID")]
+names(indikator)[names(indikator) == "Indikator"] <- "ind"
+Indikatorer <- bind_rows(Indikatorer, indikator)
+names(indikator) <- c('ReshId', 'Aar', 'Teller Ind16', 'Nevner Ind16', 'Indikator', 'AarID')
+
+plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind16')]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
+names(plotdata) <- c('ReshId', 'Aar', 'Teller')
+plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
+outfile <- paste0(figfolder, paste0("indikator16.", utformat))
+nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=12', '1 år etter operasjon med SNM'), terskel = 5,
+                maal = 50, outfile=outfile)
+
+
+RegData <- komboStr12
+RegData$Indikator <- NA
+RegData$Indikator[which(RegData$InkontinensScore<=12)] <- 1
+RegData$Indikator[which(RegData$InkontinensScore>12)] <- 0
+
+Oppfolging <- RegData[RegData$ForlopsType1Num == 3, ]
+Oppfolging <- Oppfolging[!is.na(Oppfolging$Indikator), ]
+Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegData$ForlopsID[RegData$ForlopsType1Num == 1], ] # Bare inkluder oppfølginger der det finnes basisreg
+
+indikator <- Oppfolging[, c("AvdRESH", "PasientID", "KobletForlopsID", "Indikator")]
+indikator <- merge(indikator, RegData[RegData$ForlopsType1Num == 1, c("ForlopsID", "Aar")], by.x = 'KobletForlopsID', by.y = 'ForlopsID')
+indikator$nevner <- 1
+indikator$AarID <- paste0(indikator$Aar, indikator$AvdRESH)
+indikator$Index <- 'Ind17'
+indikator <- indikator[ , c("AvdRESH", "Aar", "Indikator", "nevner", "Index", "AarID")]
+names(indikator)[names(indikator) == "Indikator"] <- "ind"
+Indikatorer <- bind_rows(Indikatorer, indikator)
+names(indikator) <- c('ReshId', 'Aar', 'Teller Ind17', 'Nevner Ind17', 'Indikator', 'AarID')
+
+plotdata <- indikator[, c('ReshId', 'Aar', 'Teller Ind17')]
+plotdata <- plotdata[plotdata$Aar <= (rap_aar-1), ]
+names(plotdata) <- c('ReshId', 'Aar', 'Teller')
+plotdata$SenterKortNavn <- RegData$SenterKortNavn[match(plotdata$ReshId, RegData$AvdRESH)]
+outfile <- paste0(figfolder, paste0("indikator17.", utformat))
+nraFigIndikator(plotdata, tittel = c('Inkontinensskår <=12', '1 år etter sfinkterplastikk'), terskel = 5,
+                maal = 50, outfile=outfile)
+
+
+################################################################################################
+################################################################################################
+
+
+
+
+
+
+# write.csv2(indikator,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/indikatorer/ind13_wexner_12_1aar_snm.csv', row.names = F)
 ##
 
 kobling_resh_shusnavn <- data.frame(ReshID = unique(RegDataAlle$AvdRESH), Sykehusnavn = RegDataAlle$Sykehusnavn[match(unique(RegDataAlle$AvdRESH), RegDataAlle$AvdRESH)])
 
-write.csv2(kobling_resh_shusnavn,
-           'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/kobling_resh_shusnavn.csv', row.names = F)
+# write.csv2(kobling_resh_shusnavn,
+#            'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/kobling_resh_shusnavn.csv', row.names = F)
 
 ################## NØKKELTALL ######################################
 
@@ -479,7 +659,7 @@ nokkeltall <- RegDataAlle %>% group_by(Aar) %>%
             'Andel med symptomvarighet mer enn 10 år' = sum(Symtomvarighet[ForlopsType1Num %in% 1:2]==4)/sum(ForlopsType1Num %in% 1:2)
   )
 
-write.csv2(nokkeltall, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/nokkeltall_nra.csv', row.names = F)
+# write.csv2(nokkeltall, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/nokkeltall_nra.csv', row.names = F)
 
 ########## Før -og ettertall #####################
 
@@ -545,11 +725,11 @@ tilfredshet_1aar <- RegData[!is.na(RegData$TilfredshetPost1), ] %>% group_by(Aar
 tilfredshet_1aar <- spread(tilfredshet_1aar, key=TilfredshetPost1, value = Antall, fill = 0)
 
 
-write.csv2(urin_snm, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/urin_snm.csv', row.names = F)
-write.csv2(urin_sfinkter, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/urin_sfinkter.csv', row.names = F)
-write.csv2(gql_snm, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/gql_snm.csv', row.names = F)
-write.csv2(gql_sfinkter, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/gql_sfinkter.csv', row.names = F)
-write.csv2(tilfredshet_1aar, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/tilfredshet_1aar.csv', row.names = F)
+# write.csv2(urin_snm, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/urin_snm.csv', row.names = F)
+# write.csv2(urin_sfinkter, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/urin_sfinkter.csv', row.names = F)
+# write.csv2(gql_snm, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/gql_snm.csv', row.names = F)
+# write.csv2(gql_sfinkter, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/gql_sfinkter.csv', row.names = F)
+# write.csv2(tilfredshet_1aar, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/tilfredshet_1aar.csv', row.names = F)
 
 
 ############## Data til Sykehusviser ############################################################
@@ -582,8 +762,15 @@ Indikatorer$ind_id[Indikatorer$ind_id == "Ind10"] <- "nra_stmarks_12_1aar_sfinkt
 Indikatorer$ind_id[Indikatorer$ind_id == "Ind11"] <- "nra_stmarks_12_5aar_sfinkt"
 Indikatorer$ind_id[Indikatorer$ind_id == "Ind12"] <- "nra_wexner_9_1aar_snm"
 Indikatorer$ind_id[Indikatorer$ind_id == "Ind13"] <- "nra_wexner_12_1aar_snm"
+Indikatorer$ind_id[Indikatorer$ind_id == "Ind14"] <- "nra_inkontinensscore_9_1aar_snm"
+Indikatorer$ind_id[Indikatorer$ind_id == "Ind15"] <- "nra_inkontinensscore_9_1aar_sfinkt"
+Indikatorer$ind_id[Indikatorer$ind_id == "Ind16"] <- "nra_inkontinensscore_12_1aar_snm"
+Indikatorer$ind_id[Indikatorer$ind_id == "Ind17"] <- "nra_inkontinensscore_12_1aar_sfinkt"
 
-write.csv2(Indikatorer, "I:/nra/indikatorer_shusviser_nra21102020.csv", row.names = F, fileEncoding = "UTF-8")
+Indikatorer$context <- "caregiver"
+
+# write.csv2(Indikatorer, "I:/nra/indikatorer_shusviser_nra21102020.csv", row.names = F, fileEncoding = "UTF-8")
+write.csv2(Indikatorer, "I:/nra/indikatorer_shusviser_nra09092021.csv", row.names = F, fileEncoding = "UTF-8")
 
 dg_tall <- readxl::read_xlsx("Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Sykehusviser/Dekningsgrader/Dekningsgrad_NRA.xlsx",
                              sheet = "DG_Totalt m utregning")
@@ -613,10 +800,14 @@ dg_samlet <- dg_samlet[!is.na(dg_samlet$denominator), ]
 dg_samlet <- dg_samlet[dg_samlet$denominator!=0, ]
 dg_samlet <- dg_samlet[,c(1,6,3,4,5)]
 
-write.csv2(dg_samlet, "I:/nra/dg_shusviser26102020.csv", row.names = F, fileEncoding = "UTF-8")
+write.csv2(dg_samlet, "I:/nra/dg_shusviser27052021.csv", row.names = F, fileEncoding = "UTF-8")
 
 
-
-
-
+# ind_beskr <- read.table("I:/nra/ind_nra.csv", sep = ";", header = T, fileEncoding = "UTF-8")
+#
+# ind_beskr$title[ind_beskr$id=="nra_dg_sfinkter"] <- "Dekningsgrad sfinkterplastikk"
+# ind_beskr$title[ind_beskr$id=="nra_dg_snm"] <- "Dekningsgrad snm"
+# ind_beskr$title[ind_beskr$id=="nra_dg_total"] <- "Dekningsgrad samlet"
+#
+# write.csv2(ind_beskr, "I:/nra/ind_beskr.csv", row.names = F, fileEncoding = "UTF-8", quote = F)
 

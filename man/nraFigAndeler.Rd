@@ -19,7 +19,8 @@ nraFigAndeler(
   enhetsUtvalg = 0,
   hentData = F,
   forlopstype1 = 99,
-  forlopstype2 = 99
+  forlopstype2 = 99,
+  onestage = 99
 )
 }
 \arguments{

@@ -16,7 +16,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
                                    decreasing=F, terskel=0, minstekrav = NA, maal = NA, xtekst ='Andel %',
                                    til100 = F, skriftStr=1.3, pktStr=1.5, datoFra='2016-01-01', datoTil='2050-12-31',
                                    hentData=F, preprosess=T, minald=0, maxald=130, erMann=99,
-                                   forlopstype1=99, forlopstype2=99, sammenlign=1)
+                                   forlopstype1=99, forlopstype2=99, sammenlign=1, onestage = 99)
   {
 
   ## Hvis spørring skjer fra R på server. ######################
@@ -27,6 +27,22 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   ## Hvis RegData ikke har blitt preprosessert
   if (preprosess){
     RegData <- nraPreprosess(RegData=RegData)
+  }
+
+  if (valgtVar=='InkontinensscoreMindreEnn9') {
+    tittel <- 'Andel med Inkontinensscore 9 eller mindre'
+    maal <- 30
+    RegData$Indikator <- NA
+    RegData$Indikator[which(RegData$StMarksTotalScore<=9 | RegData$WexnerTotalScore<=9)] <- 1
+    RegData$Indikator[which(RegData$StMarksTotalScore>9 | RegData$WexnerTotalScore>9)] <- 0
+  }
+
+  if (valgtVar=='InkontinensscoreMindreEnn12') {
+    tittel <- 'Andel med Inkontinensscore 12 eller mindre'
+    maal <- 30
+    RegData$Indikator <- NA
+    RegData$Indikator[which(RegData$StMarksTotalScore<=12 | RegData$WexnerTotalScore<=12)] <- 1
+    RegData$Indikator[which(RegData$StMarksTotalScore>12 | RegData$WexnerTotalScore>12)] <- 0
   }
 
   if (valgtVar=='StMarksMindreEnn9') {
@@ -71,6 +87,16 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
     RegData <- RegData[-which(RegData$ForlopsType1Num %in% 1:2 & RegData$Urinlekkasje == 0), ] # fjern de som ikke er urininkontinent ved inklusjon
   }
 
+  if (valgtVar=='blitt_kontinent_v2') {
+    tittel <- 'Andel urininkontinente før operasjon som er kontinente'
+    maal <- NA
+    RegData$Indikator <- NA
+    RegData$Indikator[which(RegData$Urinlekkasje_v2==0)] <- 1 # Ikke urininkontinent
+    RegData$Indikator[which(RegData$Urinlekkasje_v2==1)] <- 0
+    RegData <- RegData[!is.na(RegData$Indikator), ]
+    RegData <- RegData[-which(RegData$ForlopsType1Num %in% 1:2 & RegData$Urinlekkasje_v2 == 0), ] # fjern de som ikke er urininkontinent ved inklusjon
+  }
+
   ## Skill ut oppfølginger
   if (sammenlign==1) {
     Oppfolging <- RegData[RegData$ForlopsType1Num == 3, ] # 1-årsoppfølging
@@ -95,7 +121,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   ## Gjør utvalg basert på brukervalg
   nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
                          minald=minald, maxald=maxald, erMann=erMann,
-                         forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                         forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage = onestage)
 
   RegData <- nraUtvalg$RegData
   Oppfolging <- Oppfolging[Oppfolging$KobletForlopsID %in% RegData$ForlopsID, ]

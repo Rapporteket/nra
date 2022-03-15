@@ -9,18 +9,11 @@ datadump_UI <- function(id){
   shiny::sidebarLayout(
     sidebarPanel(
       id = ns("id_dump_panel"),
-      # uiOutput(outputId = ns('valgtevar_dump')),
       dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til", language = "nb",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), separator = " til "),
       selectInput(inputId = ns("dumptype"), label = "Velg type datadump",
-                  choices = c('alleVar', 'alleVarNum', 'ForlopsOversikt', 'SkjemaOversikt')),
-      # selectInput(inputId = ns("op_gruppe"), label = "Velg reseksjonsgruppe(r)",
-      #             choices = BrValg$reseksjonsgrupper, multiple = TRUE),
-      # uiOutput(outputId = ns('ncsp')),
-      # selectInput(inputId = ns("valgtShus"), label = "Velg sykehus",
-      #             choices = BrValg$sykehus, multiple = TRUE),
+                  choices = c('alleVar', 'alleVarNum', 'ForlopsOversikt', 'SkjemaOversikt', 'alleVarNum_utflatet')),
       tags$hr(),
-      # actionButton(ns("reset_input"), "Nullstill valg"),
       downloadButton(ns("lastNed_dump"), "Last ned datadump")
     ),
     mainPanel(
@@ -32,7 +25,9 @@ datadump_UI <- function(id){
       h4(tags$b('alleVar '), 'inneholder alle kliniske variabler i registeret og benytter etikettene til kategoriske variabler.'),
       h4(tags$b('alleVarNum '), 'inneholder alle kliniske variabler i registeret og benytter tallkodene til kategoriske variabler.'),
       h4(tags$b('ForlopsOversikt '), 'inneholder en del administrative data relevant for forløpene.'),
-      h4(tags$b('SkjemaOversikt '), 'er en oversikt over status til alle registreringer i registreret, også uferdige.')
+      h4(tags$b('SkjemaOversikt '), 'er en oversikt over status til alle registreringer i registreret, også uferdige.'),
+      h4(tags$b('alleVarNum_utflatet '), 'inneholder alle kliniske variabler i registeret og benytter tallkodene til kategoriske variabler.
+         At tabellen er utflatet innebærer at oppfølginger er koblet til sine respective basisregistreringer slik at en linje utgjør et forløp.')
     )
   )
 }
@@ -40,43 +35,42 @@ datadump_UI <- function(id){
 
 datadump <- function(input, output, session, reshID, userRole, hvd_session){
 
-  # observeEvent(input$reset_input, {
-  #   shinyjs::reset("id_dump_panel")
-  # })
-
-  # observe(
-  #   if (userRole != 'SC') {
-  #     shinyjs::hide(id = 'valgtShus')
-  #   })
-
-
   output$lastNed_dump <- downloadHandler(
     filename = function(){
       paste0(input$dumptype, '_NRA', Sys.time(), '.csv')
     },
     content = function(file){
       if (rapbase::isRapContext()) {
-        tmpData <- nraHentTabell(input$dumptype)
+        if (input$dumptype == c('alleVarNum_utflatet')) {
+          allevar <- nraHentTabell("alleVarNum")
+          basisdata <- allevar[allevar$ForlopsType1Num %in% 1:2, ]
+          basisdata <- basisdata[, colSums(is.na(basisdata)) != dim(basisdata)[1]]
+          oppfdata <- allevar[allevar$ForlopsType1Num %in% 3:4, ]
+          oppfdata <- oppfdata[, colSums(is.na(oppfdata)) != dim(oppfdata)[1]]
+          oppf1 <- oppfdata[oppfdata$ForlopsType1Num==3, ]
+          oppf5 <- oppfdata[oppfdata$ForlopsType1Num==4, ]
+          names(oppf1) <- paste0(names(oppf1), "_oppf1")
+          names(oppf5) <- paste0(names(oppf5), "_oppf5")
+          tmpData <- basisdata %>%
+            merge(oppf1, by.x = "ForlopsID", by.y = "KobletForlopsID_oppf1", all.x = T) %>%
+            merge(oppf5, by.x = "ForlopsID", by.y = "KobletForlopsID_oppf5", all.x = T)
+        } else {
+          tmpData <- nraHentTabell(input$dumptype)
+        }
       } else {
-        tmpData <- read.table(paste0('I:/nra/', input$dumptype, '2020-09-08.txt'), header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+        tmpData <- read.table(paste0('I:/nra/', input$dumptype, '2020-09-08.txt'),
+                              header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
       }
-      dumpdata <- tmpData[as.Date(tmpData$HovedDato) >= input$datovalg[1] &
-                            as.Date(tmpData$HovedDato) <= input$datovalg[2], ]
+      dumpdata <- tmpData[which(as.Date(tmpData$HovedDato) >= input$datovalg[1] &
+                                  as.Date(tmpData$HovedDato) <= input$datovalg[2]), ]
       if (userRole != 'SC') {
-        dumpdata <- dumpdata[dumpdata$AvdRESH == reshID, ]
+        dumpdata <- dumpdata[dumpdata$AvdRESH %in% reshID, ]
       }
-      # } else {
-      #   if (!is.null(input$valgtShus)) {dumpdata <- dumpdata[dumpdata$AvdRESH %in% as.numeric(input$valgtShus), ]}
-      # }
-
-      # if (!is.null(input$op_gruppe)) {dumpdata <- dumpdata[which(dumpdata$Op_gr %in% as.numeric(input$op_gruppe)), ]}
-      # if (!is.null(input$ncsp_verdi)) {dumpdata <- dumpdata[which(substr(dumpdata$Hovedoperasjon, 1, 5) %in% ncsp_verdi), ]}
-      # if (!is.null(input$valgtevar_dump_verdi)) {dumpdata <- dumpdata[, input$valgtevar_dump_verdi]}
       if (input$dumptype == "ForlopsOversikt") {
         dumpdata <- apply(dumpdata, 2, as.character)
         dumpdata <- as.data.frame(dumpdata)
         dumpdata <- dumpdata[which(dumpdata$PasientID != ""), ]
-        }
+      }
       write.csv2(dumpdata, file, row.names = F, na = '', fileEncoding = 'Latin1')
     }
   )
@@ -86,9 +80,9 @@ datadump <- function(input, output, session, reshID, userRole, hvd_session){
 
       shinyjs::onclick(
         "lastNed_dump",
-        raplog::repLogger(
+        rapbase::repLogger(
           session = hvd_session,
-          msg = paste0("NRA: nedlasting datadump", input$dumptype)
+          msg = paste0("NRA: nedlasting datadump: ", input$dumptype)
         )
       )
     }

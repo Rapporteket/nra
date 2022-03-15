@@ -1,4 +1,97 @@
+
+rm(list = ls())
+library(nra)
+library(tidyverse)
+
+RegData <- nra::nraHentRegData()
+Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
+RegData <- nra::nraPreprosess(RegData=RegData)
+
+allevar <- nraHentTabell("alleVarNum")
+basisdata <- allevar[allevar$ForlopsType1Num %in% 1:2, ]
+basisdata <- basisdata[, colSums(is.na(basisdata)) != dim(basisdata)[1]]
+oppfdata <- allevar[allevar$ForlopsType1Num %in% 3:4, ]
+oppfdata <- oppfdata[, colSums(is.na(oppfdata)) != dim(oppfdata)[1]]
+oppf1 <- oppfdata[oppfdata$ForlopsType1Num==3, ]
+oppf5 <- oppfdata[oppfdata$ForlopsType1Num==4, ]
+names(oppf1) <- paste0(names(oppf1), "_oppf1")
+names(oppf5) <- paste0(names(oppf5), "_oppf5")
+RegData_flat <- basisdata %>%
+  merge(oppf1, by.x = "ForlopsID", by.y = "KobletForlopsID_oppf1", all.x = T) %>%
+  merge(oppf5, by.x = "ForlopsID", by.y = "KobletForlopsID_oppf5", all.x = T)
+
+
+
+
+
+
+dim(RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), ])
+RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), "EQ5DSkore"]
+RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), "PasientID"]
+RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), "ForlopsType1"]
+RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), "SenterKortNavn"]
+tmp <- RegData[which(RegData$HovedDato < "2020-11-16" & !is.na(RegData$EQ5DSkore)), ]
+
+RegData$PasientID[which(!is.na(RegData$EQ5DSmerte[RegData$HovedDato < "2020-11-16"]))]
+RegData$ForlopsType1[which(!is.na(RegData$EQ5DSmerte[RegData$HovedDato < "2020-11-16"]))]
+RegData$EQ5DSkore[which(!is.na(RegData$EQ5DSkore[RegData$HovedDato < "2020-11-16"]))]
+
+
+
+
+
+
+
 setwd('c:/GIT/nra/doc')
+
+rm(list = ls())
+library(shiny)
+library(nra)
+library(tidyverse)
+library(kableExtra)
+library(DT)
+library(lubridate)
+
+RegData <- read.table('I:/nra/alleVarNum2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
+                       'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
+                       'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
+                       'KirurgiForRectumprolaps', 'Gracilisplastikk', 'Stomi', 'AnnetTidligereBeh', "SenterKortNavn", "Symtomvarighet",
+                       "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter", "GenQol",
+                       "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje", "Komplikasjon",
+                       "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
+                       "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
+                       "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
+                       'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
+                       "WexLivsstilsendring", "WexnerTotalScore", "Testprosedyre")]
+
+ForlopData <- read.table('I:/nra/ForlopsOversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
+                             'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
+RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
+Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+
+RegData <- nra::nraPreprosess(RegData=RegData)
+
+tmp <- merge(Skjemaoversikt[Skjemaoversikt$Skjemanavn == '1A Anamnese', ], Skjemaoversikt[Skjemaoversikt$Skjemanavn == '1B Symptom', ],
+             by = 'ForlopsID', suffixes = c('', '1B'))
+tmp <- merge(tmp, RegData[, c("ForlopsID", "PasientID")], by='ForlopsID', all.x = T)
+tmp <- merge(tmp, Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('2A SNM-1'), ], suffixes = c('','SNM1'), by = 'ForlopsID', all.x = T)
+tmp <- merge(tmp, Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('2A SNM-2'), ], suffixes = c('','SNM2'), by = 'ForlopsID', all.x = T)
+tmp <- merge(tmp, Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('2B Sfinkter'), ], suffixes = c('','Sfinkter'), by = 'ForlopsID', all.x = T)
+tmp2 <- merge(Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('1B Oppfølging 1 år'),], RegData[, c("ForlopsID", "KobletForlopsID")], by='ForlopsID')
+tmp <- merge(tmp, tmp2, suffixes = c('','Oppf1'), by.x = 'ForlopsID', by.y = "KobletForlopsID", all.x = T)
+tmp2 <- merge(Skjemaoversikt[Skjemaoversikt$Skjemanavn %in% c('1B Oppfølging 5 år'),], RegData[, c("ForlopsID", "KobletForlopsID")], by='ForlopsID')
+skjema_utflatet <- merge(tmp, tmp2, suffixes = c('','Oppf5'), by.x = 'ForlopsID', by.y = "KobletForlopsID", all.x = T)
+
+write.csv2(skjema_utflatet, "I:/nra/skjema_utflatet.csv", row.names = F, fileEncoding = "Latin1")
+
+table(skjema_utflatet[, c("SkjemaStatus", "SkjemaStatus1B")], useNA = "ifany")
+
+
+
+
+
 library(nra)
 rm(list = ls())
 
@@ -50,9 +143,9 @@ valgtShus <- '' #c('601225', '700116')
 
 if (outfile == '') {x11()}
 tallgrunnlag <- nraFigAndeler(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
-              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
-              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 
 ###############  St. Marks osv... ########################
 ##########
@@ -66,9 +159,9 @@ sammenlign <- 2
 
 if (outfile == '') {x11()}
 utdata2 <- nraGjsnPrePost(RegData=RegData, valgtVar=valgtVar, datoFra=datoFra, datoTil=datoTil,
-               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
-               reshID=reshID, preprosess=preprosess, hentData=hentData,
-               forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign)
+                          minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                          reshID=reshID, preprosess=preprosess, hentData=hentData,
+                          forlopstype1=forlopstype1, forlopstype2=forlopstype2, sammenlign=sammenlign)
 
 
 tibble(Sykehus = utdata0$grtxt, gj.sn = as.numeric(utdata0$PlotMatrise), KI_nedre = as.numeric(utdata0$KIned),
@@ -123,7 +216,7 @@ table(RegData$KomplikasjonT2[RegData$ForlopsType1Num==2 & RegData$ForlopsType2Nu
 
 
 tmp <- RegData[RegData$PatientID %in% as.numeric(names(sort(table(RegData$PatientID[!is.na(RegData$Symtomvarighet)], useNA = 'ifany'),
-            decreasing = T))[1:15]) & RegData$ForlopsType1Num %in% 1:2, c("PatientID", "HovedDato", "TestSluttDato", "FyllDato1A", "FyllDato1B", "ForlopsType1", "ForlopsType2")]
+                                                            decreasing = T))[1:15]) & RegData$ForlopsType1Num %in% 1:2, c("PatientID", "HovedDato", "TestSluttDato", "FyllDato1A", "FyllDato1B", "ForlopsType1", "ForlopsType2")]
 
 tmp[order(tmp$PatientID), ]
 

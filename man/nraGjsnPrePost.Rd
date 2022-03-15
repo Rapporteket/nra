@@ -24,7 +24,8 @@ nraGjsnPrePost(
   inkl_konf = 0,
   egen_mot_landet = F,
   valgtShus = "",
-  graa = ""
+  graa = "",
+  onestage = 99
 )
 }
 \arguments{

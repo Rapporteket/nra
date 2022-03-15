@@ -2,8 +2,6 @@
 #'
 #' Provides NRA data from staging
 #'
-#' @inheritParams nraFigAndeler
-#'
 #' @return RegData data frame
 #' @export
 
@@ -23,6 +21,7 @@ nraHentRegData <- function() {
                   alleVarNum.PerinealAbscess,
                   alleVarNum.Rectumreseksjon,
                   alleVarNum.Sfinkterotomi,
+                  alleVarNum.KraftBehandling,
                   alleVarNum.AnnetEtiologi,
                   alleVarNum.Konservativ,
                   alleVarNum.Irrigasjon,
@@ -62,6 +61,36 @@ nraHentRegData <- function() {
                   alleVarNum.LekkasjedagerUnder,
                   alleVarNum.WexnerTotalScore,
                   alleVarNum.Testprosedyre,
+                  alleVarNum.UrgencyFoerTestUtenLekkasje,
+                  alleVarNum.UrgencyFoerTestMedLekkasje,
+                  alleVarNum.UrgencyFoerPassivLekkasje,
+                  alleVarNum.UrgencyUnderPassivLekkasje,
+                  alleVarNum.UrgencyUnderUtenTestMedLekkasje,
+                  alleVarNum.UrgencyUnderTestLekkasje,
+                  alleVarNum.LekasjeFriFoerTest,
+                  alleVarNum.LekasjeFriUnderTest,
+                  alleVarNum.OppfoelgingMulig,
+                  alleVarNum.ICIQ_hyppighet,
+                  alleVarNum.ABD65,
+                  alleVarNum.ABD652AT2,
+                  alleVarNum.ABD60,
+                  alleVarNum.WexFastAvfoering,
+                  alleVarNum.WexBind,
+                  alleVarNum.WexFlytendeAvfoering,
+                  alleVarNum.WexLuft,
+                  alleVarNum.WexLivsstilsendring,
+                  alleVarNum.Onestage,
+                  alleVarNum.KirurgiForRectumprolaps_v2,
+                  alleVarNum.KunstigLukkMuskel,
+                  alleVarNum.PGICEndring,
+                  alleVarNum.PGICEndringLekkasje,
+                  alleVarNum.EQ5DSkore,
+                  alleVarNum.EQ5DHelsetilstand,
+                  alleVarNum.EQ5DAngst,
+                  alleVarNum.EQ5DPersonligStell,
+                  alleVarNum.EQ5DSmerte,
+                  alleVarNum.EQ5DGange,
+                  alleVarNum.EQ5DVanligeGjoeremaal,
                   ForlopsOversikt.KobletForlopsID,
                   ForlopsOversikt.ForlopsID,
                   ForlopsOversikt.HovedDato,
@@ -78,7 +107,7 @@ nraHentRegData <- function() {
                   FROM alleVarNum INNER JOIN ForlopsOversikt
                   ON alleVarNum.ForlopsID = ForlopsOversikt.ForlopsID")
 
-  RegData <- rapbase::LoadRegData(registryName, query, dbType)
+  RegData <- rapbase::loadRegData(registryName, query, dbType)
 
   return(RegData)
 }
@@ -98,7 +127,7 @@ nraHentTabell <- function(tabnavn) {
 
   query <- paste0("SELECT * FROM ", tabnavn)
 
-  RegData <- rapbase::LoadRegData(registryName, query, dbType)
+  RegData <- rapbase::loadRegData(registryName, query, dbType)
 
   return(RegData)
 }

@@ -16,6 +16,8 @@ nraPreprosess <- function(RegData)
   RegData$Mnd <- as.numeric(format(RegData$HovedDato, format="%m"))
   RegData$SenterKortNavn <- trimws(RegData$SenterKortNavn)
   RegData$SenterKortNavn[RegData$SenterKortNavn=="Helse Ber"] <- "Haukeland"
+  RegData$AvdRESH[which(RegData$AvdRESH==601233)] <- 601225
+  # RegData$SenterKortNavn[RegData$AvdRESH==601233] <- "UNN Narvik" # Foreløpig, må fikses i registeret
 
   RegData$Sfinktervurdering <- NA
   RegData$Sfinktervurdering[RegData$Ultralyd==1 & RegData$PartiellDefekt==0 &
@@ -41,6 +43,45 @@ nraPreprosess <- function(RegData)
 
   # RegData$Onestage <- factor(RegData$Onestage, levels = c(0,1), labels = c("Midl. elektr.", "Permanent"))
   RegData$Testprosedyre <- factor(RegData$Testprosedyre, levels = c(1,2), labels = c("Midl. elektr.", "Permanent"))
+
+  RegData$InkontinensScore <- RegData$StMarksTotalScore
+  RegData$InkontinensScore[is.na(RegData$InkontinensScore)] <- RegData$WexnerTotalScore[is.na(RegData$InkontinensScore)]
+
+  # RegData$Indikator1_lekk_red50_v1 <- (RegData$InkontinensFoerTest - RegData$InkontinensUnderTest)/RegData$InkontinensFoerTest*100
+  # RegData$Indikator1_lekk_red50_v1[is.nan(RegData$Indikator1_lekk_red50_v1)] <- 0
+  # RegData$Indikator1_lekk_red50_v1 <- as.numeric(RegData$Indikator1_lekk_red50_v1 >= 50)
+  #
+
+  ##### Fjernes foreløpig  05.11.2021
+
+  RegData$Indikator1_lekk_red50_v2 <- pmax((RegData$InkontinensFoerTest - RegData$InkontinensUnderTest)/RegData$InkontinensFoerTest*100) #,
+                                           # (RegData$UrgencyFoerTest - RegData$UrgencyUnderTest)/RegData$UrgencyFoerTest*100, na.rm = T)
+  RegData$Indikator1_lekk_red50_v2[is.nan(RegData$Indikator1_lekk_red50_v2)] <- 0
+  RegData$red75_v2 <- as.numeric(RegData$Indikator1_lekk_red50_v2 >= 75)
+  RegData$Indikator1_lekk_red50_v2 <- as.numeric(RegData$Indikator1_lekk_red50_v2 >= 50)
+
+  RegData$Indikator1_lekk_red50_v3 <- pmax((RegData$UrgencyFoerTestMedLekkasje - RegData$UrgencyUnderTestLekkasje)/RegData$UrgencyFoerTestMedLekkasje*100,
+                                           (RegData$UrgencyFoerPassivLekkasje - RegData$UrgencyUnderPassivLekkasje)/RegData$UrgencyFoerPassivLekkasje*100,
+                                           (RegData$UrgencyFoerTestUtenLekkasje - RegData$UrgencyUnderUtenTestMedLekkasje)/RegData$UrgencyFoerTestUtenLekkasje*100,
+                                           na.rm = T)
+  RegData$Indikator1_lekk_red50_v3[is.nan(RegData$Indikator1_lekk_red50_v3)] <- 0
+  RegData$red75_v3 <- as.numeric(RegData$Indikator1_lekk_red50_v3 >= 75)
+  RegData$Indikator1_lekk_red50_v3 <- as.numeric(RegData$Indikator1_lekk_red50_v3 >= 50)
+
+  RegData$Indikator1_lekk_red50 <- pmax(RegData$Indikator1_lekk_red50_v2, RegData$Indikator1_lekk_red50_v3, na.rm = T)
+  RegData$red75 <- pmax(RegData$red75_v2, RegData$red75_v3, na.rm = T)
+
+  RegData$Urinlekkasje_v2 <- RegData$ICIQ_hyppighet
+  RegData$Urinlekkasje_v2[RegData$Urinlekkasje_v2 %in% 1:5] <- 1
+  RegData$Urinlekkasje_v2[is.na(RegData$Urinlekkasje_v2)] <- RegData$Urinlekkasje[is.na(RegData$Urinlekkasje_v2)] # bruk nytt skjema når mulig
+  # RegData$Urinlekkasje_v2 <- pmax(RegData$Urinlekkasje, RegData$Urinlekkasje_v2, na.rm = T)
+
+  RegData$Konservativ_v2 <- pmax(RegData$Konservativ, RegData$Irrigasjon, RegData$Tibialisstimulering, na.rm = T)
+
+  RegData$Prolapskirurgi <- pmax(RegData$KirurgiForRectumprolaps, RegData$KirurgiForRectumprolaps_v2, RegData$Rectopexi, na.rm = T)
+
+  # Lager ny variabel for nyere komplikasjoner
+
 
   return(invisible(RegData))
 }

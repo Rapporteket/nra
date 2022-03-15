@@ -6,9 +6,9 @@
 #' @return En figur med gjennomsnitt før operasjon, etter 1 år og etter 5 år
 #' @export
 
-nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', valgtShus='',
+nraSNMdagbok_v2 <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', valgtShus='',
                            outfile = '', preprosess=TRUE, minald=0, maxald=130, enhetsUtvalg=0,
-                           erMann='', reshID, hentData=F, forlopstype1='', forlopstype2='', onestage=99)
+                           erMann=99, reshID, hentData=F, forlopstype1='', forlopstype2='', onestage=99)
 
 {
 
@@ -24,7 +24,15 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
   }
 
   RegData <- RegData[RegData$ForlopsType1Num == 2, ]
-  RegData <- RegData[!is.na(RegData$UrgencyFoerTest), ]
+  RegData <- RegData[!is.na(RegData$UrgencyFoerTestUtenLekkasje), ]
+
+  # tmp <- !is.na(RegData[, c("AvfoeringerFoerTest", "AvfoeringerUnderTest", "UrgencyFoerTestUtenLekkasje", "UrgencyUnderUtenTestMedLekkasje",
+  #                           "UrgencyFoerTestMedLekkasje", "UrgencyUnderTestLekkasje", "UrgencyFoerPassivLekkasje", "UrgencyUnderPassivLekkasje",
+  #                           "LekasjeFriFoerTest", "LekasjeFriUnderTest")])
+  # tmp[,1] & tmp[,2]
+  #
+  # table(rowSums(tmp))
+  # table(colSums(tmp))
 
   ## Gjør utvalg basert på brukervalg (LibUtvalg)
 
@@ -70,13 +78,21 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
   PlotMatrise <- list(Hoved = 0, Rest =0)
   Nrest <- 0
 
-  PreGjsn <- colMeans(RegData[indHoved, c("InkontinensFoerTest", "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer")], na.rm = TRUE)
-  PostGjsn <- colMeans(RegData[indHoved, c("InkontinensUnderTest", "UrgencyUnderTest", "AvfoeringerUnderTest", "LekkasjedagerUnder")], na.rm = TRUE)
+  # PreGjsn <- colMeans(RegData[indHoved, c("InkontinensFoerTest", "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer")], na.rm = TRUE)
+  PreGjsn <- colMeans(RegData[indHoved, c("AvfoeringerFoerTest", "UrgencyFoerTestUtenLekkasje", "UrgencyFoerTestMedLekkasje",
+                                          "UrgencyFoerPassivLekkasje", "LekasjeFriFoerTest")], na.rm = TRUE)
+
+  # PostGjsn <- colMeans(RegData[indHoved, c("InkontinensUnderTest", "UrgencyUnderTest", "AvfoeringerUnderTest", "LekkasjedagerUnder")], na.rm = TRUE)
+  PostGjsn <- colMeans(RegData[indHoved, c("AvfoeringerUnderTest", "UrgencyUnderUtenTestMedLekkasje", "UrgencyUnderTestLekkasje",
+                                           "UrgencyUnderPassivLekkasje", "LekasjeFriUnderTest")], na.rm = TRUE)
+
   PlotMatrise$Hoved <- as.matrix(rbind(PreGjsn, PostGjsn))
   NHoved <- length(indHoved)
   if (medSml==1) {
-    PreGjsn <- colMeans(RegData[indRest, c("InkontinensFoerTest", "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer")], na.rm = TRUE)
-    PostGjsn <- colMeans(RegData[indRest, c("InkontinensUnderTest", "UrgencyUnderTest", "AvfoeringerUnderTest", "LekkasjedagerUnder")], na.rm = TRUE)
+    PreGjsn <- colMeans(RegData[indRest, c("AvfoeringerFoerTest", "UrgencyFoerTestUtenLekkasje", "UrgencyFoerTestMedLekkasje",
+                                           "UrgencyFoerPassivLekkasje", "LekasjeFriFoerTest")], na.rm = TRUE)
+    PostGjsn <- colMeans(RegData[indRest, c("AvfoeringerUnderTest", "UrgencyUnderUtenTestMedLekkasje", "UrgencyUnderTestLekkasje",
+                                            "UrgencyUnderPassivLekkasje", "LekasjeFriUnderTest")], na.rm = TRUE)
     PlotMatrise$Rest <- as.matrix(rbind(PreGjsn, PostGjsn))
     Nrest <- length(indRest)
   }
@@ -91,11 +107,11 @@ nraSNMdagbok <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31', va
   subtxt <- ''
   tittel <- 'SNM-dagbok'
 
-  grtxt <- c('Inkontinensepisoder', 'Urgencyepisoder', 'Avføringsepisoder', 'Dager med lekkasje')
+  grtxt <- c('Avføringsepisoder', 'Urgencyep. u/lekkasje', 'Urgencyep. m/lekkasje', 'Episoder passiv lekkasje', 'Lekkasjefrie dager')
 
   #Hvis for få observasjoner..
   #if (dim(RegData)[1] < 10 | (length(which(RegData$ReshId == reshID))<5 & enhetsUtvalg == 1)) {
-  if (NHoved < 10 | (medSml ==1 & Nrest<10)) {
+  if (NHoved < 5 | (medSml ==1 & Nrest<5)) {
     FigTypUt <- rapFigurer::figtype(outfile, fargepalett=nraUtvalg$fargepalett)
     farger <- FigTypUt$farger
     plot.new()

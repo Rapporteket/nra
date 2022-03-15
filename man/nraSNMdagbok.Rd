@@ -19,7 +19,8 @@ nraSNMdagbok(
   reshID,
   hentData = F,
   forlopstype1 = "",
-  forlopstype2 = ""
+  forlopstype2 = "",
+  onestage = 99
 )
 }
 \arguments{

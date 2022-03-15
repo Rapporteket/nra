@@ -8,7 +8,7 @@ indikatorFigRaterGrVar_basis <- function(RegData, valgtVar='reduksjon_lekkasje50
                                    decreasing=F, terskel=0, minstekrav = NA, maal = NA, xtekst ='Andel %',
                                    til100 = F, skriftStr=1.3, pktStr=1.5, datoFra='2016-01-01', datoTil='2050-12-31',
                                    hentData=F, preprosess=T, minald=0, maxald=130, erMann='',
-                                   forlopstype1=99, forlopstype2=99)
+                                   forlopstype1=99, forlopstype2=99, onestage=99)
 {
 
   ## Hvis spørring skjer fra R på server. ######################
@@ -32,6 +32,13 @@ indikatorFigRaterGrVar_basis <- function(RegData, valgtVar='reduksjon_lekkasje50
     RegData$Indikator[RegData$pst_endr < 50] <- 0
   }
 
+  if (valgtVar=='reduksjon_lekkasje50_v2') {
+    tittel <- c('Andel med prosentvis reduksjon', 'i lekkasjeepisoper >= 50%')
+    maal <- 70
+    RegData$Indikator <- RegData$Indikator1_lekk_red50
+    RegData <- RegData[!is.na(RegData$Indikator), ]
+  }
+
   if (valgtVar=='reduksjon_lekkasje75') {
     tittel <- c('Andel med prosentvis reduksjon', 'i lekkasjeepisoper >= 75%')
     maal <- 70
@@ -42,6 +49,15 @@ indikatorFigRaterGrVar_basis <- function(RegData, valgtVar='reduksjon_lekkasje50
     RegData$Indikator[RegData$pst_endr >= 75] <- 1
     RegData$Indikator[RegData$pst_endr < 75] <- 0
   }
+
+  if (valgtVar=='reduksjon_lekkasje75_v2') {
+    tittel <- c('Andel med prosentvis reduksjon', 'i lekkasjeepisoper >= 75%')
+    maal <- 70
+    RegData$Indikator <- RegData$red75
+    RegData <- RegData[!is.na(RegData$Indikator), ]
+  }
+
+
 
   if (valgtVar=='utfort_ultralyd') {
     tittel <- c('Andel med utført ultralyd')
@@ -68,7 +84,7 @@ indikatorFigRaterGrVar_basis <- function(RegData, valgtVar='reduksjon_lekkasje50
   ## Gjør utvalg basert på brukervalg
   nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
                          minald=minald, maxald=maxald, erMann=erMann,
-                         forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                         forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
 
   RegData <- nraUtvalg$RegData
 
