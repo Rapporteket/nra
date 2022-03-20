@@ -46,6 +46,7 @@ ui <- tagList(
   shinyalert::useShinyalert(),
   shinyjs::useShinyjs(),
   navbarPage(
+    id = "nra_app_id",
     title = div(a(includeHTML(system.file('www/logo.svg', package='rapbase'))),
                 regTitle),
     windowTitle = regTitle,
@@ -127,9 +128,9 @@ server <- function(input, output, session) {
     userRole <- 'SC'
   }
 
-  # if (userRole != 'SC') {
-  #   shiny::hideTab("norgast_app_id", target = "Sykehusvisning")
-  # }
+  if (userRole != 'SC') {
+    shiny::hideTab("nra_app_id", target = "Verktøy")
+  }
 
   # callModule(startside, "startside_id")
   callModule(fordelingsfig, "fordelingsfig_id", reshID = reshID, RegData = RegData, hvd_session = session)
