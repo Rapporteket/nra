@@ -15,6 +15,7 @@ gjsn_prepost_UI <- function(id){
       selectInput(inputId = ns("valgtVar"), label = "Velg variabel", choices =
                     c('St. Marks score'='StMarksTotalScore',
                       'Wexner score'='WexnerTotalScore',
+                      'Inkontinensscore'='InkontinensScore',
                       'Generell livskvalitet'='GenQol',
                       'Påvirkning seksualliv'='QolSexualitet',
                       'Andel urininkontinente'='Urinlekkasje_v2',

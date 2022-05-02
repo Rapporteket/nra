@@ -26,6 +26,7 @@ indikatorfig_UI <- function(id){
                     "Wexnerskår <=9 1 år etter operasjon med SNM" = "wexner_9_1aar_snm",
                     "Wexnerskår <=12 1 år etter operasjon med SNM" = "wexner_12_1aar_snm",
                     "Inkontinensskår <=9 1 år etter operasjon med SNM" = "nra_inkontinensscore_9_1aar_snm",
+                    "Inkontinensskår <=9 1 år etter operasjon med SNM V2" = "nra_inkontinensscore_9_1aar_snm_v2",
                     "Inkontinensskår <=12 1 år etter operasjon med SNM" = "nra_inkontinensscore_12_1aar_snm",
                     "Inkontinensskår <=9 1 år etter sfinkterplastikk" = "nra_inkontinensscore_9_1aar_sfinkt",
                     "Inkontinensskår <=12 1 år etter sfinkterplastikk" = "nra_inkontinensscore_12_1aar_sfinkt"
