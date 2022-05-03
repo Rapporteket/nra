@@ -269,6 +269,7 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     skjemaoversikt$Sykehusnavn <- map_shnavn_kortnavn$kortnavn[match(skjemaoversikt$Sykehusnavn,
                                                                      map_shnavn_kortnavn$shusnavn)]
 
+
     skjemaoversikt_forlop <-
       merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "1A Anamnese",
                            c("ForlopsID", "HovedDato", "Sykehusnavn", "AvdRESH", "SkjemaStatus")],
@@ -278,18 +279,19 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
       merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "2B Sfinkter",
                            c("SkjemaStatus", "ForlopsID")],
             by = "ForlopsID", suffixes = c("", "_2B"), all = T) %>%
-      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "2A SNM-1",
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn %in% c("2A SNM-1", "2A SNM-2", "2A SNM-3", "2A SNM-4", "2A SNM-5"),
                            c("SkjemaStatus", "ForlopsID")],
-            by = "ForlopsID", suffixes = c("", "_2A1"), all = T) %>%
-      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "2A SNM-2",
+            by = "ForlopsID", suffixes = c("", "_2A"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn %in% c("2AT2 SNM-1", "2AT2 SNM-2", "2AT2 SNM-5"),
                            c("SkjemaStatus", "ForlopsID")],
-            by = "ForlopsID", suffixes = c("", "_2A2"), all = T) %>%
-      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "1B Oppfølging 1 år",
+            by = "ForlopsID", suffixes = c("", "_2AT2"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn %in% c("1B Oppfølging 1 år", "3A Oppfølging 1 år"),
                            c("SkjemaStatus", "KobletForlopsID")],
             by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf_1aar"), all = T) %>%
-      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "1B Oppfølging 5 år",
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn %in% c("1B Oppfølging 5 år", "3A Oppfølging 5 år"),
                            c("SkjemaStatus", "KobletForlopsID")],
             by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf_5aar"), all = T)
+
     names(skjemaoversikt_forlop)[names(skjemaoversikt_forlop) == "SkjemaStatus"] <- "SkjemaStatus_2B"
 
     skjemaoversikt_forlop <- merge(skjemaoversikt_forlop,
