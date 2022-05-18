@@ -60,7 +60,7 @@ for (p in 1:length(ind_aar)){
 ################## NØKKELTALL ######################################
 
 
-nokkeltall <- RegDataAlle %>% group_by(Aar) %>%
+nokkeltall <- RegData %>% group_by(Aar) %>%
   summarise('Antall SNM' = sum(ForlopsType1Num==2),
             'Antall sfinkt'  = sum(ForlopsType1Num==1),
             'Antall 1-årsoppf.' = sum(ForlopsType1Num==3),
@@ -75,7 +75,7 @@ nokkeltall <- RegDataAlle %>% group_by(Aar) %>%
 # write.csv2(nokkeltall, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/nokkeltall_nra.csv', row.names = F)
 # write.csv2(Indikatorer, "I:/nra/indikatorer_shusviser_nra09092021.csv", row.names = F, fileEncoding = "UTF-8")
 
-dg_tall <- readxl::read_xlsx("Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Sykehusviser/Dekningsgrader/Dekningsgrad_NRA.xlsx",
+dg_tall <- readxl::read_xlsx("~/.ssh/nra/Dekningsgrad_NRA.xlsx",
                              sheet = "DG_Totalt m utregning")
 dg_tall <- dg_tall[,c("Årstall", "ReshID", "Antall i NRA Sfinkter", "Antall i NPR sfinkter", "Antall i NRA SMN", "Antall i NPR SNM")]
 dg_tall$ant_tot_nra <- dg_tall[["Antall i NRA SMN"]] + dg_tall[["Antall i NRA Sfinkter"]]
@@ -98,7 +98,9 @@ dg_samlet <- bind_rows(bind_rows(dg_tall_snm, dg_tall_sfinkter), dg_tall_tot)
 dg_samlet <- dg_samlet[!is.na(dg_samlet$denominator), ]
 dg_samlet <- dg_samlet[dg_samlet$resh != 10000, ]
 
-dg_samlet$orgnr <- kobl_resh_orgnr$orgnr[match(dg_samlet$resh, kobl_resh_orgnr$resh)]
+dg_samlet$orgnr <- Indikatorer$orgnr[match(dg_samlet$resh, Indikatorer$AvdRESH)]
+
+
 dg_samlet <- dg_samlet[!is.na(dg_samlet$denominator), ]
 dg_samlet <- dg_samlet[dg_samlet$denominator!=0, ]
 dg_samlet <- dg_samlet[,c(1,6,3,4,5)]

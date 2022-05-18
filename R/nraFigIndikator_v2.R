@@ -61,144 +61,156 @@ nraFigIndikator_v2 <- function(indikatordata, tittel='', terskel=30, minstekrav 
   }
   andeler <- andeler[rekkefolge, ]
   N <- N[rekkefolge, ]
-  andeler[N[, dim(andeler)[2]]<terskel, 1:2] <- NA
-  KI <- binomkonf(AntTilfeller[rekkefolge, dim(andeler)[2]], N[, dim(andeler)[2]])*100
-  KI[, is.na(andeler[, dim(andeler)[2]])] <- NA
-  pst_txt <- paste0(sprintf('%.0f', andeler[, dim(andeler)[2]]), ' %')
-  pst_txt[N[, dim(andeler)[2]]<terskel] <- paste0('N<', terskel)
-  pst_txt[rownames(andeler) %in% lavDG] <- lavDGtekst
-  pst_txt <- c(NA, pst_txt, NA, NA)
 
   FigTypUt <- rapFigurer::figtype(outfile=outfile, width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
   farger <- FigTypUt$farger
-  soyleFarger <- rep(farger[3], length(andeler[,dim(andeler)[2]]))
-  soyleFarger[which(rownames(andeler)=='Norge')] <- farger[4]
-  if (!is.na(graaUt[1])) {soyleFarger[which(rownames(andeler) %in% graaUt)] <- 'gray88'}
-  soyleFarger <- c(NA, soyleFarger)
 
-  oldpar_mar <- par()$mar
-  oldpar_fig <- par()$fig
-  oldpar_oma <- par()$oma
+  if (max(N[,2], na.rm = T) < terskel) {
+    plot.new()
+    # title(tittel)	#, line=-6)
+    # legend('topleft',utvalgTxt, bty='n', cex=0.9, text.col=farger[1])
+    text(0.5, 0.6, paste0("Det er færre enn ", terskel,
+                          " registreringer av indikatoren nasjonalt i ", names(N)[2], "."), cex=1.2)
+  } else {
 
-  cexgr <- skriftStr
-  rownames(andeler) <- paste0(rownames(andeler), ' (', N[, dim(N)[2]], ') ')
-  andeler <- rbind(andeler, c(NA,NA,NA))
-  rownames(andeler)[dim(andeler)[1]] <- paste0('(N, ', names(andeler)[dim(andeler)[2]], ') ')
-  KI <- cbind(c(NA, NA), KI, c(NA, NA))
+    andeler[N[, dim(andeler)[2]]<terskel, 1:2] <- NA
+    KI <- binomkonf(AntTilfeller[rekkefolge, dim(andeler)[2]], N[, dim(andeler)[2]])*100
+    KI[, is.na(andeler[, dim(andeler)[2]])] <- NA
+    pst_txt <- paste0(sprintf('%.0f', andeler[, dim(andeler)[2]]), ' %')
+    pst_txt[N[, dim(andeler)[2]]<terskel] <- paste0('N<', terskel)
+    pst_txt[rownames(andeler) %in% lavDG] <- lavDGtekst
+    pst_txt <- c(NA, pst_txt, NA, NA)
 
-  vmarg <- max(0, strwidth(rownames(andeler), units='figure', cex=cexgr)*0.75)
-  par('fig'=c(vmarg, 1, 0, 1))
-  # par('mar'=c(5.1, 4.1, 5.1, 9.1))
-  par('oma'=c(0,1,0,0))
 
-  par('mar'=c(5.1, 4.1, 5.1, 2.1))
-  xmax <- min(max(KI, max(andeler, na.rm = T), na.rm = T)*1.15,100)
+    soyleFarger <- rep(farger[3], length(andeler[,dim(andeler)[2]]))
+    soyleFarger[which(rownames(andeler)=='Norge')] <- farger[4]
+    if (!is.na(graaUt[1])) {soyleFarger[which(rownames(andeler) %in% graaUt)] <- 'gray88'}
+    soyleFarger <- c(NA, soyleFarger)
 
-  andeler <- rbind(c(NA,NA), andeler, c(NA,NA))
-  rownames(andeler)[dim(andeler)[1]] <- '  '
-  rownames(andeler)[1] <- ' '
+    oldpar_mar <- par()$mar
+    oldpar_fig <- par()$fig
+    oldpar_oma <- par()$oma
 
-  ypos <- barplot( t(andeler[,dim(andeler)[2]]), beside=T, las=1,
-                   xlim=c(0,xmax),
-                   names.arg=rep('',dim(andeler)[1]),
-                   horiz=T, axes=F, space=c(0,0.3),
-                   col=soyleFarger, border=NA, xlab = 'Andel (%)') # '#96BBE7'
+    cexgr <- skriftStr
+    rownames(andeler) <- paste0(rownames(andeler), ' (', N[, dim(N)[2]], ') ')
+    andeler <- rbind(andeler, c(NA,NA,NA))
+    rownames(andeler)[dim(andeler)[1]] <- paste0('(N, ', names(andeler)[dim(andeler)[2]], ') ')
+    KI <- cbind(c(NA, NA), KI, c(NA, NA))
 
-  fargerMaalNiva <-  c('aquamarine3','#fbf850', 'red')
+    vmarg <- max(0, strwidth(rownames(andeler), units='figure', cex=cexgr)*0.75)
+    par('fig'=c(vmarg, 1, 0, 1))
+    # par('mar'=c(5.1, 4.1, 5.1, 9.1))
+    par('oma'=c(0,1,0,0))
 
-  if (maal > minstekrav & !is.na(maal) & !is.na(minstekrav)) {
-    rect(xleft=minstekrav, ybottom=1, xright=maal, ytop=max(ypos)-1.6, col = fargerMaalNiva[2], border = NA)
-    rect(xleft=maal, ybottom=1, xright=min(xmax, 100), ytop=max(ypos)-1.6, col = fargerMaalNiva[1], border = NA)}
-  if (maal < minstekrav & !is.na(maal) & !is.na(minstekrav)) {
-    rect(xleft=maal, ybottom=1, xright=minstekrav, ytop=max(ypos)-1.6, col = fargerMaalNiva[2], border = NA)
-    rect(xleft=0, ybottom=1, xright=maal, ytop=max(ypos)-1.6, col = fargerMaalNiva[1], border = NA)}
-  if (!is.na(maal) & is.na(minstekrav) & maalretn=='lav') {
-    rect(xleft=0, ybottom=1, xright=maal, ytop=max(ypos)-1.6, col = fargerMaalNiva[1], border = NA)}
-  if (!is.na(maal) & is.na(minstekrav) & maalretn=='hoy') {
-    rect(xleft=maal, ybottom=1, xright=min(xmax, 100), ytop=max(ypos)-1.6, col = fargerMaalNiva[1], border = NA)}
+    par('mar'=c(5.1, 4.1, 5.1, 2.1))
+    xmax <- min(max(KI, max(andeler, na.rm = T), na.rm = T)*1.15,100)
 
-  barplot( t(andeler[,dim(andeler)[2]]), beside=T, las=1,
-           names.arg=rep('',dim(andeler)[1]),
-           horiz=T, axes=F, space=c(0,0.3),
-           col=soyleFarger, border=NA, xlab = 'Andel (%)', add=TRUE)
+    andeler <- rbind(c(NA,NA), andeler, c(NA,NA))
+    rownames(andeler)[dim(andeler)[1]] <- '  '
+    rownames(andeler)[1] <- ' '
 
-  title(main = tittel, cex.main=skriftStr*1.1)
-  ypos <- as.numeric(ypos) #as.vector(ypos)
-  yposOver <- max(ypos)-2 + 0.5*diff(ypos)[1]
-  if (!is.na(minstekrav)) {
-    lines(x=rep(minstekrav, 2), y=c(-1, yposOver), col=fargerMaalNiva[2], lwd=2)
-    par(xpd=TRUE)
-    text(x=minstekrav, y=yposOver, labels = minstekravTxt,
-         pos = 4, cex=cexgr*0.65, srt = 90)
-    par(xpd=FALSE)
-  }
-  if (!is.na(maal)) {
-    lines(x=rep(maal, 2), y=c(-1, yposOver), col=fargerMaalNiva[1], lwd=2)
-    barplot( t(andeler[, dim(andeler)[2]]), beside=T, las=1,
+    ypos <- barplot( t(andeler[,dim(andeler)[2]]), beside=T, las=1,
+                     xlim=c(0,xmax),
+                     names.arg=rep('',dim(andeler)[1]),
+                     horiz=T, axes=F, space=c(0,0.3),
+                     col=soyleFarger, border=NA, xlab = 'Andel (%)') # '#96BBE7'
+
+    fargerMaalNiva <-  c('aquamarine3','#fbf850', 'red')
+
+    if (maal > minstekrav & !is.na(maal) & !is.na(minstekrav)) {
+      rect(xleft=minstekrav, ybottom=1, xright=maal, ytop=max(ypos)-1.6, col = fargerMaalNiva[2], border = NA)
+      rect(xleft=maal, ybottom=1, xright=min(xmax, 100), ytop=max(ypos)-1.6, col = fargerMaalNiva[1], border = NA)}
+    if (maal < minstekrav & !is.na(maal) & !is.na(minstekrav)) {
+      rect(xleft=maal, ybottom=1, xright=minstekrav, ytop=max(ypos)-1.6, col = fargerMaalNiva[2], border = NA)
+      rect(xleft=0, ybottom=1, xright=maal, ytop=max(ypos)-1.6, col = fargerMaalNiva[1], border = NA)}
+    if (!is.na(maal) & is.na(minstekrav) & maalretn=='lav') {
+      rect(xleft=0, ybottom=1, xright=maal, ytop=max(ypos)-1.6, col = fargerMaalNiva[1], border = NA)}
+    if (!is.na(maal) & is.na(minstekrav) & maalretn=='hoy') {
+      rect(xleft=maal, ybottom=1, xright=min(xmax, 100), ytop=max(ypos)-1.6, col = fargerMaalNiva[1], border = NA)}
+
+    barplot( t(andeler[,dim(andeler)[2]]), beside=T, las=1,
              names.arg=rep('',dim(andeler)[1]),
              horiz=T, axes=F, space=c(0,0.3),
              col=soyleFarger, border=NA, xlab = 'Andel (%)', add=TRUE)
-    par(xpd=TRUE)
-    text(x=maal, y=yposOver, labels = maalTxt, pos = 4, cex=cexgr*0.65, srt = 90) #paste0(maalTxt,maal,'%')
-    par(xpd=FALSE)
-  }
+
+    title(main = tittel, cex.main=skriftStr*1.1)
+    ypos <- as.numeric(ypos) #as.vector(ypos)
+    yposOver <- max(ypos)-2 + 0.5*diff(ypos)[1]
+    if (!is.na(minstekrav)) {
+      lines(x=rep(minstekrav, 2), y=c(-1, yposOver), col=fargerMaalNiva[2], lwd=2)
+      par(xpd=TRUE)
+      text(x=minstekrav, y=yposOver, labels = minstekravTxt,
+           pos = 4, cex=cexgr*0.65, srt = 90)
+      par(xpd=FALSE)
+    }
+    if (!is.na(maal)) {
+      lines(x=rep(maal, 2), y=c(-1, yposOver), col=fargerMaalNiva[1], lwd=2)
+      barplot( t(andeler[, dim(andeler)[2]]), beside=T, las=1,
+               names.arg=rep('',dim(andeler)[1]),
+               horiz=T, axes=F, space=c(0,0.3),
+               col=soyleFarger, border=NA, xlab = 'Andel (%)', add=TRUE)
+      par(xpd=TRUE)
+      text(x=maal, y=yposOver, labels = maalTxt, pos = 4, cex=cexgr*0.65, srt = 90) #paste0(maalTxt,maal,'%')
+      par(xpd=FALSE)
+    }
     arrows(x0 = KI[1,], y0 = ypos, x1 = KI[2,], y1 = ypos,
            length=0.5/max(ypos), code=3, angle=90, lwd=1.8, col='gray') #, col=farger[1])
     legend('bottom', cex=0.9*cexgr, bty='n',
            lwd=1.8, lty = 1, pt.cex=1.8, col='gray',
            legend=paste0('Konfidensintervall ', names(N)[dim(N)[2]]))
 
-  axis(1,cex.axis=0.9)
-  mtext( rownames(andeler), side=2, line=0.2, las=1, at=ypos, col=1, cex=cexgr)
-  antAar <- dim(andeler)[2]
+    axis(1,cex.axis=0.9)
+    mtext( rownames(andeler), side=2, line=0.2, las=1, at=ypos, col=1, cex=cexgr)
+    antAar <- dim(andeler)[2]
 
-  if (dim(andeler)[2]==2) {
-    par(xpd=TRUE)
-    points(y=ypos, x=andeler[,1],cex=pktStr, pch= 19)
-    par(xpd=FALSE)
-    if (legPlass=='nede'){
-      legend('bottomright', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',
-             lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-             legend=names(N), ncol = 1)}
-    if (legPlass=='top'){
-      # legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
-      #        lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-      #        legend=names(N), ncol = dim(andeler)[2])
-      legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
-             lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-             legend=paste0(names(N), " (", as.character(round(as.numeric(andeler[substr(rownames(andeler), 1, 9) == "Nasjonalt", ]), 1)),
-                           "%, N = ", N[rownames(N) == "Nasjonalt", ], ")"),
-             ncol = 1)}
-    if (legPlass=='topleft'){
-      legend('topleft', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
-             lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-             legend=names(N), ncol = dim(andeler)[2])}
-    if (legPlass=='topright'){
-      legend('topright', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
-             lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
-             legend=names(N), ncol = dim(andeler)[2])}
+    if (dim(andeler)[2]==2) {
+      par(xpd=TRUE)
+      points(y=ypos, x=andeler[,1],cex=pktStr, pch= 19)
+      par(xpd=FALSE)
+      if (legPlass=='nede'){
+        legend('bottomright', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',
+               lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
+               legend=names(N), ncol = 1)}
+      if (legPlass=='top'){
+        # legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
+        #        lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
+        #        legend=names(N), ncol = dim(andeler)[2])
+        legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
+               lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
+               legend=paste0(names(N), " (", as.character(round(as.numeric(andeler[substr(rownames(andeler), 1, 9) == "Nasjonalt", ]), 1)),
+                             "%, N = ", N[rownames(N) == "Nasjonalt", ], ")"),
+               ncol = 1)}
+      if (legPlass=='topleft'){
+        legend('topleft', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
+               lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
+               legend=names(N), ncol = dim(andeler)[2])}
+      if (legPlass=='topright'){
+        legend('topright', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
+               lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
+               legend=names(N), ncol = dim(andeler)[2])}
 
-  } else {
+    } else {
 
-    par(xpd=TRUE)
-    points(y=ypos, x=andeler[,1],cex=pktStr) #'#4D4D4D'
-    points(y=ypos, x=andeler[,2],cex=pktStr,pch= 19)
-    par(xpd=FALSE)
-    if (legPlass=='nede'){
-      legend(x=82, y=ypos[2]+1 ,xjust=0, cex=cexgr, bty='n', #bg='white', box.col='white',
-             lwd=c(NA,NA,NA), pch=c(1,19,15), pt.cex=c(1.2,1.2,1.8), col=c('black','black',farger[3]),
-             legend=names(N) )}
-    if (legPlass=='top'){
-      legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
-             lwd=c(NA,NA,NA), pch=c(1,19,15), pt.cex=c(1.2,1.2,1.8), col=c('black','black',farger[3]),
-             legend=names(N), ncol = dim(andeler)[2])
+      par(xpd=TRUE)
+      points(y=ypos, x=andeler[,1],cex=pktStr) #'#4D4D4D'
+      points(y=ypos, x=andeler[,2],cex=pktStr,pch= 19)
+      par(xpd=FALSE)
+      if (legPlass=='nede'){
+        legend(x=82, y=ypos[2]+1 ,xjust=0, cex=cexgr, bty='n', #bg='white', box.col='white',
+               lwd=c(NA,NA,NA), pch=c(1,19,15), pt.cex=c(1.2,1.2,1.8), col=c('black','black',farger[3]),
+               legend=names(N) )}
+      if (legPlass=='top'){
+        legend('top', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
+               lwd=c(NA,NA,NA), pch=c(1,19,15), pt.cex=c(1.2,1.2,1.8), col=c('black','black',farger[3]),
+               legend=names(N), ncol = dim(andeler)[2])
+      }
     }
+    text(x=0, y=ypos, labels = pst_txt, cex=skriftStr, pos=4)#
+
+    par('mar'= oldpar_mar)
+    par('fig'= oldpar_fig)
+    par('oma'= oldpar_oma)
+
+    if ( outfile != '') {dev.off()}
   }
-  text(x=0, y=ypos, labels = pst_txt, cex=skriftStr, pos=4)#
-
-  par('mar'= oldpar_mar)
-  par('fig'= oldpar_fig)
-  par('oma'= oldpar_oma)
-
-  if ( outfile != '') {dev.off()}
 }
