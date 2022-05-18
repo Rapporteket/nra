@@ -13,7 +13,11 @@
 lastshinydata <- function() {
 
   if (rapbase::isRapContext()) {
-    RegData <- nra::nraHentRegData()
+    # RegData <- nra::nraHentRegData()
+    allevar <- allevar <- nra::nraHentTabell("alleVarNum")
+    foversikt <- nra::nraHentTabell("ForlopsOversikt")
+    RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
+                     by = "ForlopsID")
     Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
   } else {
     RegData <- read.table('I:/nra/alleVarNum2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)

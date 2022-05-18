@@ -2,32 +2,38 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
-RegData <- nra::nraHentRegData()
+# RegData <- nra::nraHentRegData()
+allevar <- allevar <- nra::nraHentTabell("alleVarNum")
+foversikt <- nra::nraHentTabell("ForlopsOversikt")
+RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
+                 by = "ForlopsID")
 Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
 RegData <- nraPreprosess(RegData=RegData)
 # RegData$SenterKortNavn <- paste0(RegData$SenterKortNavn, ' ')
 
 rap_aar <- 2021
-variabler <- c("Prosentvis reduksjon i lekkasjeepisoder >= 50%" = "Indikator1_lekk_red50",
-              "Utført ultralyd" = "Ultralyd",
-              "Tidligere konservativ behandling" = "tidl_konservativ",
-              "Bekreftet sårinfeksjon innen 30 dager etter implantasjon" = "saarinfeksjon",
-              "St. Mark’s Inkontinensskår <=9 1 år etter operasjon med SNM" = "stmarks_9_1aar_snm",
-              "St. Mark’s Inkontinensskår <=9 5 år etter operasjon med SNM" = "stmarks_9_5aar_snm",
-              "St. Mark’s Inkontinensskår <=12 1 år etter operasjon med SNM" = "stmarks_12_1aar_snm",
-              "St. Mark’s Inkontinensskår <=12 5 år etter operasjon med SNM" = "stmarks_12_5aar_snm",
-              "St. Mark’s Inkontinensskår <=9 1 år etter sfinkterplastikk" = "stmarks_9_1aar_sfinkt",
-              "St. Mark’s Inkontinensskår <=9 5 år etter sfinkterplastikk" = "stmarks_9_5aar_sfinkt",
-              "St. Mark’s Inkontinensskår <=12 1 år etter sfinkterplastikk" = "stmarks_12_1aar_sfinkt",
-              "St. Mark’s Inkontinensskår <=12 5 år etter sfinkterplastikk" = "stmarks_12_5aar_sfinkt",
-              "Wexnerskår <=9 1 år etter operasjon med SNM" = "wexner_9_1aar_snm",
-              "Wexnerskår <=12 1 år etter operasjon med SNM" = "wexner_12_1aar_snm",
-              "Inkontinensskår <=9 1 år etter operasjon med SNM" = "nra_inkontinensscore_9_1aar_snm",
-              "Inkontinensskår <=9 1 år etter operasjon med SNM V2" = "nra_inkontinensscore_9_1aar_snm_v2",
-              "Inkontinensskår <=12 1 år etter operasjon med SNM" = "nra_inkontinensscore_12_1aar_snm",
-              "Inkontinensskår <=9 1 år etter sfinkterplastikk" = "nra_inkontinensscore_9_1aar_sfinkt",
-              "Inkontinensskår <=12 1 år etter sfinkterplastikk" = "nra_inkontinensscore_12_1aar_sfinkt")
-ind_aar <- c(rap_aar, rap_aar, rap_aar, rap_aar, rap_aar-1, rap_aar-5, rap_aar-1, rap_aar-5, rap_aar-1,
+variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardisert",
+               "Andel skjema levert innen 4mnd postoperativt" = "Indikator_aktualitet",
+               "Prosentvis reduksjon i lekkasjeepisoder >= 50%" = "Indikator1_lekk_red50",
+               "Utført ultralyd" = "Ultralyd",
+               "Tidligere konservativ behandling" = "tidl_konservativ",
+               "Bekreftet sårinfeksjon innen 30 dager etter implantasjon" = "saarinfeksjon",
+               "St. Mark’s Inkontinensskår <=9 1 år etter operasjon med SNM" = "stmarks_9_1aar_snm",
+               "St. Mark’s Inkontinensskår <=9 5 år etter operasjon med SNM" = "stmarks_9_5aar_snm",
+               "St. Mark’s Inkontinensskår <=12 1 år etter operasjon med SNM" = "stmarks_12_1aar_snm",
+               "St. Mark’s Inkontinensskår <=12 5 år etter operasjon med SNM" = "stmarks_12_5aar_snm",
+               "St. Mark’s Inkontinensskår <=9 1 år etter sfinkterplastikk" = "stmarks_9_1aar_sfinkt",
+               "St. Mark’s Inkontinensskår <=9 5 år etter sfinkterplastikk" = "stmarks_9_5aar_sfinkt",
+               "St. Mark’s Inkontinensskår <=12 1 år etter sfinkterplastikk" = "stmarks_12_1aar_sfinkt",
+               "St. Mark’s Inkontinensskår <=12 5 år etter sfinkterplastikk" = "stmarks_12_5aar_sfinkt",
+               "Wexnerskår <=9 1 år etter operasjon med SNM" = "wexner_9_1aar_snm",
+               "Wexnerskår <=12 1 år etter operasjon med SNM" = "wexner_12_1aar_snm",
+               "Inkontinensskår <=9 1 år etter operasjon med SNM" = "nra_inkontinensscore_9_1aar_snm",
+               "Inkontinensskår <=9 1 år etter operasjon med SNM V2" = "nra_inkontinensscore_9_1aar_snm_v2",
+               "Inkontinensskår <=12 1 år etter operasjon med SNM" = "nra_inkontinensscore_12_1aar_snm",
+               "Inkontinensskår <=9 1 år etter sfinkterplastikk" = "nra_inkontinensscore_9_1aar_sfinkt",
+               "Inkontinensskår <=12 1 år etter sfinkterplastikk" = "nra_inkontinensscore_12_1aar_sfinkt")
+ind_aar <- c(rap_aar, rap_aar, rap_aar, rap_aar, rap_aar, rap_aar, rap_aar-1, rap_aar-5, rap_aar-1, rap_aar-5, rap_aar-1,
              rap_aar-5, rap_aar-1, rap_aar-5, rap_aar-1, rap_aar-1, rap_aar-1,rap_aar-1, rap_aar-1,
              rap_aar-1, rap_aar-1)
 figfolder <- "~/.ssh/nra/indikatorer_2021/"
@@ -36,7 +42,7 @@ if (!dir.exists(figfolder)) {
 }
 
 Indikatorer <- data.frame(year=numeric(), AvdRESH=character(), var=numeric(), denominator=numeric(), ind_id=character(),
-           orgnr=numeric(), SenterKortNavn=character(), context=character())
+                          orgnr=numeric(), SenterKortNavn=character(), context=character())
 
 for (p in 1:length(ind_aar)){
   indikatordata <- nra::nraBeregnIndikator(RegData=RegData, valgtVar = variabler[p])
@@ -48,6 +54,7 @@ for (p in 1:length(ind_aar)){
 
   nra::nraFigIndikator_v2(plotdata, tittel = indikatordata$tittel,
                           terskel = indikatordata$terskel, maal = indikatordata$maal,
+                          minstekrav = indikatordata$minstekrav,
                           maalretn = indikatordata$maalRetn, xmax = indikatordata$xmax,
                           decreasing =indikatordata$decreasing, outfile=outfile)
 }

@@ -12,6 +12,14 @@ nraPreprosess <- function(RegData)
 {
   # RegData <- RegData[RegData$BasisRegStatus==1,]
   RegData$HovedDato <- as.Date(RegData$HovedDato, format="%Y-%m-%d")
+  RegData <- dplyr::mutate_at(RegData, c("FIRST_TIME_CLOSEDQ1A", "FIRST_TIME_CLOSEDQ1B",
+                          "FIRST_TIME_CLOSEDQ2A", "FIRST_TIME_CLOSEDQ2AT2",
+                          "FIRST_TIME_CLOSEDQ2B", "FIRST_TIME_CLOSEDQ3A"), as.Date)
+  RegData <- dplyr::mutate(RegData, FIRST_TIME_CLOSED = pmax(FIRST_TIME_CLOSEDQ1A, FIRST_TIME_CLOSEDQ1B,
+                                  FIRST_TIME_CLOSEDQ2A, FIRST_TIME_CLOSEDQ2AT2,
+                                  FIRST_TIME_CLOSEDQ2B, FIRST_TIME_CLOSEDQ3A, na.rm = T))
+  RegData <- dplyr::mutate(RegData, GjennomfortStandardisert_sml =
+                             pmax(GjennomfortStandardisert, GjennomfortStandardisertT2, na.rm = T))
   RegData$Aar <- as.numeric(format(RegData$HovedDato, format="%Y"))
   RegData$Mnd <- as.numeric(format(RegData$HovedDato, format="%m"))
   RegData$SenterKortNavn <- trimws(RegData$SenterKortNavn)

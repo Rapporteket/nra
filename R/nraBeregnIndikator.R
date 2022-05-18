@@ -23,6 +23,40 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
   xmax <- NA
   decreasing <- FALSE
 
+  if (valgtVar == "Indikator_standardisert") {
+    nraUtvalg <- nraUtvalg(RegData=RegData, datoFra = "2021-01-01", forlopstype2 = c(1,2,3,5))
+    indikator <- nraUtvalg$RegData
+    indikator$var <- 0
+    indikator$var[indikator$GjennomfortStandardisert_sml == 1] <- 1
+    indikator$denominator <- 1
+    indikator$ind_id <- 'nra_standardisert'
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c('Andel operert etter', 'standardisert metode')
+    maal <- 99
+    minstekrav <-90
+  }
+
+  if (valgtVar == "Indikator_aktualitet") {
+    nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=c(1,2))
+    RegData <- nraUtvalg$RegData
+    RegData$tid_op_reg <- difftime(RegData$FIRST_TIME_CLOSED, RegData$HovedDato, units = "days")/30.437
+    indikator <- RegData[!is.na(RegData$tid_op_reg), ]
+    indikator$var <- 0
+    indikator$var[indikator$tid_op_reg <=4] <- 1
+    indikator$denominator <- 1
+    indikator$ind_id <- 'nra_aktualitet'
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c('Andel skjema levert', 'innen 4mnd postoperativt')
+    maal <- 80
+    minstekrav <-60
+  }
+
   if (valgtVar == "Indikator1_lekk_red50") {
     nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=2)
     RegData <- nraUtvalg$RegData
@@ -36,6 +70,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     tittel <- c('Andel med prosentvis reduksjon', 'i lekkasjeepisoder >= 50%')
     maal <- 70
+    minstekrav <- 50
   }
 
   if (valgtVar == "Ultralyd") {
@@ -53,6 +88,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- 'Andel med utført ultralyd'
     maal <- 95
+    minstekrav <-80
   }
 
   if (valgtVar == "tidl_konservativ") {
@@ -73,6 +109,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('Andel med tidligere', 'konservativ behandling')
     maal <- 90
+    minstekrav <-80
   }
 
   if (valgtVar == "saarinfeksjon") {
@@ -95,6 +132,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('Andel bekreftet sårinfeksjon innen', '30 dager etter implantasjon')
     maal <- 4
+    minstekrav <-6
     maalRetn <- "lav"
     decreasing <- TRUE
     xmax <- 5
@@ -120,6 +158,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('St. Mark’s Inkontinensskår <=9', '1 år etter operasjon med SNM')
     maal <- 30
+    minstekrav <-20
   }
 
   if (valgtVar == "stmarks_9_5aar_snm") {
@@ -142,6 +181,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('St. Mark’s Inkontinensskår <=9', '5 år etter operasjon med SNM')
     maal <- 30
+    minstekrav <-20
   }
 
   if (valgtVar == "stmarks_12_1aar_snm") {
@@ -164,6 +204,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('St. Mark’s Inkontinensskår <=12', '1 år etter operasjon med SNM')
     maal <- 50
+    minstekrav <-30
   }
 
   if (valgtVar == "stmarks_12_5aar_snm") {
@@ -186,6 +227,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('St. Mark’s Inkontinensskår <=12', '5 år etter operasjon med SNM')
     maal <- 50
+    minstekrav <-30
   }
 
   if (valgtVar == "stmarks_9_1aar_sfinkt") {
@@ -208,6 +250,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('St. Mark’s Inkontinensskår <=9', '1 år etter sfinkterplastikk')
     maal <- 30
+    minstekrav <-20
   }
 
   if (valgtVar == "stmarks_9_5aar_sfinkt") {
@@ -230,6 +273,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('St. Mark’s Inkontinensskår <=9', '5 år etter sfinkterplastikk')
     maal <- 30
+    minstekrav <-20
   }
 
   if (valgtVar == "stmarks_12_1aar_sfinkt") {
@@ -252,6 +296,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('St. Mark’s Inkontinensskår <=12', '1 år etter sfinkterplastikk')
     maal <- 50
+    minstekrav <-30
   }
 
   if (valgtVar == "stmarks_12_5aar_sfinkt") {
@@ -274,6 +319,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('St. Mark’s Inkontinensskår <=12', '5 år etter sfinkterplastikk')
     maal <- 50
+    minstekrav <-30
   }
 
   if (valgtVar == "wexner_9_1aar_snm") {
@@ -296,6 +342,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('Wexnerskår <=9', '1 år etter operasjon med SNM')
     maal <- 30
+    minstekrav <-20
   }
 
   if (valgtVar == "wexner_12_1aar_snm") {
@@ -318,6 +365,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('Wexnerskår <=12', '1 år etter operasjon med SNM')
     maal <- 50
+    minstekrav <-30
   }
 
   if (valgtVar == "nra_inkontinensscore_9_1aar_snm") {
@@ -345,11 +393,12 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('Inkontinensscore <=9', '1 år etter operasjon med SNM')
     maal <- 30
+    minstekrav <-20
   }
 
   if (valgtVar == "nra_inkontinensscore_9_1aar_snm_v2") {
     predata <- RegData[which(RegData$InkontinensScore>9 & RegData$ForlopsType1Num == 2 &
-                                 RegData$ForlopsType2Num %in% 2), ]
+                               RegData$ForlopsType2Num %in% 2), ]
     oppfolging <- RegData[which(!is.na(RegData$InkontinensScore) & RegData$ForlopsType1Num == 3), ]
     indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "InkontinensScore")],
                        oppfolging[, c("KobletForlopsID", "InkontinensScore")], by.x = "ForlopsID",
@@ -366,6 +415,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('Inkontinensscore <=9', '1 år etter operasjon med SNM')
     maal <- 30
+    minstekrav <-20
   }
 
   if (valgtVar == "nra_inkontinensscore_9_1aar_sfinkt") {
@@ -393,6 +443,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('Inkontinensscore <=9', '1 år etter sfinkterplastikk')
     maal <- 30
+    minstekrav <-20
   }
 
   if (valgtVar == "nra_inkontinensscore_12_1aar_snm") {
@@ -420,6 +471,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('Inkontinensscore <=12', '1 år etter operasjon med SNM')
     maal <- 50
+    minstekrav <-30
   }
 
   if (valgtVar == "nra_inkontinensscore_12_1aar_sfinkt") {
@@ -447,12 +499,13 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c('Inkontinensscore <=12', '1 år etter sfinkterplastikk')
     maal <- 50
+    minstekrav <-30
   }
 
   indikator$context <- "caregiver"
 
   utputt <- list(indikator=indikator, tittel=tittel, maal=maal, terskel=terskel,
-                 maalRetn=maalRetn, xmax=xmax, decreasing=decreasing)
+                 maalRetn=maalRetn, xmax=xmax, decreasing=decreasing, minstekrav = minstekrav)
 
   return(utputt)
 
