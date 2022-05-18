@@ -82,6 +82,20 @@ nraPreprosess <- function(RegData)
 
   # Lager ny variabel for nyere komplikasjoner
 
+  ### St. Marks og Wexner: Der det finnes St.Marks skal den brukes og Wexner fjernes :
+
+  # fid <-RegData$ForlopsID[!is.na(RegData$StMarksTotalScore) & !is.na(RegData$WexnerTotalScore)& RegData$ForlopsType1Num %in% 1:2]
+  # kfid <- RegData$KobletForlopsID[!is.na(RegData$StMarksTotalScore) & !is.na(RegData$WexnerTotalScore) & RegData$ForlopsType1Num %in% 3:4]
+  # aux1 <- RegData[RegData$ForlopsID %in% intersect(fid, kfid), c("ForlopsID", "StMarksTotalScore", "WexnerTotalScore")]
+  # aux2 <- RegData[RegData$KobletForlopsID %in% intersect(fid, kfid),
+  #                 c("KobletForlopsID", "ForlopsType1Num", "StMarksTotalScore", "WexnerTotalScore")]
+  #
+  # samlet <- merge(aux1, aux2[aux2$ForlopsType1Num %in% 3, ], by.x = "ForlopsID", by.y = "KobletForlopsID",
+  #                 suffixes = c('', '_1aar'), all = T)
+
+  RegData$WexnerTotalScore[!is.na(RegData$StMarksTotalScore) & !is.na(RegData$WexnerTotalScore)  & RegData$ForlopsType1Num %in% 1:2] <- NA
+
+
 
   return(invisible(RegData))
 }
