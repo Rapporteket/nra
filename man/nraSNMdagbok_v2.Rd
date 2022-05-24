@@ -15,7 +15,7 @@ nraSNMdagbok_v2(
   minald = 0,
   maxald = 130,
   enhetsUtvalg = 0,
-  erMann = "",
+  erMann = 99,
   reshID,
   hentData = F,
   forlopstype1 = "",

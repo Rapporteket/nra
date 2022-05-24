@@ -52,7 +52,7 @@ for (p in 1:length(ind_aar)){
   plotdata <- TabellData[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
   outfile <- paste0(figfolder, variabler[p], ".pdf")
 
-  nra::nraFigIndikator_v2(plotdata, tittel = indikatordata$tittel,
+  nra::nraFigIndikator_v3(plotdata, tittel = indikatordata$tittel,
                           terskel = indikatordata$terskel, maal = indikatordata$maal,
                           minstekrav = indikatordata$minstekrav,
                           maalretn = indikatordata$maalRetn, xmax = indikatordata$xmax,
