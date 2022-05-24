@@ -83,7 +83,7 @@ nraFigIndikator_v3 <- function(indikatordata, tittel='', terskel=30, minstekrav 
 
 
     soyleFarger <- rep(farger[3], length(andeler[,dim(andeler)[2]]))
-    soyleFarger[which(rownames(andeler)=='Norge')] <- farger[4]
+    soyleFarger[which(rownames(andeler)=='Nasjonalt')] <- farger[4]
     if (!is.na(graaUt[1])) {soyleFarger[which(rownames(andeler) %in% graaUt)] <- 'gray88'}
     soyleFarger <- c(NA, soyleFarger)
 
@@ -115,7 +115,7 @@ nraFigIndikator_v3 <- function(indikatordata, tittel='', terskel=30, minstekrav 
                      xlim=c(0,xmax),
                      names.arg=rep('',dim(andeler)[1]),
                      horiz=T, axes=F, space=c(0,0.3),
-                     col=soyleFarger, border=NA, xlab = 'Andel (%)') # '#96BBE7'
+                     col=soyleFarger, border=NA) # '#96BBE7'
 
     fargerMaalNiva <-  c('aquamarine3','#fbf850', 'red')
 
@@ -133,28 +133,28 @@ nraFigIndikator_v3 <- function(indikatordata, tittel='', terskel=30, minstekrav 
     barplot( t(andeler[,dim(andeler)[2]]), beside=T, las=1,
              names.arg=rep('',dim(andeler)[1]),
              horiz=T, axes=F, space=c(0,0.3),
-             col=soyleFarger, border=NA, xlab = 'Andel (%)', add=TRUE)
+             col=soyleFarger, border=NA, add=TRUE)
 
     title(main = tittel, cex.main=skriftStr*1.1)
     ypos <- as.numeric(ypos) #as.vector(ypos)
     yposOver <- max(ypos)-2 + 0.5*diff(ypos)[1]
-    if (!is.na(minstekrav)) {
-      lines(x=rep(minstekrav, 2), y=c(-1, yposOver), col=fargerMaalNiva[2], lwd=2)
-      par(xpd=TRUE)
-      text(x=minstekrav, y=yposOver, labels = minstekravTxt,
-           pos = 4, cex=cexgr*0.65, srt = 90)
-      par(xpd=FALSE)
-    }
-    if (!is.na(maal)) {
-      lines(x=rep(maal, 2), y=c(-1, yposOver), col=fargerMaalNiva[1], lwd=2)
-      barplot( t(andeler[, dim(andeler)[2]]), beside=T, las=1,
-               names.arg=rep('',dim(andeler)[1]),
-               horiz=T, axes=F, space=c(0,0.3),
-               col=soyleFarger, border=NA, xlab = 'Andel (%)', add=TRUE)
-      par(xpd=TRUE)
-      text(x=maal, y=yposOver, labels = maalTxt, pos = 4, cex=cexgr*0.65, srt = 90) #paste0(maalTxt,maal,'%')
-      par(xpd=FALSE)
-    }
+    # if (!is.na(minstekrav)) {
+    #   lines(x=rep(minstekrav, 2), y=c(-1, yposOver), col=fargerMaalNiva[2], lwd=2)
+    #   par(xpd=TRUE)
+    #   text(x=minstekrav, y=yposOver, labels = minstekravTxt,
+    #        pos = 4, cex=cexgr*0.65, srt = 90)
+    #   par(xpd=FALSE)
+    # }
+    # if (!is.na(maal)) {
+    #   lines(x=rep(maal, 2), y=c(-1, yposOver), col=fargerMaalNiva[1], lwd=2)
+    #   barplot( t(andeler[, dim(andeler)[2]]), beside=T, las=1,
+    #            names.arg=rep('',dim(andeler)[1]),
+    #            horiz=T, axes=F, space=c(0,0.3),
+    #            col=soyleFarger, border=NA, add=TRUE)
+    #   par(xpd=TRUE)
+    #   text(x=maal, y=yposOver, labels = maalTxt, pos = 4, cex=cexgr*0.65, srt = 90) #paste0(maalTxt,maal,'%')
+    #   par(xpd=FALSE)
+    # }
     arrows(x0 = KI[1,], y0 = ypos, x1 = KI[2,], y1 = ypos,
            length=0.5/max(ypos), code=3, angle=90, lwd=1.8, col='gray') #, col=farger[1])
     legend('bottom', cex=0.9*cexgr, bty='n',
@@ -182,7 +182,7 @@ nraFigIndikator_v3 <- function(indikatordata, tittel='', terskel=30, minstekrav 
         #        legend=paste0(names(N), " (", as.character(round(as.numeric(andeler[substr(rownames(andeler), 1, 9) == "Nasjonalt", ]), 1)),
         #                      "%, N = ", N[rownames(N) == "Nasjonalt", ], ")"),
         #        ncol = 1)
-        }
+      }
       if (legPlass=='topleft'){
         legend('topleft', cex=0.9*cexgr, bty='n', #bg='white', box.col='white',y=max(ypos),
                lwd=c(NA,NA), pch=c(19,15), pt.cex=c(1.2,1.8), col=c('black',farger[3]),
@@ -208,6 +208,14 @@ nraFigIndikator_v3 <- function(indikatordata, tittel='', terskel=30, minstekrav 
                legend=names(N), ncol = dim(andeler)[2])
       }
     }
+
+    # title(xlab="Andel (%)", line=1)
+    mtext('Andel (%)', side=1, line=1.7, cex = 0.8)
+    legPos <- ifelse(dim(andeler)[1] < 8, -1, -1.7)
+    legend(x=0, y=legPos, pch=c(NA, 15, 15), col=c(NA, fargerMaalNiva[2:1]),
+           ncol=3, xpd=TRUE, border=NA, box.col='white',cex=0.8, pt.cex=1.5,
+           legend=c('Måloppnåelse:', 'Moderat', 'Høy'))
+
     text(x=0, y=ypos, labels = pst_txt, cex=skriftStr, pos=4)#
 
     par('mar'= oldpar_mar)

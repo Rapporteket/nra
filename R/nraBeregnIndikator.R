@@ -23,6 +23,22 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
   xmax <- NA
   decreasing <- FALSE
 
+  if (valgtVar == "andel_inform_oppf") {
+    nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=c(1,2))
+    RegData <- nraUtvalg$RegData
+    indikator <- RegData[!is.na(RegData$InformertOppf), ]
+    indikator$var <- indikator$InformertOppf
+    indikator$denominator <- 1
+    indikator$ind_id <- "nra_inform_oppf"
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c("Andel som har fått informasjon", "om ett års oppfølging")
+    maal <- 90
+    minstekrav <-80
+  }
+
   if (valgtVar == "Indikator_standardisert") {
     nraUtvalg <- nraUtvalg(RegData=RegData, datoFra = "2021-01-01", forlopstype2 = c(1,2,3,5))
     indikator <- nraUtvalg$RegData
