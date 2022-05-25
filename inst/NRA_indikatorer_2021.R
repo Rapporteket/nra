@@ -37,7 +37,7 @@ variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardi
 ind_aar <- c(rap_aar, rap_aar, rap_aar, rap_aar, rap_aar, rap_aar, rap_aar-1, rap_aar-5, rap_aar-1, rap_aar-5, rap_aar-1,
              rap_aar-5, rap_aar-1, rap_aar-5, rap_aar-1, rap_aar-1, rap_aar-1,rap_aar-1, rap_aar-1,
              rap_aar-1, rap_aar-1, rap_aar)
-figfolder <- "~/.ssh/nra/indikatorer_2021/"
+figfolder <- "~/.ssh/nra/indikatorer_2021_v4/"
 if (!dir.exists(figfolder)) {
   dir.create(figfolder)
 }
@@ -53,26 +53,26 @@ for (p in 1:length(ind_aar)){
   plotdata <- TabellData[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
   outfile <- paste0(figfolder, variabler[p], ".pdf")
 
-  nra::nraFigIndikator_v3(plotdata, tittel = indikatordata$tittel,
+  nra::nraFigIndikator_v4(plotdata, tittel = indikatordata$tittel,
                           terskel = indikatordata$terskel, maal = indikatordata$maal,
                           minstekrav = indikatordata$minstekrav,
                           maalretn = indikatordata$maalRetn, xmax = indikatordata$xmax,
                           decreasing =indikatordata$decreasing, outfile=outfile)
 }
 
-# p <- 1
-# indikatordata <- nra::nraBeregnIndikator(RegData=RegData, valgtVar = variabler[p])
-# TabellData <- indikatordata$indikator
-# TabellData <- TabellData[which(TabellData$year <= ind_aar[p]), ]
-# Indikatorer <- dplyr::bind_rows(Indikatorer, TabellData)
-# plotdata <- TabellData[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
-# outfile <- ""
-#
-# nra::nraFigIndikator_v3(plotdata, tittel = indikatordata$tittel,
-#                         terskel = indikatordata$terskel, maal = indikatordata$maal,
-#                         minstekrav = indikatordata$minstekrav,
-#                         maalretn = indikatordata$maalRetn, xmax = indikatordata$xmax,
-#                         decreasing =indikatordata$decreasing, outfile=outfile)
+p <- 7
+indikatordata <- nra::nraBeregnIndikator(RegData=RegData, valgtVar = variabler[p])
+TabellData <- indikatordata$indikator
+TabellData <- TabellData[which(TabellData$year <= ind_aar[p]), ]
+Indikatorer <- dplyr::bind_rows(Indikatorer, TabellData)
+plotdata <- TabellData[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
+outfile <- ""
+
+nra::nraFigIndikator_v4(plotdata, tittel = indikatordata$tittel,
+                        terskel = indikatordata$terskel, maal = indikatordata$maal,
+                        minstekrav = indikatordata$minstekrav,
+                        maalretn = indikatordata$maalRetn, xmax = indikatordata$xmax,
+                        decreasing =indikatordata$decreasing, outfile=outfile)
 
 
 
