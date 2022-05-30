@@ -3,7 +3,7 @@ library(tidyverse)
 rm(list = ls())
 
 # RegData <- nra::nraHentRegData()
-allevar <- allevar <- nra::nraHentTabell("alleVarNum")
+allevar <- nra::nraHentTabell("alleVarNum")
 foversikt <- nra::nraHentTabell("ForlopsOversikt")
 RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
                  by = "ForlopsID")
@@ -60,7 +60,7 @@ for (p in 1:length(ind_aar)){
                           decreasing =indikatordata$decreasing, outfile=outfile)
 }
 
-p <- 7
+p <- 21
 indikatordata <- nra::nraBeregnIndikator(RegData=RegData, valgtVar = variabler[p])
 TabellData <- indikatordata$indikator
 TabellData <- TabellData[which(TabellData$year <= ind_aar[p]), ]

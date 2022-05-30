@@ -25,8 +25,9 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
 
   if (valgtVar == "andel_inform_oppf") {
     nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=c(1,2))
-    RegData <- nraUtvalg$RegData
-    indikator <- RegData[!is.na(RegData$InformertOppf), ]
+    indikator <- nraUtvalg$RegData
+    indikator <- indikator[indikator$ForlopsType2Num != 4 | is.na(indikator$ForlopsType2Num), ]
+    indikator <- indikator[!is.na(indikator$InformertOppf), ]
     indikator$var <- indikator$InformertOppf
     indikator$denominator <- 1
     indikator$ind_id <- "nra_inform_oppf"
@@ -40,10 +41,13 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
   }
 
   if (valgtVar == "Indikator_standardisert") {
-    nraUtvalg <- nraUtvalg(RegData=RegData, datoFra = "2021-01-01", forlopstype2 = c(1,2,3,5))
+    # nraUtvalg <- nraUtvalg(RegData=RegData, datoFra = "2021-01-01", forlopstype2 = c(1,2,3,5))
+    # nraUtvalg <- nraUtvalg(RegData=RegData, datoFra = "2020-11-16", forlopstype2 = c(1,2,3,5))
+    nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype2 = c(1,2,3,5))
     indikator <- nraUtvalg$RegData
-    indikator$var <- 0
-    indikator$var[indikator$GjennomfortStandardisert_sml == 1] <- 1
+    indikator$var <- indikator$GjennomfortStandardisert_sml
+    indikator <- indikator[!is.na(indikator$var), ]
+    # indikator$var[indikator$GjennomfortStandardisert_sml == 1] <- 1
     indikator$denominator <- 1
     indikator$ind_id <- "nra_standardisert"
     names(indikator)[names(indikator)=="Aar"] <- "year"
@@ -463,7 +467,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
   }
 
   if (valgtVar == "nra_inkontinensscore_12_1aar_snm") {
-    komboStr9 <- RegData[which(RegData$InkontinensScore>9 & RegData$ForlopsType1Num %in% 1:2 &
+    komboStr9 <- RegData[which(RegData$InkontinensScore>12 & RegData$ForlopsType1Num %in% 1:2 &
                                  RegData$ForlopsType2Num %in% c(2, NA)), ]
     komboStr9 <- dplyr::bind_rows(komboStr9, RegData[RegData$KobletForlopsID %in% komboStr9$ForlopsID, ])
     komboStr9$var <- NA
@@ -491,7 +495,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
   }
 
   if (valgtVar == "nra_inkontinensscore_12_1aar_sfinkt") {
-    komboStr9 <- RegData[which(RegData$InkontinensScore>9 & RegData$ForlopsType1Num %in% 1:2 &
+    komboStr9 <- RegData[which(RegData$InkontinensScore>12 & RegData$ForlopsType1Num %in% 1:2 &
                                  RegData$ForlopsType2Num %in% c(2, NA)), ]
     komboStr9 <- dplyr::bind_rows(komboStr9, RegData[RegData$KobletForlopsID %in% komboStr9$ForlopsID, ])
     komboStr9$var <- NA
