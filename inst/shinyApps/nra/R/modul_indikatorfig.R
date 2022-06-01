@@ -11,7 +11,9 @@ indikatorfig_UI <- function(id){
       selectInput(
         inputId = ns("valgtVar"),
         label = "Velg variabel",
-        choices = c("Prosentvis reduksjon i lekkasjeepisoder >= 50%" = "Indikator1_lekk_red50",
+        choices = c("Andel operert etter standardisert metode" = "Indikator_standardisert",
+                    "Andel skjema levert innen 4mnd postoperativt" = "Indikator_aktualitet",
+                    "Prosentvis reduksjon i lekkasjeepisoder >= 50%" = "Indikator1_lekk_red50",
                     "Utført ultralyd" = "Ultralyd",
                     "Tidligere konservativ behandling" = "tidl_konservativ",
                     "Bekreftet sårinfeksjon innen 30 dager etter implantasjon" = "saarinfeksjon",
@@ -29,8 +31,8 @@ indikatorfig_UI <- function(id){
                     "Inkontinensskår <=9 1 år etter operasjon med SNM V2" = "nra_inkontinensscore_9_1aar_snm_v2",
                     "Inkontinensskår <=12 1 år etter operasjon med SNM" = "nra_inkontinensscore_12_1aar_snm",
                     "Inkontinensskår <=9 1 år etter sfinkterplastikk" = "nra_inkontinensscore_9_1aar_sfinkt",
-                    "Inkontinensskår <=12 1 år etter sfinkterplastikk" = "nra_inkontinensscore_12_1aar_sfinkt"
-        )
+                    "Inkontinensskår <=12 1 år etter sfinkterplastikk" = "nra_inkontinensscore_12_1aar_sfinkt",
+                    "Andel informert om ett års oppfølging" = "andel_inform_oppf")
       ),
       uiOutput(outputId = ns('tilAar')),
       selectInput(inputId = ns("bildeformat"), label = "Velg bildeformat",
@@ -71,7 +73,7 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
   output$Figur1 <- renderPlot({
     indikator <- req(indikatorData()$indikator)
     plotdata <- indikator[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
-    nra::nraFigIndikator_v2(plotdata, tittel = indikatorData()$tittel,
+    nra::nraFigIndikator_v4(plotdata, tittel = indikatorData()$tittel,
                             terskel = indikatorData()$terskel, maal = indikatorData()$maal,
                             minstekrav = indikatorData()$minstekrav,
                             maalretn = indikatorData()$maalRetn, xmax = indikatorData()$xmax,
@@ -87,7 +89,7 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
     content = function(file){
       indikator <- req(indikatorData()$indikator)
       plotdata <- indikator[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
-      nra::nraFigIndikator_v2(plotdata, tittel = indikatorData()$tittel,
+      nra::nraFigIndikator_v4(plotdata, tittel = indikatorData()$tittel,
                               terskel = indikatorData()$terskel, maal = indikatorData()$maal,
                               maalretn = indikatorData()$maalRetn, xmax = indikatorData()$xmax,
                               decreasing =indikatorData()$decreasing, outfile=file)

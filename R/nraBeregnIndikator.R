@@ -229,6 +229,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
 
   if (valgtVar == "stmarks_12_5aar_snm") {
     RegDataStr12 <- RegData[which(RegData$StMarksTotalScore>12 & RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
+    RegDataStr12 <- RegData[which(RegData$ForlopsType1Num %in% 1:2 & RegData$ForlopsType2Num %in% c(2, NA)), ]
     RegDataStr12 <- dplyr::bind_rows(RegDataStr12, RegData[RegData$KobletForlopsID %in% RegDataStr12$ForlopsID, ])
     RegDataStr12$var <- NA
     RegDataStr12$var[which(RegDataStr12$StMarksTotalScore<=12)] <- 1

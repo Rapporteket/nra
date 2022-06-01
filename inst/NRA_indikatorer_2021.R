@@ -51,7 +51,7 @@ for (p in 1:length(ind_aar)){
   TabellData <- TabellData[which(TabellData$year <= ind_aar[p]), ]
   Indikatorer <- dplyr::bind_rows(Indikatorer, TabellData)
   plotdata <- TabellData[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
-  outfile <- paste0(figfolder, variabler[p], ".pdf")
+  outfile <- paste0(figfolder, variabler[p], ".svg")
 
   nra::nraFigIndikator_v4(plotdata, tittel = indikatordata$tittel,
                           terskel = indikatordata$terskel, maal = indikatordata$maal,
