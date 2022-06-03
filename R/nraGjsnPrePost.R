@@ -21,8 +21,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
   RegData$Grvar <- RegData[, grvar]
   if (valgtShus != '') {RegData <- RegData[which(RegData$AvdRESH %in% valgtShus), ]}
 
-  if (valgtVar %in% c('StMarksTotalScore', 'GenQol', 'QolSexualitet', 'WexnerTotalScore',
-                      'InkontinensScore', 'EQ5DSkore', 'EQ5DHelsetilstand')) {
+  if (!(valgtVar %in% c('Urinlekkasje', 'Urinlekkasje_v2'))) {
     inkl_konf <- 1
   }
 
@@ -38,6 +37,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
   ## Fjerner registreringer som mangler valgt variabel
   RegData$Variabel <- RegData[, valgtVar]
+  RegDataAlt <- RegData
   RegData <- RegData[!is.na(RegData$Variabel), ]
   if (valgtVar %in% c('Urinlekkasje', 'Urinlekkasje_v2')) {
     RegData <- RegData[RegData$Variabel != 9, ]
@@ -185,6 +185,48 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       tittel2 <- 'før og etter (5 år) operasjon'
     }
 
+    if (sammenlign == 4) { # Kun 1-årsoppfølginger
+      RegData <- merge(RegDataAlt[RegDataAlt$ForlopsType1Num %in% 1:2, which(names(RegDataAlt)!="Variabel")],
+                   RegDataAlt[RegDataAlt$ForlopsType1Num %in% 3, c("KobletForlopsID", "Variabel")],
+                   by.x = "ForlopsID", by.y = "KobletForlopsID")
+      RegData <- RegData[!is.na(RegData$Variabel), ]
+      if (valgtVar %in% c('Urinlekkasje', 'Urinlekkasje_v2')) {
+        RegData <- RegData[RegData$Variabel != 9, ]
+        RegData$Variabel <- 100*RegData$Variabel}
+
+      if (valgtVar=='GenQol') {
+        RegData <- RegData[RegData$GenQol != 98, ]}
+
+      nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
+                             minald=minald, maxald=maxald, erMann=erMann,
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
+      RegData <- nraUtvalg$RegData
+      utvalgTxt <- nraUtvalg$utvalgTxt
+
+
+      RegData <- RegData[,c("Variabel", "Grvar", "ForlopsID")]
+      names(RegData)[names(RegData)=='Variabel'] <- 'VariabelPre'
+      if (valgtVar=='QolSexualitet') {
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre %in% c(98,99)])
+        RegData <- RegData[!(RegData$VariabelPre %in% c(98,99)), ]
+      }
+      nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
+                             datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
+      utvalgTxt <- nraUtvalg$utvalgTxt
+      Pre <- aggregate(RegData$VariabelPre, by=list(RegData$Grvar), mean, na.rm = TRUE)
+      PrePostSD <- aggregate(RegData[, c('VariabelPre')],
+                             by=list(RegData$Grvar), sd, na.rm = TRUE)
+      PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), sd(RegData[, c('VariabelPre')], na.rm=T))
+      PlotMatrise <- as.matrix(t(Pre[,-1]))
+      PlotMatrise <- cbind(PlotMatrise, mean(RegData[, c('VariabelPre')]))
+      Ngr <- table(as.character(RegData$Grvar))  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
+      Ngr <- c(Ngr, sum(Ngr))
+      tittel2 <- '1 år etter operasjon'
+      preog5 <- FALSE
+      sammenlign <- 0
+    }
+
     ############## Lag figur  ###############################
 
     grtxt <- c(names(Ngr)[1:(length(Ngr)-1)], 'Samlet')
@@ -199,20 +241,17 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                      'WexnerTotalScore' = paste0('Wexner ', tittel2, ', inkl. 95 % konf.int.'),
                      'InkontinensScore' = paste0('InkontinensScore ', tittel2, ', inkl. 95 % konf.int.'),
                      'EQ5DSkore' = paste0('EQ5D-Score ', tittel2, ', inkl. 95 % konf.int.'),
-                     'EQ5DHelsetilstand' = paste0('EQ5D-Helsetilstand ', tittel2, ', inkl. 95 % konf.int.')
+                     'EQ5DHelsetilstand' = paste0('EQ5D-Helsetilstand ', tittel2, ', inkl. 95 % konf.int.'),
+                     'ICIQ_sumscore' = paste0('ICIQ sumscore ', tittel2, ', inkl. 95 % konf.int.'),
+                     'BegrensSeksLivPlager' = paste0('Grad av seksuelle plager ', tittel2, ', inkl. 95 % konf.int.')
     )
 
-    ytekst <- switch(valgtVar,
-                     'StMarksTotalScore' = 'Gjennomsnittsscore',
-                     'GenQol' = 'Gjennomsnittsscore',
-                     'QolSexualitet' = 'Gjennomsnittsscore',
-                     'Urinlekkasje' = 'Andel i prosent',
-                     'Urinlekkasje_v2' = 'Andel i prosent',
-                     'WexnerTotalScore' = 'Gjennomsnittsscore',
-                     'InkontinensScore' = 'Gjennomsnittsscore',
-                     'EQ5DSkore' ='Gjennomsnittsscore',
-                     'EQ5DHelsetilstand' = 'Gjennomsnittsscore'
-    )
+    if (!(valgtVar %in% c("Urinlekkasje", "Urinlekkasje_v2"))) {
+      ytekst <- 'Andel i prosent'
+    } else {
+      ytekst <- 'Gjennomsnittsscore'
+    }
+
     cexgr<-0.9
     cexleg <- 0.9	#Størrelse på legendtekst
     retn<-'V'

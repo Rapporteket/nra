@@ -135,6 +135,30 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 
+
+  if (valgtVar == 'BegrensSeksLiv') {
+    retn <- 'V'
+    RegData$Variabel <- RegData$BegrensSeksLiv
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    N <- sum(RegData$Variabel == 5, na.rm = T)
+    tittel <- c("Begrenser du ditt seksualliv på grunn av mulige uhell/lekkasjer ",
+                paste0("i forhold til avføring/lukt, ikke aktuelt for ", N, " pasienter"))
+    gr <- 0:4
+    grtxt <- c("Aldri", "Sjelden", "Av og til", "Vanligvis", "Alltid")
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'ICIQ_hyppighet') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$ICIQ_hyppighet
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c("Hvor ofte lekker du urin")
+    gr <- c(0:5, 9)
+    grtxt <- c("Aldri", "Omtrent èn gang i uken \n eller sjeldnere", "2 - 3 ganger i uken",
+               "ca. 1 gang per dag", "Flere ganger per dag", "Hele tiden", "Ukjent")
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
   if (valgtVar == 'PasientAlder') {
     RegData$Variabel <- RegData[, valgtVar]
     RegData$Variabel <- as.numeric(RegData$Variabel)
@@ -354,6 +378,22 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     tittel <- 'Komplikasjoner ved sfinkterplastikk'
   }
 
+  if (valgtVar == 'lekker_urin_naar') {
+    retn <- 'H'
+    # RegData <- RegData[RegData$ICIQ_hyppighet != 0 & !is.na(RegData$ICIQ_hyppighet), ]
+    RegData <- RegData[RegData$ICIQ_hyppighet %in% 1:5, ]
+    N <- dim(RegData)[1]
+    AntVar <- colSums(RegData[, c("LekkerUrinAldri", "LekkerUrinFoerToalett", "LekkerUrinHoster",
+                                  "LekkerUrinSover", "LekkerUrinFysiskAktiv", "LekkerUrinEtterToalett",
+                                  "LekkerUrinIngenGrunn", "LekkerUrinHeleTiden", "LekkerUrinUkjent")], na.rm = T)
+    NVar<-rep(N, length(AntVar))
+    grtxt <- c("Aldri, jeg lekker ikke urin", "Lekker før jeg når toalettet",
+               "Lekker når jeg hoster eller nyser", "Lekker når jeg sover",
+               "Lekker når jeg er fysisk \n aktiv/trimmer",
+               "Lekker når jeg er ferdig med å late \n vannet og har tatt på meg klærne",
+               "Lekker uten noen opplagt grunn", "Lekker hele tiden", "Ukjent")
+    tittel <- 'Når lekker du urin'
+  }
 
 
   if (valgtVar == 'Symtomvarighet') {

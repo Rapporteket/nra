@@ -46,7 +46,12 @@ library(tidyverse)
 rm(list = ls())
 hentData <- F
 
-RegData <- nra::nraHentRegData()
+# RegData <- nra::nraHentRegData()
+# Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
+allevar <- nra::nraHentTabell("alleVarNum")
+foversikt <- nra::nraHentTabell("ForlopsOversikt")
+RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
+                 by = "ForlopsID")
 Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
 RegData <- nraPreprosess(RegData=RegData)
 
@@ -64,7 +69,7 @@ hentData <- F
 forlopstype1=99
 forlopstype2=99
 valgtShus <- '' #c('601225', '700116')
-utformat <- 'pdf'
+utformat <- 'svg'
 
 
 figstr <- 0.61
@@ -102,7 +107,12 @@ xtekst ='Andel %'
 til100 = F
 skriftStr=2.0
 pktStr=1.5
+onestage <- 99
+grvar='SenterKortNavn'
 figfolder <- "~/.ssh/nra/aarsrapp_2021/"
+valgtVar <- 'StMarksTotalScore'
+outfile <- ''
+
 if (!dir.exists(figfolder)) {
   dir.create(figfolder)
 }
@@ -848,6 +858,151 @@ if (utformat!='pdf') {
                  sammenlign=2, inkl_konf=0, valgtShus='')
 }
 
+
+outfile <- paste0(figfolder, "BegrensSeksLiv.pdf")
+aux <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, which(names(RegData)!="BegrensSeksLiv")],
+             RegData[RegData$ForlopsType1Num %in% 3, c("KobletForlopsID", "BegrensSeksLiv")],
+             by.x = "ForlopsID", by.y = "KobletForlopsID")
+nraFigAndeler(RegData=aux, valgtVar='BegrensSeksLiv', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=aux, valgtVar='BegrensSeksLiv', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
+
+outfile <- paste0(figfolder, "BegrensSeksLiv_sfinkt.pdf")
+nraFigAndeler(RegData=aux, valgtVar='BegrensSeksLiv', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=aux, valgtVar='BegrensSeksLiv', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+}
+
+outfile <- paste0(figfolder, "BegrensSeksLiv_snm.pdf")
+nraFigAndeler(RegData=aux, valgtVar='BegrensSeksLiv', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=aux, valgtVar='BegrensSeksLiv', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+}
+
+outfile <- paste0(figfolder, "ICIQ_hyppighet.pdf")
+aux <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, which(names(RegData)!="ICIQ_hyppighet")],
+             RegData[RegData$ForlopsType1Num %in% 3, c("KobletForlopsID", "ICIQ_hyppighet")],
+             by.x = "ForlopsID", by.y = "KobletForlopsID")
+nraFigAndeler(RegData=aux, valgtVar='ICIQ_hyppighet', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=aux, valgtVar='ICIQ_hyppighet', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
+
+outfile <- paste0(figfolder, "ICIQ_hyppighet_sfinkt.pdf")
+nraFigAndeler(RegData=aux, valgtVar='ICIQ_hyppighet', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=aux, valgtVar='ICIQ_hyppighet', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+}
+
+outfile <- paste0(figfolder, "ICIQ_hyppighet_snm.pdf")
+nraFigAndeler(RegData=aux, valgtVar='ICIQ_hyppighet', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=aux, valgtVar='ICIQ_hyppighet', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+}
+
+outfile <- paste0(figfolder, "lekker_urin_naar.pdf")
+aux <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, !(names(RegData) %in%
+                                                           c("LekkerUrinAldri",
+                                                             "LekkerUrinFoerToalett",
+                                                             "LekkerUrinHoster",
+                                                             "LekkerUrinSover",
+                                                             "LekkerUrinFysiskAktiv",
+                                                             "LekkerUrinEtterToalett",
+                                                             "LekkerUrinIngenGrunn",
+                                                             "LekkerUrinHeleTiden",
+                                                             "LekkerUrinUkjent"))],
+             RegData[RegData$ForlopsType1Num %in% 3, c("KobletForlopsID",
+                                                       "LekkerUrinAldri",
+                                                       "LekkerUrinFoerToalett",
+                                                       "LekkerUrinHoster",
+                                                       "LekkerUrinSover",
+                                                       "LekkerUrinFysiskAktiv",
+                                                       "LekkerUrinEtterToalett",
+                                                       "LekkerUrinIngenGrunn",
+                                                       "LekkerUrinHeleTiden",
+                                                       "LekkerUrinUkjent")],
+             by.x = "ForlopsID", by.y = "KobletForlopsID")
+nraFigAndeler(RegData=aux, valgtVar='lekker_urin_naar', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=aux, valgtVar='lekker_urin_naar', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+}
+
+outfile <- paste0(figfolder, "lekker_urin_naar_sfinkt.pdf")
+nraFigAndeler(RegData=aux, valgtVar='lekker_urin_naar', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=aux, valgtVar='lekker_urin_naar', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=1, forlopstype2=forlopstype2)
+}
+
+outfile <- paste0(figfolder, "lekker_urin_naar_snm.pdf")
+nraFigAndeler(RegData=aux, valgtVar='lekker_urin_naar', datoFra=datoFra, datoTil=datoTil,
+              minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+              reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+              valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraFigAndeler(RegData=aux, valgtVar='lekker_urin_naar', datoFra=datoFra, datoTil=datoTil,
+                minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
+                reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
+                valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
+}
+
 outfile <- paste0(figfolder, "Tilfredshet_snm.pdf")
 nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
@@ -959,7 +1114,7 @@ if (utformat!='pdf') {
 }
 
 datoFra='2013-01-01'
-datoTil=paste0(rap_aar-4, '-12-31')
+datoTil=paste0(rap_aar-5, '-12-31')
 
 outfile <- paste0(figfolder, "StMarksTotalScore_5aar_sfinkt.pdf")
 utdata <- nraGjsnPrePost(RegData, valgtVar='StMarksTotalScore', datoFra=datoFra, datoTil=datoTil,
@@ -1162,6 +1317,62 @@ if (utformat!='pdf') {
 % \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}GenQol_samlet.pdf}
 % \caption{Generell livskvalitet, samlet}
 % \end{figure}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}BegrensSeksLiv.pdf}
+\caption{Begrensning av seksualliv. Verdi på 1-årsoppfølging, filtrert på operasjonsdato.}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}BegrensSeksLiv_sfinkt.pdf}
+\caption{Begrensning av seksualliv, sfinkterplastikk. Verdi på 1-årsoppfølging, filtrert på operasjonsdato.}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}BegrensSeksLiv_snm.pdf}
+\caption{Begrensning av seksualliv, snm. Verdi på 1-årsoppfølging, filtrert på operasjonsdato.}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}ICIQ_hyppighet.pdf}
+\caption{ICIQ hyppighet. Verdi på 1-årsoppfølging, filtrert på operasjonsdato.}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}ICIQ_hyppighet_sfinkt.pdf}
+\caption{ICIQ hyppighet, sfinkterplastikk. Verdi på 1-årsoppfølging, filtrert på operasjonsdato.}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}ICIQ_hyppighet_snm.pdf}
+\caption{ICIQ hyppighet, snm. Verdi på 1-årsoppfølging, filtrert på operasjonsdato.}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}lekker_urin_naar.pdf}
+\caption{Lekker urin når. Blant de med verdi 1 til 5 på ICIQ hyppighet. Verdi på 1-årsoppfølging, filtrert på operasjonsdato.}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}lekker_urin_naar_sfinkt.pdf}
+\caption{Lekker urin når, sfinkterplastikk. Blant de med verdi 1 til 5 på ICIQ hyppighet. Verdi på 1-årsoppfølging, filtrert på operasjonsdato.}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}lekker_urin_naar_snm.pdf}
+\caption{Lekker urin når, snm. Blant de med verdi 1 til 5 på ICIQ hyppighet. Verdi på 1-årsoppfølging, filtrert på operasjonsdato.}
+\end{figure}
+
 
 \begin{figure}[ht]
 \centering
@@ -1451,13 +1662,13 @@ if (utformat!='pdf') {
 
 outfile <- paste0(figfolder, "snmDagbok_v2.pdf")
 nraSNMdagbok_v2(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-             outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-             erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+                erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
   nraSNMdagbok_v2(RegData, datoFra=datoFra, datoTil=datoTil, valgtShus=valgtShus,
-               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
-               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
+                  outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald, enhetsUtvalg=enhetsUtvalg,
+                  erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=forlopstype1, forlopstype2=forlopstype2)
 }
 
 outfile <- paste0(figfolder, "snmDagbokPst_pos.pdf")
@@ -1847,6 +2058,15 @@ ant_onestage <- RegData[which(RegData$Aar == rap_aar & RegData$ForlopsType1Num =
   summarise("Antall onestage" = sum(Onestage==1),
             "Antall SNM" =n())
 print(xtable::xtable(ant_onestage, align=c('l', 'l', rep('r', dim(ant_onestage)[2]-1)), caption = paste0('Antall operasjoner per sykehus utført med onestage i ', rap_aar)), include.rownames = F)
+
+aux <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, which(names(RegData)!="EQ5DHelsetilstand")],
+             RegData[RegData$ForlopsType1Num %in% 3, c("KobletForlopsID", "EQ5DHelsetilstand")],
+             by.x = "ForlopsID", by.y = "KobletForlopsID")
+aux <- aux[!is.na(aux$EQ5DHelsetilstand), ]
+
+tabell <- aux %>% filter(Aar == 2020) %>% group_by(SenterKortNavn) %>%
+  summarise(gj.sn.eq5d = mean(EQ5DHelsetilstand),
+            N = n())
 
 @
 

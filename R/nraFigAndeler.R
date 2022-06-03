@@ -113,7 +113,8 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     NRest <- 0
     AntRest <- 0
 
-    if (valgtVar %in% c('Etiologi','Etiologi_v2' , 'TidlBeh', 'TidlBeh_v2', 'TidlBeh_v3', 'KomplSfinkter')) {
+    if (valgtVar %in% c('Etiologi','Etiologi_v2' , 'TidlBeh', 'TidlBeh_v2',
+                        'TidlBeh_v3', 'KomplSfinkter', 'lekker_urin_naar')) {
       flerevar <- 1
     } else {
       flerevar <- 0

@@ -26,6 +26,7 @@ BrValg <- function(RegData) {
               'Komplikasjoner ved sfinkterplastikk'= 'KomplSfinkter',
               'SNM-dagbok (gml)'= 'SNMdagbok',
               'SNM-dagbok (ny)'= 'SNMdagbok_v2',
+              "Begrensning av seksualliv" = "BegrensSeksLiv",
               "PGIC Endring" = "PGICEndring",
               "PGIC Endring lekkasje" = "PGICEndringLekkasje",
               "EQ5D: Angst og depresjon" = "EQ5DAngst",

@@ -17,7 +17,7 @@ indikatorfig_UI <- function(id){
                     "Utført ultralyd" = "Ultralyd",
                     "Tidligere konservativ behandling" = "tidl_konservativ",
                     "Bekreftet sårinfeksjon innen 30 dager etter implantasjon" = "saarinfeksjon",
-                    "St. Mark’s Inkontinensskår <=9 1 år etter operasjon med SNM" = "stmarks_9_1aar_snm",
+                    "St. Mark’s Inkontinensskår \u2264 9 1 år etter operasjon med SNM" = "stmarks_9_1aar_snm",
                     "St. Mark’s Inkontinensskår <=9 5 år etter operasjon med SNM" = "stmarks_9_5aar_snm",
                     "St. Mark’s Inkontinensskår <=12 1 år etter operasjon med SNM" = "stmarks_12_1aar_snm",
                     "St. Mark’s Inkontinensskår <=12 5 år etter operasjon med SNM" = "stmarks_12_5aar_snm",
