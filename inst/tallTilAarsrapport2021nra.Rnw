@@ -945,7 +945,8 @@ if (utformat!='pdf') {
 
 outfile <- paste0(figfolder, "lekker_urin_naar.pdf")
 aux <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, !(names(RegData) %in%
-                                                           c("LekkerUrinAldri",
+                                                           c("ICIQ_hyppighet",
+                                                             "LekkerUrinAldri",
                                                              "LekkerUrinFoerToalett",
                                                              "LekkerUrinHoster",
                                                              "LekkerUrinSover",
@@ -955,6 +956,7 @@ aux <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, !(names(RegData) %in%
                                                              "LekkerUrinHeleTiden",
                                                              "LekkerUrinUkjent"))],
              RegData[RegData$ForlopsType1Num %in% 3, c("KobletForlopsID",
+                                                       "ICIQ_hyppighet",
                                                        "LekkerUrinAldri",
                                                        "LekkerUrinFoerToalett",
                                                        "LekkerUrinHoster",

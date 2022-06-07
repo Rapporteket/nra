@@ -37,28 +37,62 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
   ## Fjerner registreringer som mangler valgt variabel
   RegData$Variabel <- RegData[, valgtVar]
-  RegDataAlt <- RegData
-  RegData <- RegData[!is.na(RegData$Variabel), ]
-  if (valgtVar %in% c('Urinlekkasje', 'Urinlekkasje_v2')) {
-    RegData <- RegData[RegData$Variabel != 9, ]
-    RegData$Variabel <- 100*RegData$Variabel}
 
-  if (valgtVar=='GenQol') {
-    RegData <- RegData[RegData$GenQol != 98, ]}
+  if (sammenlign == 4) {
+    RegData <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, which(names(RegData)!="Variabel")],
+                     RegData[RegData$ForlopsType1Num %in% 3, c("KobletForlopsID", "Variabel")],
+                     by.x = "ForlopsID", by.y = "KobletForlopsID")
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    if (valgtVar %in% c('Urinlekkasje', 'Urinlekkasje_v2')) {
+      RegData <- RegData[RegData$Variabel != 9, ]
+      RegData$Variabel <- 100*RegData$Variabel}
+    if (valgtVar=='GenQol') {
+      RegData <- RegData[RegData$GenQol != 98, ]}
+    nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
+                           minald=minald, maxald=maxald, erMann=erMann,
+                           forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
+    RegData <- nraUtvalg$RegData
+    utvalgTxt <- nraUtvalg$utvalgTxt
+  }
+  if (sammenlign == 5) {
+    RegData <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, which(names(RegData)!="Variabel")],
+                     RegData[RegData$ForlopsType1Num %in% 4, c("KobletForlopsID", "Variabel")],
+                     by.x = "ForlopsID", by.y = "KobletForlopsID")
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    if (valgtVar %in% c('Urinlekkasje', 'Urinlekkasje_v2')) {
+      RegData <- RegData[RegData$Variabel != 9, ]
+      RegData$Variabel <- 100*RegData$Variabel}
+    if (valgtVar=='GenQol') {
+      RegData <- RegData[RegData$GenQol != 98, ]}
+    nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
+                           minald=minald, maxald=maxald, erMann=erMann,
+                           forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
+    RegData <- nraUtvalg$RegData
+    utvalgTxt <- nraUtvalg$utvalgTxt
+  }
 
-  ## Skill ut oppfølginger
-  Oppfolging1 <- RegData[RegData$ForlopsType1Num == 3, ]
-  Oppfolging2 <- RegData[RegData$ForlopsType1Num == 4, ]
 
-  RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
+  if (sammenlign %in% 0:3) {
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    if (valgtVar %in% c('Urinlekkasje', 'Urinlekkasje_v2')) {
+      RegData <- RegData[RegData$Variabel != 9, ]
+      RegData$Variabel <- 100*RegData$Variabel}
+    if (valgtVar=='GenQol') {
+      RegData <- RegData[RegData$GenQol != 98, ]}
+    ## Skill ut oppfølginger
+    Oppfolging1 <- RegData[RegData$ForlopsType1Num == 3, ]
+    Oppfolging2 <- RegData[RegData$ForlopsType1Num == 4, ]
 
-  nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
-                         minald=minald, maxald=maxald, erMann=erMann,
-                         forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
-  RegData <- nraUtvalg$RegData
-  utvalgTxt <- nraUtvalg$utvalgTxt
+    RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
 
-  if (dim(RegData)[1]>4) {
+    nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
+                           minald=minald, maxald=maxald, erMann=erMann,
+                           forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
+    RegData <- nraUtvalg$RegData
+    utvalgTxt <- nraUtvalg$utvalgTxt
+  }
+
+  if (dim(RegData)[1] > 4){
     if (sammenlign == 0) {
       RegData <- RegData[,c("Variabel", "Grvar", "ForlopsID")]
       names(RegData)[names(RegData)=='Variabel'] <- 'VariabelPre'
@@ -72,7 +106,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       utvalgTxt <- nraUtvalg$utvalgTxt
       Pre <- aggregate(RegData$VariabelPre, by=list(RegData$Grvar), mean, na.rm = TRUE)
       PrePostSD <- aggregate(RegData[, c('VariabelPre')],
-                               by=list(RegData$Grvar), sd, na.rm = TRUE)
+                             by=list(RegData$Grvar), sd, na.rm = TRUE)
       PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), sd(RegData[, c('VariabelPre')], na.rm=T))
       PlotMatrise <- as.matrix(t(Pre[,-1]))
       PlotMatrise <- cbind(PlotMatrise, mean(RegData[, c('VariabelPre')]))
@@ -101,7 +135,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       PrePost <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
                            by=list(RegData$Grvar), mean, na.rm = TRUE)
       PrePostSD <- aggregate(RegData[, c('VariabelPre', "VariabelPost1")],
-                            by=list(RegData$Grvar), sd, na.rm = TRUE)
+                             by=list(RegData$Grvar), sd, na.rm = TRUE)
       PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), apply(RegData[, c('VariabelPre', "VariabelPost1")], 2, sd, na.rm=T))
       PlotMatrise <- as.matrix(t(PrePost[,-1]))
       PlotMatrise <- cbind(PlotMatrise, colMeans(RegData[, c('VariabelPre', "VariabelPost1")]))
@@ -186,23 +220,6 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     }
 
     if (sammenlign == 4) { # Kun 1-årsoppfølginger
-      RegData <- merge(RegDataAlt[RegDataAlt$ForlopsType1Num %in% 1:2, which(names(RegDataAlt)!="Variabel")],
-                   RegDataAlt[RegDataAlt$ForlopsType1Num %in% 3, c("KobletForlopsID", "Variabel")],
-                   by.x = "ForlopsID", by.y = "KobletForlopsID")
-      RegData <- RegData[!is.na(RegData$Variabel), ]
-      if (valgtVar %in% c('Urinlekkasje', 'Urinlekkasje_v2')) {
-        RegData <- RegData[RegData$Variabel != 9, ]
-        RegData$Variabel <- 100*RegData$Variabel}
-
-      if (valgtVar=='GenQol') {
-        RegData <- RegData[RegData$GenQol != 98, ]}
-
-      nraUtvalg <- nraUtvalg(RegData=RegData, datoFra=datoFra, datoTil=datoTil,
-                             minald=minald, maxald=maxald, erMann=erMann,
-                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
-      RegData <- nraUtvalg$RegData
-      utvalgTxt <- nraUtvalg$utvalgTxt
-
 
       RegData <- RegData[,c("Variabel", "Grvar", "ForlopsID")]
       names(RegData)[names(RegData)=='Variabel'] <- 'VariabelPre'
@@ -223,6 +240,31 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       Ngr <- table(as.character(RegData$Grvar))  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
       Ngr <- c(Ngr, sum(Ngr))
       tittel2 <- '1 år etter operasjon'
+      preog5 <- FALSE
+      sammenlign <- 0
+    }
+
+    if (sammenlign == 5) { # Kun 5-årsoppfølginger
+
+      RegData <- RegData[,c("Variabel", "Grvar", "ForlopsID")]
+      names(RegData)[names(RegData)=='Variabel'] <- 'VariabelPre'
+      if (valgtVar=='QolSexualitet') {
+        Nuaktuelt <- length(RegData$VariabelPre[RegData$VariabelPre %in% c(98,99)])
+        RegData <- RegData[!(RegData$VariabelPre %in% c(98,99)), ]
+      }
+      nraUtvalg <- nraUtvalg(RegData=nraUtvalg$RegData[nraUtvalg$RegData$ForlopsID %in% RegData$ForlopsID, ], # I tilfelle utvalget er endret
+                             datoFra=datoFra, datoTil=datoTil, minald=minald, maxald=maxald, erMann=erMann,   # ved fjerning av registreringer
+                             forlopstype1=forlopstype1, forlopstype2=forlopstype2, valgtShus=valgtShus, onestage=onestage)
+      utvalgTxt <- nraUtvalg$utvalgTxt
+      Pre <- aggregate(RegData$VariabelPre, by=list(RegData$Grvar), mean, na.rm = TRUE)
+      PrePostSD <- aggregate(RegData[, c('VariabelPre')],
+                             by=list(RegData$Grvar), sd, na.rm = TRUE)
+      PrePostSD <- cbind(as.matrix(t(PrePostSD[,-1])), sd(RegData[, c('VariabelPre')], na.rm=T))
+      PlotMatrise <- as.matrix(t(Pre[,-1]))
+      PlotMatrise <- cbind(PlotMatrise, mean(RegData[, c('VariabelPre')]))
+      Ngr <- table(as.character(RegData$Grvar))  ######## Må forsikre at rekkefølgen av sykehus blir lik som i PlotMatrise
+      Ngr <- c(Ngr, sum(Ngr))
+      tittel2 <- '5 år etter operasjon'
       preog5 <- FALSE
       sammenlign <- 0
     }
@@ -296,8 +338,8 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
       Ngr <- Ngr[ind_med]
       soyleTxt <- soyleTxt[c(2*ind_med[1]-1, 2*ind_med[1], 2*ind_med[2]-1, 2*ind_med[2])]
     }
-soylefarger <- matrix(farger[1:(sammenlign+1)], nrow = sammenlign+1, ncol = length(grtxt))
-soylefarger[, which(grtxt %in% graa)] <- c('gray40', 'gray70', 'gray80')[1:(sammenlign+1)]
+    soylefarger <- matrix(farger[1:(sammenlign+1)], nrow = sammenlign+1, ncol = length(grtxt))
+    soylefarger[, which(grtxt %in% graa)] <- c('gray40', 'gray70', 'gray80')[1:(sammenlign+1)]
 
     pos <- barplot(PlotMatrise, beside=TRUE, las=txtretn, ylab=ytekst,
                    col=soylefarger, border='white', ylim=c(0, ymax))

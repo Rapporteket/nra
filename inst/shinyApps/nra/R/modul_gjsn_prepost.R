@@ -28,7 +28,7 @@ gjsn_prepost_UI <- function(id){
       selectInput(inputId = ns("sammenlign"), label = "Sammenlign med oppfølging", choices =
                     c('Kun pre'=0, 'Pre og 1-årsoppfølging'=1,
                       'Pre 1- og 5-årsoppfølging'=2, 'Pre og 5-årsoppfølging'=3,
-                      'Kun 1-årsoppfølging'=4)),
+                      'Kun 1-årsoppfølging'=4, 'Kun 5-årsoppfølging'=5)),
       sliderInput(inputId=ns("alder"), label = "Alder", min = 0,
                   max = 130, value = c(0, 130)),
       selectInput(inputId = ns("erMann"), label = "Kjønn",
