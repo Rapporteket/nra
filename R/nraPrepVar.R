@@ -18,6 +18,20 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
 
   RegData$Variabel <- NA
 
+
+  if (valgtVar == "tidligereKonservativ") {
+    RegData <- RegData[RegData$ForlopsType1Num %in% c(1,2) & RegData$ForlopsType2Num %in% c(1,2,5, NA), ]
+    RegData$Variabel <- RegData$Konservativ_v2
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    grtxt <- c('Nei', 'Ja')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=0:1, labels = grtxt)
+    retn <- 'V'
+    tittel <- c("Andel pasienter med tidligere", "konservativ behandling")
+    VarTxt <- "pasienter med tidligere konservativ behandling"
+  }
+
+
+
   if (valgtVar == 'EQ5DAngst') {
     retn <- 'H'
     RegData$Variabel <- RegData[, valgtVar]

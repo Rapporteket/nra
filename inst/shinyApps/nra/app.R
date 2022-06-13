@@ -34,6 +34,7 @@ source(system.file("shinyApps/nra/R/modul_gjsn_prepost.R", package = "nra"), enc
 source(system.file("shinyApps/nra/R/modul_datadump.R", package = "nra"), encoding = 'UTF-8')
 source(system.file("shinyApps/nra/R/modul_admtab.R", package = "nra"), encoding = 'UTF-8')
 source(system.file("shinyApps/nra/R/modul_indikatorfig.R", package = "nra"), encoding = 'UTF-8')
+source(system.file("shinyApps/nra/R/modul_tidsandeler.R", package = "nra"), encoding = 'UTF-8')
 
 AllData <- lastshinydata()
 RegData <- AllData$RegData
@@ -60,6 +61,9 @@ ui <- tagList(
     ),
     tabPanel("Fordelingsfigurer",
              fordelingsfig_UI(id = "fordelingsfig_id", BrValg = BrValg)
+    ),
+    tabPanel("Tidsutvikling andeler",
+             andeler_tid_ui(id = "andeler_tid_id", BrValg = BrValg)
     ),
     tabPanel("Gjennomsnitt/andeler før og etter operasjon",
              gjsn_prepost_UI(id = "gjsn_prepost_id")
@@ -134,6 +138,7 @@ server <- function(input, output, session) {
 
   # callModule(startside, "startside_id")
   callModule(fordelingsfig, "fordelingsfig_id", reshID = reshID, RegData = RegData, hvd_session = session)
+  callModule(andeler_tid, "andeler_tid_id", reshID = reshID, RegData = RegData, hvd_session = session)
   callModule(gjsn_prepost, "gjsn_prepost_id", reshID = reshID, RegData = RegData, hvd_session = session)
   callModule(indikatorfig, "indikator_id", RegData = RegData, hvd_session = session)
   callModule(datadump, "datadump_id", reshID = reshID, userRole = userRole, hvd_session = session)

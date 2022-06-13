@@ -2,6 +2,45 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
+######## Utlevering for dekningsgradsanalyse NPR 13.06.2022 #################################
+allevar <- nra::nraHentTabell("alleVarNum")
+foversikt <- nra::nraHentTabell("ForlopsOversikt")
+RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
+                 by = "ForlopsID")
+RegData <- nraPreprosess(RegData=RegData)
+
+dg_tall <- RegData[RegData$ForlopsType1Num %in% 1:2, c("PatientID", "AvdRESH", "SenterKortNavn", "ForlopsType1", "ForlopsType2",
+                                                       "ProsedyreDato2A", "ProsedyreDato2AT2", "OperasjonsDato2B")]
+
+dg_tall <- dg_tall[as.numeric(format(as.Date(dg_tall$ProsedyreDato2A, format = "%Y-%m-%d"), "%Y")) %in% 2020:2021 |
+                     as.numeric(format(as.Date(dg_tall$ProsedyreDato2AT2, format = "%Y-%m-%d"), "%Y")) %in% 2020:2021 |
+                     as.numeric(format(as.Date(dg_tall$OperasjonsDato2B, format = "%Y-%m-%d"), "%Y")) %in% 2020:2021, ]
+
+dg_tall <- dg_tall[dg_tall$ForlopsType2 != "Eksplantasjon" | is.na(dg_tall$ForlopsType2), ]
+dg_tall$prosedyre <- NA
+dg_tall$prosedyre[dg_tall$ForlopsType1 == "Sfinkterplastikk"] <- "JHC10"
+dg_tall$prosedyre[dg_tall$ForlopsType2 %in% c("Test positiv", "Revisjon")] <- "ABD60/ABD65/JHGX00"
+dg_tall$prosedyre[dg_tall$ForlopsType2 %in% c("Test negativ", "Test usikker")] <- "ABD60/JHGX00"
+
+
+write.csv2(dg_tall, "~/.ssh/nra/aktivitetsdata_nra.csv", row.names = F, fileEncoding = "Latin1", na = "")
+
+
+kobl <- read.table("~/.ssh/nra/Norsk_Register_for_Analinkontinens_koblingstabell_datadump_13.06.2022.csv",
+                   sep = ";", fileEncoding = "UTF-8", stringsAsFactors = F,
+                   header = T, colClasses = 'character')
+
+
+kobl <- kobl[kobl$PID %in% dg_tall$PatientID, ]
+write.csv2(kobl, "~/.ssh/nra/koblingsfil_nra.csv", row.names = F, fileEncoding = "Latin1", na = "")
+
+
+
+
+
+
+
+
 ####### Figur til Mona Rydningen 02.12.2020 #########################################
 RegData <- read.table('I:/nra/alleVarNum2020-12-02 12-16-58.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',

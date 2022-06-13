@@ -22,6 +22,8 @@ nraPreprosess <- function(RegData)
                              pmax(GjennomfortStandardisert, GjennomfortStandardisertT2, na.rm = T))
   RegData$Aar <- as.numeric(format(RegData$HovedDato, format="%Y"))
   RegData$Mnd <- as.numeric(format(RegData$HovedDato, format="%m"))
+  RegData$Kvartal <- floor((RegData$Mnd - 1)/3)+1
+  RegData$Halvaar <- floor((RegData$Mnd - 1)/6)+1
   RegData$SenterKortNavn <- trimws(RegData$SenterKortNavn)
   RegData$SenterKortNavn[RegData$SenterKortNavn=="Helse Ber"] <- "Haukeland"
   RegData$AvdRESH[which(RegData$AvdRESH==601233)] <- 601225
