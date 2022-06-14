@@ -216,7 +216,7 @@ nraFigAndelTid  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='20
            sub='(Tall ved punktene angir antall operasjoner)', cex.sub=cexgr)
 
       axis(side=1, at = xskala, labels = Tidtxt, cex.axis=0.9)
-      title(tittel, line=1, font.main=1)
+      title(main=tittel, line=1, cex=1.2)
       text(xskala, AndelHoved, pos=3, NTidHoved, cex=0.9, col=fargeHoved)#pos=1,
       lines(range(xskala),rep(AndelHovedGjsn,2), col=fargeHoved, lwd=2, lty=2)
       mtext(sprintf("%.1f", AndelHovedGjsn), side=2, at = AndelHovedGjsn,las=1, cex=0.9, adj=0, col=fargeRest, line=2)
