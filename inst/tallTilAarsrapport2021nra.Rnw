@@ -2072,6 +2072,33 @@ tabell <- aux %>% filter(Aar == 2020) %>% group_by(SenterKortNavn) %>%
 
 @
 
+<<'Utvikling over tid', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
+
+aux <- RegData %>% dplyr::filter(PostopKomplikasjoner==1) %>%
+  dplyr::group_by(Aar) %>%
+  dplyr::summarise(
+    Bloedning = sum(Bloedning),
+    Saardehisens = sum(Saardehisens),
+    Saarinfeksjon = sum(Saarinfeksjon),
+    N = n()
+  )
+
+RegData$Bloedning
+RegData$Saardehisens
+RegData$Saarinfeksjon
+
+table(RegData$Komplikasjon, useNA = 'ifany')
+
+
+
+
+
+
+
+
+@
+
+
 
 \end{document}
 
