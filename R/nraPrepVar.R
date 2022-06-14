@@ -20,17 +20,36 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
 
 
   if (valgtVar == "tidligereKonservativ") {
-    RegData <- RegData[RegData$ForlopsType1Num %in% c(1,2) & RegData$ForlopsType2Num %in% c(1,2,5, NA), ]
+    # RegData <- RegData[RegData$ForlopsType1Num %in% c(1,2) & RegData$ForlopsType2Num %in% c(1,2,5, NA), ]
     RegData$Variabel <- RegData$Konservativ_v2
     RegData <- RegData[!is.na(RegData$Variabel), ]
     grtxt <- c('Nei', 'Ja')
     RegData$VariabelGr <- factor(RegData$Variabel, levels=0:1, labels = grtxt)
     retn <- 'V'
-    tittel <- c("Andel pasienter med tidligere", "konservativ behandling")
-    VarTxt <- "pasienter med tidligere konservativ behandling"
+    tittel <- c("Andel forløp med tidligere", "konservativ behandling")
+    VarTxt <- "forløp med tidligere konservativ behandling"
   }
 
+  if (valgtVar == "Ultralyd_utfort") {
+    RegData$Variabel <- RegData$Ultralyd
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    RegData$Variabel[RegData$Variabel %in% 1:2] <- 1
+    grtxt <- c('Nei', 'Ja')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=0:1, labels = grtxt)
+    retn <- 'V'
+    tittel <- c("Utført ultralyd")
+    VarTxt <- "forløp med utført ultralyd"
+  }
 
+  if (valgtVar == "Indikator1_lekk_red50") {
+    RegData$Variabel <- RegData[ , valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    grtxt <- c('Nei', 'Ja')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=0:1, labels = grtxt)
+    retn <- 'V'
+    tittel <- c("Prosentvis reduksjon", "i lekkasjeepisoder >= 50%")
+    VarTxt <- "forløp med prosentvis reduksjon i lekkasjeepisoder >= 50%"
+  }
 
   if (valgtVar == 'EQ5DAngst') {
     retn <- 'H'

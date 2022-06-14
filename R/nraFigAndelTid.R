@@ -109,7 +109,7 @@ nraFigAndelTid  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='20
 
   FigTypUt <- rapFigurer::figtype(outfile=outfile, fargepalett=nraUtvalg$fargepalett)
   farger <- FigTypUt$farger
-  tittel <-  c(tittel, shtxt)
+  # tittel <-  c(tittel, shtxt)
 
   #----------FIGUR------------------------------
   #Hvis for få observasjoner..
@@ -190,7 +190,7 @@ nraFigAndelTid  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='20
       #       arrows(x0=xskala, y0=AndelHoved+h, x1=xskala, y1=replace(Konf[2, ], ind, AndelHoved[ind]+h),
       #              length=0.08, code=2, angle=90, col=fargeHovedRes, lwd=1.5)
 
-      title(main=tittel, font.main=1, line=1)
+      title(main=tittel, line=1, cex=1.2)
       mtext(utvalgTxt, side=3, las=1, cex=0.9, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
 
       # par('fig'=c(0, 1, 0, 1))
