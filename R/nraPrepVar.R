@@ -18,6 +18,23 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
 
   RegData$Variabel <- NA
 
+  if (valgtVar == "saarinfeksjon_snm") {
+    RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ] # Kun SNM
+    RegData <- RegData[RegData$ForlopsType2Num %in% c(1,2,5,3), ] # Kun test positiv, test usikker, test negativ
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
+    RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==1 | RegData$KomplikasjonT2==1))] <- 1
+    RegData$Variabel[which(RegData$Variabel==98 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
+    RegData$Variabel[which(RegData$Variabel==98 & (RegData$Komplikasjon==1 | RegData$KomplikasjonT2==1))] <- 1
+    RegData$Variabel <- as.numeric(RegData$Variabel == 2)
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    grtxt <- c('Nei', 'Ja')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=0:1, labels = grtxt)
+    retn <- 'V'
+    tittel <- c("Andel bekreftet sårinfeksjon innen", "30 dager etter implantasjon")
+    VarTxt <- "bekreftet sårinfeksjon innen 30 dager etter implantasjon"
+  }
 
   if (valgtVar == "tidligereKonservativ") {
     # RegData <- RegData[RegData$ForlopsType1Num %in% c(1,2) & RegData$ForlopsType2Num %in% c(1,2,5, NA), ]

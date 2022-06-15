@@ -2074,21 +2074,54 @@ tabell <- aux %>% filter(Aar == 2020) %>% group_by(SenterKortNavn) %>%
 
 <<'Utvikling over tid', include=FALSE, echo=FALSE, eval=T, cache=FALSE>>=
 
-aux <- RegData %>% dplyr::filter(PostopKomplikasjoner==1) %>%
+aux <- RegData %>% dplyr::filter(PostopKomplikasjoner %in% 1) %>%
   dplyr::group_by(Aar) %>%
   dplyr::summarise(
-    Bloedning = sum(Bloedning),
-    Saardehisens = sum(Saardehisens),
-    Saarinfeksjon = sum(Saarinfeksjon),
-    N = n()
+    Bloedning = sum(Bloedning, na.rm = TRUE),
+    Saardehisens = sum(Saardehisens, na.rm = TRUE),
+    Saarinfeksjon = sum(Saarinfeksjon, na.rm = TRUE),
+    N = n(),
+    Bloedning_pst = Bloedning/N*100,
+    Saardehisens_pst = Saardehisens/N*100,
+    Saarinfeksjon_pst = Saarinfeksjon/N*100
   )
 
-RegData$Bloedning
-RegData$Saardehisens
-RegData$Saarinfeksjon
+rapFigurer::figtype(outfile = "~/.ssh/nra/komplikasjonstype_fordeling.svg")
 
-table(RegData$Komplikasjon, useNA = 'ifany')
+plot(aux$Aar, aux$Saarinfeksjon_pst, type='l', col='red', frame.plot = FALSE,
+     xlab="Operasjonsår", ylab="Andel (%)", main = "Type komplikasjoner", lwd=1.8)
+lines(aux$Aar, aux$Bloedning_pst, col='green', lwd=1.8)
+lines(aux$Aar, aux$Saardehisens_pst, col='blue', lwd=1.8)
+legend('topleft', c("Sårinfeksjon", "Blødning som krever behandling",
+                    "Sårdehisens løsning av > 4 suturer"), lty = 1,
+       col=c("red", "green", "blue"), bty='n')
 
+dev.off()
+
+
+aux <- RegData %>% dplyr::filter(PostopKomplikasjoner %in% 0:1) %>%
+  dplyr::group_by(Aar) %>%
+  dplyr::summarise(
+    Bloedning = sum(Bloedning, na.rm = TRUE),
+    Saardehisens = sum(Saardehisens, na.rm = TRUE),
+    Saarinfeksjon = sum(Saarinfeksjon, na.rm = TRUE),
+    N = n(),
+    Bloedning_pst = Bloedning/N*100,
+    Saardehisens_pst = Saardehisens/N*100,
+    Saarinfeksjon_pst = Saarinfeksjon/N*100
+  )
+
+rapFigurer::figtype(outfile = "~/.ssh/nra/andel_komplikasjon_type.svg")
+
+plot(aux$Aar, aux$Saarinfeksjon_pst, type='l', col='red', frame.plot = FALSE,
+     xlab="Operasjonsår", ylab="Andel (%)", main = "Andel komplikasjoner etter sfinkterplastikk", lwd=1.8)
+lines(aux$Aar, aux$Bloedning_pst, col='green', lwd=1.8)
+lines(aux$Aar, aux$Saardehisens_pst, col='blue', lwd=1.8)
+legend('topright', c("Sårinfeksjon", "Blødning som krever behandling",
+                    "Sårdehisens løsning av > 4 suturer"), lty = 1,
+       col=c("red", "green", "blue"), bty='n')
+
+dev.off()
 
 
 
