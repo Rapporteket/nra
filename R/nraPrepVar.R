@@ -263,6 +263,18 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 
+  if (valgtVar == 'KomplikasjonT2_ny') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$KomplikasjonT2
+    RegData <- RegData[RegData$HovedDato > "2020-11-15", ]
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- 'Komplikasjoner SNM implantasjon innen 30 dager'
+    gr <- c(0,2,3,98)
+    grtxt <- c('Ingen', 'Sårinfeksjon bekreftet', 'Hematom som krever intervensjon', 'Ukjent')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
   if (valgtVar == 'KomplSNMtot') {
     retn <- 'H'
     RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)

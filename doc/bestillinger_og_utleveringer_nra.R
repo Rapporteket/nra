@@ -2,6 +2,58 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
+#### Forespørsel Tone sårruptur, 05.12.2022 ################################
+
+RegData <- read.table('C:/GIT/data/nra/alleVarNum2022-12-05 14-02-46.txt', header=TRUE,
+                      sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+
+# RegData[, c("ForlopsType1Num", "ForlopsType2Num", "Saarinfeksjon", "HovedDato")]
+
+RegData <- RegData %>% dplyr::filter(ForlopsType2Num == 2) %>%
+  dplyr::mutate(HovedDato <- as.Date(HovedDato)) %>%
+  dplyr::filter(HovedDato >= "2013-01-01")
+
+RegData$datogruppe <- 0
+RegData$datogruppe[RegData$HovedDato >= "2020-01-01"] <- 1
+RegData$datogruppe <- factor(RegData$datogruppe, levels = 0:1,
+                             labels = c("2013-2019", "2020-"))
+RegData$avdeling <- "Resten av landet"
+RegData$avdeling[RegData$AvdRESH == 601225] <- "UNN Tromso"
+
+variant1 <- RegData %>% dplyr::group_by(datogruppe, avdeling) %>%
+  dplyr::summarise(Saarinfeksjon = sum(KomplikasjonT2==2, na.rm = T),
+                   N = dplyr::n()) %>%
+  janitor::adorn_totals()
+tmp <- RegData %>% dplyr::group_by(datogruppe) %>%
+  dplyr::summarise(Saarinfeksjon = sum(KomplikasjonT2==2, na.rm = T),
+                   N = dplyr::n()) %>%
+  mutate(avdeling = "Hele landet")
+variant1 <- dplyr::bind_rows(variant1, tmp) %>%
+  mutate("Andel (%)" = Saarinfeksjon/N*100)
+variant1 <- variant1[c(2,1,6,4,3,7,5), ]
+
+RegData$datogruppe <- 0
+RegData$datogruppe[RegData$HovedDato >= "2019-01-01"] <- 1
+RegData$datogruppe <- factor(RegData$datogruppe, levels = 0:1,
+                             labels = c("2013-2018", "2019-"))
+
+variant2 <- RegData %>% dplyr::group_by(datogruppe, avdeling) %>%
+  dplyr::summarise(Saarinfeksjon = sum(KomplikasjonT2==2, na.rm = T),
+                   N = dplyr::n()) %>%
+  janitor::adorn_totals()
+tmp <- RegData %>% dplyr::group_by(datogruppe) %>%
+  dplyr::summarise(Saarinfeksjon = sum(KomplikasjonT2==2, na.rm = T),
+                   N = dplyr::n()) %>%
+  mutate(avdeling = "Hele landet")
+variant2 <- dplyr::bind_rows(variant2, tmp) %>%
+  mutate("Andel (%)" = Saarinfeksjon/N*100)
+variant2 <- variant2[c(2,1,6,4,3,7,5), ]
+
+write.csv2(variant1, "C:/GIT/data/nra/variant1.csv", row.names = F,
+           fileEncoding = "Latin1")
+write.csv2(variant2, "C:/GIT/data/nra/variant2.csv", row.names = F,
+           fileEncoding = "Latin1")
+
 ###### Registreringer med både St. Marks og Wexner #########################################
 RegData <- nra::nraHentRegData()
 RegData <- nra::nraPreprosess(RegData=RegData)
@@ -35,7 +87,8 @@ utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)
 write.csv2(utlevering, "/home/rstudio/.ssh/utlevering_nra_2021_11_22.csv", row.names = F, fileEncoding = "Latin1")
 
 ### Stid Norderval
-RegData <- read.table('I:/nra/alleVarNum2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData <- read.table('I:/nra/alleVarNum2021-06-25 14-16-02.txt', header=TRUE,
+                      sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 # ForlopData <- read.table('I:/nra/ForlopsOversikt2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 RegData_sfinkt <- RegData[RegData$ForlopsType1Num == 1, ]
 RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_sfinkt$ForlopsID, ]
