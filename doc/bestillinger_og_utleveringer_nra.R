@@ -54,6 +54,57 @@ write.csv2(variant1, "C:/GIT/data/nra/variant1.csv", row.names = F,
 write.csv2(variant2, "C:/GIT/data/nra/variant2.csv", row.names = F,
            fileEncoding = "Latin1")
 
+
+RegData <- read.table('C:/GIT/data/nra/alleVarNum2022-12-05 14-02-46.txt', header=TRUE,
+                      sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+
+RegData$Onestage[is.na(RegData$Onestage)] <- 0
+
+RegData <- RegData %>% dplyr::filter(ForlopsType2Num == 2) %>%
+  dplyr::mutate(HovedDato <- as.Date(HovedDato)) %>%
+  dplyr::filter(HovedDato >= "2013-01-01") %>%
+  dplyr::mutate(Onestage = factor(Onestage, levels = 0:1, labels = c("Nei", "Ja")))
+
+RegData$datogruppe <- 0
+RegData$datogruppe[RegData$HovedDato >= "2020-01-01"] <- 1
+RegData$datogruppe <- factor(RegData$datogruppe, levels = 0:1,
+                             labels = c("2013-2019", "2020-"))
+
+variant1 <- RegData %>% dplyr::group_by(datogruppe, Onestage) %>%
+  dplyr::summarise(Saarinfeksjon = sum(KomplikasjonT2==2, na.rm = T),
+                   N = dplyr::n()) %>%
+  janitor::adorn_totals()
+tmp <- RegData %>% dplyr::group_by(datogruppe) %>%
+  dplyr::summarise(Saarinfeksjon = sum(KomplikasjonT2==2, na.rm = T),
+                   N = dplyr::n()) %>%
+  mutate(Onestage = "Begge")
+variant1 <- dplyr::bind_rows(variant1, tmp) %>%
+  mutate("Andel (%)" = Saarinfeksjon/N*100)
+variant1 <- variant1[c(2,1,6,4,3,7,5), ]
+
+
+RegData$datogruppe <- 0
+RegData$datogruppe[RegData$HovedDato >= "2019-01-01"] <- 1
+RegData$datogruppe <- factor(RegData$datogruppe, levels = 0:1,
+                             labels = c("2013-2018", "2019-"))
+
+variant2 <- RegData %>% dplyr::group_by(datogruppe, Onestage) %>%
+  dplyr::summarise(Saarinfeksjon = sum(KomplikasjonT2==2, na.rm = T),
+                   N = dplyr::n()) %>%
+  janitor::adorn_totals()
+tmp <- RegData %>% dplyr::group_by(datogruppe) %>%
+  dplyr::summarise(Saarinfeksjon = sum(KomplikasjonT2==2, na.rm = T),
+                   N = dplyr::n()) %>%
+  mutate(Onestage = "Begge")
+variant2 <- dplyr::bind_rows(variant2, tmp) %>%
+  mutate("Andel (%)" = Saarinfeksjon/N*100)
+variant2 <- variant2[c(2,1,6,4,3,7,5), ]
+
+write.csv2(variant1, "C:/GIT/data/nra/variant1_onestage.csv", row.names = F,
+           fileEncoding = "Latin1")
+write.csv2(variant2, "C:/GIT/data/nra/variant2_onestage.csv", row.names = F,
+           fileEncoding = "Latin1")
+
 ###### Registreringer med både St. Marks og Wexner #########################################
 RegData <- nra::nraHentRegData()
 RegData <- nra::nraPreprosess(RegData=RegData)
