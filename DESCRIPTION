@@ -23,8 +23,7 @@ Imports:
     shinyjs,
     rapFigurer,
     rapbase,
-    shinyalert,
-    shinyWidgets
+    shinyalert
 Remotes:
   Rapporteket/rapbase@*release,
   Rapporteket/rapFigurer
