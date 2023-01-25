@@ -37,7 +37,7 @@ variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardi
 ind_aar <- c(rap_aar, rap_aar, rap_aar, rap_aar, rap_aar, rap_aar, rap_aar-1, rap_aar-5, rap_aar-1, rap_aar-5, rap_aar-1,
              rap_aar-5, rap_aar-1, rap_aar-5, rap_aar-1, rap_aar-1, rap_aar-1,rap_aar-1, rap_aar-1,
              rap_aar-1, rap_aar-1, rap_aar)
-figfolder <- "~/.ssh/nra/indikatorer_2021_v4/"
+figfolder <- "/home/mydata/nra_indikatorer_2021/"
 if (!dir.exists(figfolder)) {
   dir.create(figfolder)
 }
@@ -127,7 +127,12 @@ dg_samlet$orgnr <- Indikatorer$orgnr[match(dg_samlet$resh, Indikatorer$AvdRESH)]
 dg_samlet <- dg_samlet[!is.na(dg_samlet$denominator), ]
 dg_samlet <- dg_samlet[dg_samlet$denominator!=0, ]
 dg_samlet <- dg_samlet[,c(1,6,3,4,5)]
+dg_samlet$context <- "caregiver"
+
+Indikatorer <- Indikatorer[ , c("year", "orgnr", "var", "denominator", "ind_id", "context")]
+Indikatorer <- dplyr::bind_rows(Indikatorer, dg_samlet)
 
 # write.csv2(dg_samlet, "I:/nra/dg_shusviser27052021.csv", row.names = F, fileEncoding = "UTF-8")
 
-
+write.csv2(Indikatorer, "/home/mydata/nra_indikatorer_2021/nra_ind_2021.csv",
+           row.names = F, fileEncoding = "UTF-8")
