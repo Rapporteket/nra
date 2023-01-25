@@ -11,7 +11,7 @@ Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
 RegData <- nraPreprosess(RegData=RegData)
 # RegData$SenterKortNavn <- paste0(RegData$SenterKortNavn, ' ')
 
-rap_aar <- 2021
+rap_aar <- 2022
 variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardisert",
                "Andel skjema levert innen 4mnd postoperativt" = "Indikator_aktualitet",
                "Prosentvis reduksjon i lekkasjeepisoder >= 50%" = "Indikator1_lekk_red50",
@@ -128,6 +128,7 @@ dg_samlet <- dg_samlet[!is.na(dg_samlet$denominator), ]
 dg_samlet <- dg_samlet[dg_samlet$denominator!=0, ]
 dg_samlet <- dg_samlet[,c(1,6,3,4,5)]
 dg_samlet$context <- "caregiver"
+dg_samlet <- dg_samlet[!is.na(dg_samlet$orgnr), ]
 
 Indikatorer <- Indikatorer[ , c("year", "orgnr", "var", "denominator", "ind_id", "context")]
 Indikatorer <- dplyr::bind_rows(Indikatorer, dg_samlet)
