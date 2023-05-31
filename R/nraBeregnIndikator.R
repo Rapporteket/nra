@@ -10,13 +10,16 @@
 nraBeregnIndikator <- function(RegData, valgtVar) {
 
   kobl_resh_orgnr <- data.frame(resh = c(601225, 108162, 107440, 700116, 700922,
-                                         111138, 107505, 4210588, 601233),
+                                         111138, 107505, 4210588, 601233,
+                                         114271),
                                 orgnr = c(974795787, 974706490, 974749025,
                                           983971768, 974557746, 974724960,
-                                          974116804, 974733013, 974795396),
+                                          974116804, 974733013, 974795396,
+                                          974703300),
                                 shus = c("UNN", "Akershus", "St.Olav", "Østfold",
                                          "Haukeland", "Innlandet", "DS",
-                                         "Kristiansand", "UNN Narvik"))
+                                         "Kristiansand", "UNN Narvik",
+                                         "Stavanger"))
 
   terskel <- 5 # minste antall man viser avdelingens resultater for
   maalRetn <- "hoy"

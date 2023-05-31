@@ -2,14 +2,15 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
-# RegData <- nra::nraHentRegData()
 allevar <- nra::nraHentTabell("alleVarNum")
 foversikt <- nra::nraHentTabell("ForlopsOversikt")
-RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
+RegData <- merge(
+  allevar, foversikt[, c("ForlopsID",
+                         names(foversikt)[!(names(foversikt) %in%
+                                              intersect(names(allevar), names(foversikt)))])],
                  by = "ForlopsID")
 Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
 RegData <- nraPreprosess(RegData=RegData)
-# RegData$SenterKortNavn <- paste0(RegData$SenterKortNavn, ' ')
 
 rap_aar <- 2022
 variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardisert",
@@ -37,7 +38,7 @@ variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardi
 ind_aar <- c(rap_aar, rap_aar, rap_aar, rap_aar, rap_aar, rap_aar, rap_aar-1, rap_aar-5, rap_aar-1, rap_aar-5, rap_aar-1,
              rap_aar-5, rap_aar-1, rap_aar-5, rap_aar-1, rap_aar-1, rap_aar-1,rap_aar-1, rap_aar-1,
              rap_aar-1, rap_aar-1, rap_aar)
-figfolder <- "/home/mydata/nra_indikatorer_2021/"
+figfolder <- "~/mydata/nra/nra_indikatorer_2022/"
 if (!dir.exists(figfolder)) {
   dir.create(figfolder)
 }
@@ -60,7 +61,7 @@ for (p in 1:length(ind_aar)){
                           decreasing =indikatordata$decreasing, outfile=outfile)
 }
 
-p <- 21
+p <- 2
 indikatordata <- nra::nraBeregnIndikator(RegData=RegData, valgtVar = variabler[p])
 TabellData <- indikatordata$indikator
 TabellData <- TabellData[which(TabellData$year <= ind_aar[p]), ]
@@ -95,9 +96,6 @@ nokkeltall <- RegData %>% group_by(Aar) %>%
             'Andel med symptomvarighet mer enn 10 år' = sum(Symtomvarighet[ForlopsType1Num %in% 1:2]==4)/sum(ForlopsType1Num %in% 1:2)
   )
 
-# write.csv2(nokkeltall, 'Q:/SKDE/Nasjonalt servicemiljø/Resultattjenester/Resultatportalen/2. NRA/nokkeltall_nra.csv', row.names = F)
-# write.csv2(Indikatorer, "I:/nra/indikatorer_shusviser_nra09092021.csv", row.names = F, fileEncoding = "UTF-8")
-
 dg_tall <- readxl::read_xlsx("~/.ssh/nra/Dekningsgrad_NRA.xlsx",
                              sheet = "DG_Totalt m utregning")
 dg_tall <- dg_tall[,c("Årstall", "ReshID", "Antall i NRA Sfinkter", "Antall i NPR sfinkter", "Antall i NRA SMN", "Antall i NPR SNM")]
@@ -123,7 +121,6 @@ dg_samlet <- dg_samlet[dg_samlet$resh != 10000, ]
 
 dg_samlet$orgnr <- Indikatorer$orgnr[match(dg_samlet$resh, Indikatorer$AvdRESH)]
 
-
 dg_samlet <- dg_samlet[!is.na(dg_samlet$denominator), ]
 dg_samlet <- dg_samlet[dg_samlet$denominator!=0, ]
 dg_samlet <- dg_samlet[,c(1,6,3,4,5)]
@@ -132,8 +129,6 @@ dg_samlet <- dg_samlet[!is.na(dg_samlet$orgnr), ]
 
 Indikatorer <- Indikatorer[ , c("year", "orgnr", "var", "denominator", "ind_id", "context")]
 Indikatorer <- dplyr::bind_rows(Indikatorer, dg_samlet)
-
-# write.csv2(dg_samlet, "I:/nra/dg_shusviser27052021.csv", row.names = F, fileEncoding = "UTF-8")
 
 write.csv2(Indikatorer, "/home/mydata/nra_indikatorer_2021/nra_ind_2021.csv",
            row.names = F, fileEncoding = "UTF-8")

@@ -21,6 +21,7 @@ Imports:
     tidyverse,
     kableExtra,
     shinyjs,
+    shinyWidgets,
     rapFigurer,
     rapbase,
     shinyalert
