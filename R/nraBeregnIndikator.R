@@ -43,16 +43,46 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     minstekrav <-80
   }
 
+  if (valgtVar == "andel_inform_oppf_sfinkt") {
+    nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=c(1))
+    indikator <- nraUtvalg$RegData
+    indikator <- indikator[indikator$ForlopsType2Num != 4 | is.na(indikator$ForlopsType2Num), ]
+    indikator <- indikator[!is.na(indikator$InformertOppf), ]
+    indikator$var <- indikator$InformertOppf
+    indikator$denominator <- 1
+    indikator$ind_id <- "nra_inform_oppf_sfinkt"
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c("Andel sfinkterplastikkopererte som har fått", "informasjon om ett års oppfølging")
+    maal <- 90
+    minstekrav <-80
+  }
+
+  if (valgtVar == "andel_inform_oppf_snm") {
+    nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=c(2))
+    indikator <- nraUtvalg$RegData
+    indikator <- indikator[indikator$ForlopsType2Num != 4 | is.na(indikator$ForlopsType2Num), ]
+    indikator <- indikator[!is.na(indikator$InformertOppf), ]
+    indikator$var <- indikator$InformertOppf
+    indikator$denominator <- 1
+    indikator$ind_id <- "nra_inform_oppf_snm"
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c("Andel SNM-pasienter som har fått", "informasjon om ett års oppfølging")
+    maal <- 90
+    minstekrav <-80
+  }
+
   if (valgtVar == "Indikator_standardisert") {
-    # nraUtvalg <- nraUtvalg(RegData=RegData, datoFra = "2021-01-01", forlopstype2 = c(1,2,3,5))
-    # nraUtvalg <- nraUtvalg(RegData=RegData, datoFra = "2020-11-16", forlopstype2 = c(1,2,3,5))
     nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype2 = c(1,2,3,5))
     indikator <- nraUtvalg$RegData
     indikator$var <- indikator$GjennomfortStandardisert_sml
     indikator <- indikator[!is.na(indikator$var), ]
     indikator <- indikator[!(indikator$RevisjonsProsedyre %in% c(1,4)), ]
-
-    # indikator$var[indikator$GjennomfortStandardisert_sml == 1] <- 1
     indikator$denominator <- 1
     indikator$ind_id <- "nra_standardisert"
     names(indikator)[names(indikator)=="Aar"] <- "year"
@@ -82,6 +112,42 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     minstekrav <-60
   }
 
+  if (valgtVar == "Indikator_aktualitet_snm") {
+    nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=c(2))
+    RegData <- nraUtvalg$RegData
+    RegData$tid_op_reg <- difftime(RegData$FIRST_TIME_CLOSED, RegData$HovedDato, units = "days")/30.437
+    indikator <- RegData[!is.na(RegData$tid_op_reg), ]
+    indikator$var <- 0
+    indikator$var[indikator$tid_op_reg <=4] <- 1
+    indikator$denominator <- 1
+    indikator$ind_id <- "nra_aktualitet_snm"
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c("Andel skjema levert innen", "4mnd postoperativt etter SNM")
+    maal <- 80
+    minstekrav <-60
+  }
+
+  if (valgtVar == "Indikator_aktualitet_sfinkt") {
+    nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=c(1))
+    RegData <- nraUtvalg$RegData
+    RegData$tid_op_reg <- difftime(RegData$FIRST_TIME_CLOSED, RegData$HovedDato, units = "days")/30.437
+    indikator <- RegData[!is.na(RegData$tid_op_reg), ]
+    indikator$var <- 0
+    indikator$var[indikator$tid_op_reg <=4] <- 1
+    indikator$denominator <- 1
+    indikator$ind_id <- "nra_aktualitet_sfinkt"
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c("Andel skjema levert innen", "4mnd postoperativt etter sfinkterplastikk")
+    maal <- 80
+    minstekrav <-60
+  }
+
   if (valgtVar == "Indikator1_lekk_red50") {
     nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=2)
     RegData <- nraUtvalg$RegData
@@ -101,7 +167,6 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
   if (valgtVar == "Ultralyd") {
     indikator <- RegData[which(RegData$Ultralyd %in% 0:2), ]
     indikator <- indikator[indikator$ForlopsType1Num %in% c(1,2) & indikator$ForlopsType2Num %in% c(1,2,5, NA), ]
-
     indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Sfinktervurdering")]
     indikator$var <- indikator$Sfinktervurdering
     indikator$var <- as.numeric(indikator$var != 99)
@@ -116,9 +181,42 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     minstekrav <-80
   }
 
+  if (valgtVar == "Ultralyd_snm") {
+    indikator <- RegData[which(RegData$Ultralyd %in% 0:2), ]
+    indikator <- indikator[indikator$ForlopsType1Num %in% c(2) & indikator$ForlopsType2Num %in% c(1,2,5, NA), ]
+    indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Sfinktervurdering")]
+    indikator$var <- indikator$Sfinktervurdering
+    indikator$var <- as.numeric(indikator$var != 99)
+    indikator$denominator <- 1
+    indikator$ind_id <- "nra_ultralyd_snm"
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- "Andel med utført ultralyd - SNM"
+    maal <- 95
+    minstekrav <-80
+  }
+
+  if (valgtVar == "Ultralyd_sfinkt") {
+    indikator <- RegData[which(RegData$Ultralyd %in% 0:2), ]
+    indikator <- indikator[indikator$ForlopsType1Num %in% c(1) & indikator$ForlopsType2Num %in% c(1,2,5, NA), ]
+    indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Sfinktervurdering")]
+    indikator$var <- indikator$Sfinktervurdering
+    indikator$var <- as.numeric(indikator$var != 99)
+    indikator$denominator <- 1
+    indikator$ind_id <- "nra_ultralyd_sfinkt"
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- "Andel med utført ultralyd - Sfinkterplastikk"
+    maal <- 95
+    minstekrav <-80
+  }
+
   if (valgtVar == "tidl_konservativ") {
     indikator <- RegData[RegData$ForlopsType1Num %in% c(1,2) & RegData$ForlopsType2Num %in% c(1,2,5, NA), ]
-
     indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
     indikator$var <- indikator$Konservativ_v2
     indikator <- indikator[!is.na(indikator$var), ]
@@ -133,6 +231,46 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     tittel <- c("Andel med tidligere", "konservativ behandling")
+    maal <- 90
+    minstekrav <-80
+  }
+
+  if (valgtVar == "tidl_konservativ_snm") {
+    indikator <- RegData[RegData$ForlopsType1Num %in% c(2) & RegData$ForlopsType2Num %in% c(1,2,5, NA), ]
+    indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
+    indikator$var <- indikator$Konservativ_v2
+    indikator <- indikator[!is.na(indikator$var), ]
+    indikator <- indikator %>% group_by(PasientID, Aar, AvdRESH) %>%
+      summarise(var = max(var),
+                ForlopsID = ForlopsID[var==max(var)][1])
+    indikator$denominator <- 1
+    indikator$ind_id <- "nra_tidl_konservativ_snm"
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator <- indikator[, c("AvdRESH", "year", "var", "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c("Andel SNM-pasienter med tidligere", "konservativ behandling")
+    maal <- 90
+    minstekrav <-80
+  }
+
+  if (valgtVar == "tidl_konservativ_sfinkt") {
+    indikator <- RegData[RegData$ForlopsType1Num %in% c(1), ]
+    indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
+    indikator$var <- indikator$Konservativ_v2
+    indikator <- indikator[!is.na(indikator$var), ]
+    indikator <- indikator %>% group_by(PasientID, Aar, AvdRESH) %>%
+      summarise(var = max(var),
+                ForlopsID = ForlopsID[var==max(var)][1])
+    indikator$denominator <- 1
+    indikator$ind_id <- "nra_tidl_konservativ_sfinkt"
+    names(indikator)[names(indikator)=="Aar"] <- "year"
+    indikator <- indikator[, c("AvdRESH", "year", "var", "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    tittel <- c("Andel sfinkterplastikkpasienter med", "tidligere konservativ behandling")
     maal <- 90
     minstekrav <-80
   }
