@@ -14,6 +14,8 @@ RegData <- nraPreprosess(RegData=RegData)
 
 rap_aar <- 2022
 variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardisert",
+               "Andel operert etter standardisert metode" = "Indikator_standardisert",
+               "Andel operert etter standardisert metode" = "Indikator_standardisert",
                "Andel skjema levert innen 4mnd postoperativt" = "Indikator_aktualitet",
                "Prosentvis reduksjon i lekkasjeepisoder >= 50%" = "Indikator1_lekk_red50",
                "Utført ultralyd" = "Ultralyd",
@@ -29,6 +31,8 @@ variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardi
                "St. Mark’s Inkontinensskår <=12 5 år etter sfinkterplastikk" = "stmarks_12_5aar_sfinkt",
                "Wexnerskår <=9 1 år etter operasjon med SNM" = "wexner_9_1aar_snm",
                "Wexnerskår <=12 1 år etter operasjon med SNM" = "wexner_12_1aar_snm",
+               "Wexnerskår <=9 5 år etter operasjon med SNM" = "wexner_9_5aar_snm",
+               "Wexnerskår <=12 5 år etter operasjon med SNM" = "wexner_12_5aar_snm",
                "Inkontinensskår <=9 1 år etter operasjon med SNM" = "nra_inkontinensscore_9_1aar_snm",
                "Inkontinensskår <=12 1 år etter operasjon med SNM" = "nra_inkontinensscore_12_1aar_snm",
                "Inkontinensskår <=9 1 år etter sfinkterplastikk" = "nra_inkontinensscore_9_1aar_sfinkt",
