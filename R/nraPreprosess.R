@@ -103,7 +103,7 @@ nraPreprosess <- function(RegData)
   # samlet <- merge(aux1, aux2[aux2$ForlopsType1Num %in% 3, ], by.x = "ForlopsID", by.y = "KobletForlopsID",
   #                 suffixes = c('', '_1aar'), all = T)
 
-  RegData$WexnerTotalScore[!is.na(RegData$StMarksTotalScore) & !is.na(RegData$WexnerTotalScore)  & RegData$ForlopsType1Num %in% 1:2] <- NA
+  # RegData$WexnerTotalScore[!is.na(RegData$StMarksTotalScore) & !is.na(RegData$WexnerTotalScore)  & RegData$ForlopsType1Num %in% 1:2] <- NA
 
 
 
