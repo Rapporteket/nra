@@ -113,6 +113,7 @@ indikatorfig <- function(input, output, session, RegData, hvd_session){
       plotdata <- indikator[, c('AvdRESH', 'year', 'var', "SenterKortNavn")]
       nra::nraFigIndikator_v4(plotdata, tittel = indikatorData()$tittel,
                               terskel = indikatorData()$terskel, maal = indikatorData()$maal,
+                              minstekrav = indikatorData()$minstekrav,
                               maalretn = indikatorData()$maalRetn, xmax = indikatorData()$xmax,
                               decreasing =indikatorData()$decreasing, outfile=file)
     }
