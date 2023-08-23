@@ -159,7 +159,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$ind_id <- "nra_50pst_lekkasjeredusjon"
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
-    tittel <- c("Andel med prosentvis reduksjon", "i lekkasjeepisoder >= 50%")
+    tittel <- c("Andel med prosentvis reduksjon", "i lekkasjeepisoder \u2265 50%")
     maal <- 70
     minstekrav <- 50
   }
@@ -320,7 +320,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
     indikator$year <- indikator$year + 1
-    tittel <- c("St. Mark’s Inkontinensskår \u2264 9", "1 år etter operasjon med SNM")#c("St. Mark's Inkontinensskår \u2264 9", "1 år etter operasjon med SNM")
+    tittel <- c("St. Mark's Inkontinensskår \u2264 9", "1 år etter operasjon med SNM")#c("St. Mark's Inkontinensskår \u2264 9", "1 år etter operasjon med SNM")
     maal <- 30
     minstekrav <-20
   }

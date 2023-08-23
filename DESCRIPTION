@@ -27,6 +27,6 @@ Imports:
     shinyalert
 Remotes:
   Rapporteket/rapbase@*release,
-  Rapporteket/rapFigurer
+  Rapporteket/rapFigurer@pdf_cairo
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
