@@ -1111,6 +1111,19 @@ if (utformat!='pdf') {
                  sammenlign=2, inkl_konf=1)
 }
 
+outfile <- paste0(figfolder, "WexnerTotalScore_5aar_snm.pdf")
+utdata <- nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
+                         outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                         erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                         sammenlign=2, inkl_konf=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=forlopstype2,
+                 sammenlign=2, inkl_konf=1)
+}
+
 aux <- as.data.frame(matrix(paste0(sprintf('%.1f', utdata$KIned), ' - ', sprintf('%.1f', utdata$KIopp)), nrow = 3))
 names(aux) <- utdata$grtxt
 aux2 <- as.data.frame(matrix(sprintf('%.1f', utdata$PlotMatrise), nrow = 3))
@@ -1260,6 +1273,11 @@ if (utformat!='pdf') {
 \caption{St. Marks før og etter 1 og 5 år, snm}
 \end{figure}
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}WexnerTotalScore_5aar_snm.pdf}
+\caption{Wexnerscore før og etter 1 og 5 år, snm}
+\end{figure}
 
 % \begin{figure}[ht]
 % \centering
@@ -1870,6 +1888,19 @@ if (utformat!='pdf') {
                  sammenlign=1, inkl_konf=1, onestage=1)
 }
 
+outfile <- paste0(figfolder, "WexnerTotalScore_SNM_onestage.pdf")
+nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
+               outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+               erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=2,
+               sammenlign=1, inkl_konf=1, onestage=1)
+if (utformat!='pdf') {
+  outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
+  nraGjsnPrePost(RegData, valgtVar='WexnerTotalScore', datoFra=datoFra, datoTil=datoTil,
+                 outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
+                 erMann=erMann, reshID=reshID, hentData=hentData, forlopstype1=2, forlopstype2=2,
+                 sammenlign=1, inkl_konf=1, onestage=1)
+}
+
 # outfile <- paste0(figfolder, "GenQol_snm_onestage.pdf")
 # nraGjsnPrePost(RegData, valgtVar='GenQol', datoFra=datoFra, datoTil=datoTil,
 #                outfile = outfile, preprosess=preprosess, minald=minald, maxald=maxald,
@@ -1981,6 +2012,11 @@ if (utformat!='pdf') {
 \caption{St. Marks før og etter, SNM, onestage}
 \end{figure}
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}WexnerTotalScore_SNM_onestage.pdf}
+\caption{Wexnerscore før og etter, SNM, onestage}
+\end{figure}
 % \begin{figure}[ht]
 % \centering
 % \includegraphics[width=\Sexpr{figstr}\textwidth]{\Sexpr{figfolder}GenQol_snm_onestage.pdf}

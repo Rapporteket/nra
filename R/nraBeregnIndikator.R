@@ -340,7 +340,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
-    indikator$year <- indikator$year + 1
+    indikator$year <- indikator$year + 5
     tittel <- c("St. Mark's Inkontinensskår \u2264 9", "5 år etter operasjon med SNM")
     maal <- 30
     minstekrav <-20
@@ -384,7 +384,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
-    indikator$year <- indikator$year + 1
+    indikator$year <- indikator$year + 5
     tittel <- c("St. Mark's Inkontinensskår \u2264 12", "5 år etter operasjon med SNM")
     maal <- 30
     minstekrav <-20
@@ -429,7 +429,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
-    indikator$year <- indikator$year + 1
+    indikator$year <- indikator$year + 5
     tittel <- c("St. Mark's Inkontinensskår \u2264 9", "5 år etter sfinkterplastikk")
     maal <- 30
     minstekrav <-20
@@ -473,7 +473,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
-    indikator$year <- indikator$year + 1
+    indikator$year <- indikator$year + 5
     tittel <- c("St. Mark's Inkontinensskår \u2264 12", "5 år etter sfinkterplastikk")
     maal <- 30
     minstekrav <-20
@@ -896,7 +896,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator %>% mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
-    indikator$ind_id <- "nra_inkontinensscore_12_5aar_sfinkt"
+    indikator$ind_id <- "nra_reduksjon_4_stmarks_1aar_snm"
     indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
@@ -917,7 +917,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator %>% mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
-    indikator$ind_id <- "nra_inkontinensscore_12_5aar_sfinkt"
+    indikator$ind_id <- "nra_reduksjon_4_stmarks_1aar_snm"
     indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
@@ -937,7 +937,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator %>% mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
-    indikator$ind_id <- "nra_inkontinensscore_12_5aar_sfinkt"
+    indikator$ind_id <- "nra_reduksjon_40pst_stmarks_1aar_sfinkt"
     indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
@@ -957,7 +957,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator %>% mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
-    indikator$ind_id <- "nra_inkontinensscore_12_5aar_sfinkt"
+    indikator$ind_id <- "nra_reduksjon_40pst_stmarks_5aar_sfinkt"
     indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
@@ -978,7 +978,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator %>% mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
-    indikator$ind_id <- "nra_inkontinensscore_12_5aar_sfinkt"
+    indikator$ind_id <- "nra_reduksjon_40pst_stmarks_1aar_snm"
     indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
@@ -999,7 +999,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator %>% mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
-    indikator$ind_id <- "nra_inkontinensscore_12_5aar_sfinkt"
+    indikator$ind_id <- "nra_reduksjon_40pst_stmarks_5aar_snm"
     indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
@@ -1053,7 +1053,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
-    indikator$year <- indikator$year + 1
+    indikator$year <- indikator$year + 5
     tittel <- c("St. Mark's Inkontinensskår \u2264 9", "5 år etter operasjon med SNM")
     maal <- 30
     minstekrav <-20
@@ -1097,7 +1097,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
-    indikator$year <- indikator$year + 1
+    indikator$year <- indikator$year + 5
     tittel <- c("St. Mark's Inkontinensskår \u2264 12", "5 år etter operasjon med SNM")
     maal <- 30
     minstekrav <-20
@@ -1142,7 +1142,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
-    indikator$year <- indikator$year + 1
+    indikator$year <- indikator$year + 5
     tittel <- c("St. Mark's Inkontinensskår \u2264 9", "5 år etter sfinkterplastikk")
     maal <- 30
     minstekrav <-20
@@ -1186,7 +1186,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
     indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
-    indikator$year <- indikator$year + 1
+    indikator$year <- indikator$year + 5
     tittel <- c("St. Mark's Inkontinensskår \u2264 12", "5 år etter sfinkterplastikk")
     maal <- 30
     minstekrav <-20
