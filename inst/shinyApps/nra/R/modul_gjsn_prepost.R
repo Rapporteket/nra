@@ -84,7 +84,7 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
   tabellReager <- reactive({
     TabellData <- nraGjsnPrePost(RegData = RegData, valgtVar = input$valgtVar, minald=as.numeric(input$alder[1]),
                                  maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-                                 grvar='SenterKortNavn', outfile = '', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
+                                 grvar=input$gr_var, outfile = '', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
                                  reshID = reshID, hentData=F, forlopstype1=as.numeric(input$forlopstype1),
                                  forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99},
                                  onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
@@ -230,7 +230,7 @@ gjsn_prepost <- function(input, output, session, reshID, RegData, hvd_session){
     content = function(file){
       nra::nraGjsnPrePost(RegData = RegData, valgtVar = input$valgtVar, minald=as.numeric(input$alder[1]),
                      maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-                     grvar='SenterKortNavn', preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
+                     grvar=input$gr_var, preprosess=F, erMann = as.numeric(input$erMann), sammenlign=as.numeric(input$sammenlign),
                      reshID = reshID, hentData=F, forlopstype1=as.numeric(input$forlopstype1),
                      forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99}, outfile = file,
                      onestage = if(!is.null(input$onestage)){as.numeric(input$onestage)} else {99})
