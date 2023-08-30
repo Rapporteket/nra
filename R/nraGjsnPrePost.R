@@ -288,7 +288,7 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
                      'BegrensSeksLivPlager' = paste0('Grad av seksuelle plager ', tittel2, ', inkl. 95 % konf.int.')
     )
 
-    if (!(valgtVar %in% c("Urinlekkasje", "Urinlekkasje_v2"))) {
+    if (valgtVar %in% c("Urinlekkasje", "Urinlekkasje_v2")) {
       ytekst <- 'Andel i prosent'
     } else {
       ytekst <- 'Gjennomsnittsscore'
