@@ -47,9 +47,12 @@
 #' @export
 
 
-nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='2050-12-31',
-                           valgtShus='', outfile = '', preprosess=TRUE, minald=0, maxald=130,
-                           erMann=99, reshID, enhetsUtvalg=0, hentData=F, forlopstype1=99, forlopstype2=99, onestage=99)
+nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01',
+                           datoTil='2050-12-31', tittelstr = 1.2,
+                           valgtShus='', outfile = '', preprosess=TRUE,
+                           minald=0, maxald=130,
+                           erMann=99, reshID, enhetsUtvalg=0, hentData=F,
+                           forlopstype1=99, forlopstype2=99, onestage=99)
 {
   if (valgtVar %in% c('SNMdagbok', 'SNMdagbok_v2')) {
     if (valgtVar == 'SNMdagbok_v2') {
@@ -228,10 +231,13 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
 
       #Horisontale søyler
       if (retn == 'H') {
-        xmax <- max(c(Andeler$Hoved, Andeler$Rest),na.rm=T)*1.15
-        pos <- barplot(rev(as.numeric(Andeler$Hoved)), horiz=TRUE, beside=TRUE, las=1, xlab="Andel pasienter (%)", #main=tittel,
-                       col=fargeHoved, border='white', font.main=1, xlim=c(0, xmax), ylim=c(0.05,1.4)*antGr)	#
-        if (NHoved>0) {mtext(at=pos+0.05, text=grtxtpst, side=2, las=1, cex=cexgr, adj=1, line=0.25)}
+        xmax <- max(c(Andeler$Hoved, Andeler$Rest),na.rm=T)*1.2
+        pos <- barplot(rev(as.numeric(Andeler$Hoved)), horiz=TRUE, beside=TRUE,
+                       las=1, xlab="Andel pasienter (%)", #main=tittel,
+                       col=fargeHoved, border='white', font.main=1, xlim=c(0, xmax),
+                       ylim=c(0.05,1.4)*antGr)	#
+        if (NHoved>0) {mtext(at=pos+0.05, text=grtxtpst, side=2, las=1,
+                             cex=cexgr, adj=1, line=0.25)}
         # text(x=rev(as.numeric(Andeler$Hoved)), y=pos+0.05, labels = n_txt, pos=4, xpd = NA)
 
         if (medSml == 1) {
@@ -265,8 +271,8 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
         }
       }
 
-      # if (tittel==1) {title(Tittel, line=1, font.main=1)}
-      title(tittel, line=1, font.main=1)
+      if (valgtVar == "PGICEndring") {tittelstr <- 1.1}
+      title(tittel, font.main=1, line=1, cex.main=tittelstr)
       #Tekst som angir hvilket utvalg som er gjort
       mtext(utvalgTxt, side=3, las=1, cex=0.9, adj=0, col=farger[1], line=c(3+0.8*((NutvTxt-1):0)))
 

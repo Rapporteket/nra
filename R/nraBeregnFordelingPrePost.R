@@ -155,9 +155,13 @@ nraBeregnFordelingPrePost  <- function(RegData, valgtVar, datoFra='2012-04-01',
                      col=farger[c(2,1)], border='white', ylim=c(0, ymax), xaxt='n')
       mtext(at=colMeans(pos), grtxt, side=1, las=1, cex=cexgr, adj=0.5, line=0.5)
       mtext(at=colMeans(pos), grtxt2, side=1, las=1, cex=cexgr, adj=0.5, line=1.5)
+      text(pos[1,], 0.1, labels = sprintf("%.1f", tabell[,1]), pos = 3, cex = 0.8, col = "white")
+      text(pos[2,], 0.1, labels = sprintf("%.1f", tabell[,2]), pos = 3, cex = 0.8, col = "white")
 
       legend('top', c('Før', 'Etter', paste('N=', N, sep='')), bty='n',
              fill=farger[c(2,1,NA)], border=NA, ncol=3, cex=1)
+
+
 
 
       title(tittel, font.main=1)	#line=0.5,

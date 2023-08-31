@@ -12,7 +12,7 @@ fordelingsfig_prepost_UI <- function(id, BrValg){
 
   shiny::sidebarLayout(
     sidebarPanel(
-      selectInput(inputId = ns("valgtVar"), label = "Velg variabel", choices = BrValg$varvalg),
+      selectInput(inputId = ns("valgtVar"), label = "Velg variabel", choices = "BegrensSeksLiv"),
       dateRangeInput(inputId=ns("datovalg"), label = "Dato fra og til",
                      max = Sys.Date(), start  = '2014-01-01', end = Sys.Date(), language = "nb", separator = " til "),
       selectInput(inputId = ns("enhetsUtvalg"), label = "Lag figur for",

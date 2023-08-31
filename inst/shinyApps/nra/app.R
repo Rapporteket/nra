@@ -64,7 +64,7 @@ ui <- tagList(
              fordelingsfig_UI(id = "fordelingsfig_id", BrValg = BrValg)
     ),
     tabPanel("Fordelingsfigurer - Før og etter",
-             fordelingsfig_UI(id = "fordelingsfig_prepost_id", BrValg = BrValg)
+             fordelingsfig_prepost_UI(id = "fordelingsfig_prepost_id", BrValg = BrValg)
     ),
     tabPanel("Tidsutvikling andeler",
              andeler_tid_ui(id = "andeler_tid_id", BrValg = BrValg)
