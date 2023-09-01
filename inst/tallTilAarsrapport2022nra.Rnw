@@ -2120,13 +2120,57 @@ legend('topright', c("Sårinfeksjon", "Blødning som krever behandling",
 
 dev.off()
 
+@
 
 
 
 
+<<'Analyse, signifikant forskjell mellom gruppene under og over 12', results='asis', echo=FALSE>>=
 
+analysedata <- RegData %>%
+  dplyr::filter(Aar == rap_aar-1 &
+                  ForlopsType1Num %in% 1:2) %>%
+  merge(RegData %>% dplyr::filter(ForlopsType1Num ==3),
+        by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_post1"))
+
+analysedata$forverring <- NA
+analysedata$forverring[analysedata$InkontinensScore_post1 > analysedata$InkontinensScore] <- 1
+analysedata$forverring[analysedata$InkontinensScore_post1 <= analysedata$InkontinensScore] <- 0
+analysedata <- analysedata %>% dplyr::filter(!is.na(forverring)) %>%
+  mutate(under12 = ifelse(InkontinensScore < 12, 1, 0))
+
+ant_forverret_under12 <- sum(analysedata$forverring[analysedata$under12==1])
+ant_under12 <- sum(analysedata$under12)
+ant_forverret_over_el_lik12 <- sum(analysedata$forverring[analysedata$under12==0])
+ant_over_el_lik12 <- sum(analysedata$under12==0)
+
+out <- prop.test(c(ant_forverret_under12, ant_forverret_over_el_lik12),
+          c(ant_under12, ant_over_el_lik12),
+          alternative = "greater")
+
+
+# as.data.frame.htest <- function(x) {
+#     x <- unclass(x)
+#     names <- c("statistic", "estimate", "parameter", "p.value")
+#     x <- x[names]
+#     x <- x[!sapply(x, is.null)]
+#     for (i in seq_along(x)) {
+#         if (!is.null(names(x[[i]])))
+#             names(x)[i] <- names(x[[i]])
+#     }
+#     as.data.frame(x, stringsAsFactors = FALSE)
+# }
+#
+# knitr::kable(as.data.frame.htest(out), format = "latex")
+#
+# knitr::kable(out, format = "latex")
 
 @
+
+
+
+
+
 
 
 
