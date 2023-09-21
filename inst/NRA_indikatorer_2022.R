@@ -139,6 +139,61 @@ dg_samlet <- read.csv2("~/mydata/nra/ind_imongr_20230623.csv") %>%
   dplyr::filter(substr(ind_id, 1, 6) == "nra_dg") %>%
   dplyr::mutate(var = ifelse(var > denominator, denominator, var))
 
+kobl_resh_orgnr <- data.frame(resh = c(601225, 108162, 107440, 700116, 700922,
+                                       111138, 107505, 4210588, 601233,
+                                       114271),
+                              orgnr = c(974795787, 974706490, 974749025,
+                                        983971768, 974557746, 974724960,
+                                        974116804, 974733013, 974795396,
+                                        974703300),
+                              shus = c("UNN", "Akershus", "St.Olav", "Østfold",
+                                       "Haukeland", "Innlandet", "DS",
+                                       "Kristiansand", "UNN Narvik",
+                                       "Stavanger"))
+dg_2020_21 <- read.csv2(
+  "~/mydata/nra/DGA_begge_operasjonstyper_hf_aar_2020_2021_mRESHID.csv",
+  fileEncoding = "latin1") %>%
+  dplyr::filter(!is.na(AvdRESH))
+dg_2020_21$var <- dg_2020_21$Begge + dg_2020_21$Kun_NRA
+dg_2020_21$orgnr <- kobl_resh_orgnr$orgnr[match(dg_2020_21$AvdRESH, kobl_resh_orgnr$resh)]
+dg_2020_21 <- dg_2020_21 %>%
+  dplyr::rename(denominator = Total,
+         year = aar) %>%
+  dplyr::mutate(context = "caregiver",
+         ind_id = "nra_dg_total") %>%
+  dplyr::select(context, orgnr, year, var, denominator, ind_id)
+
+dg_samlet <- dplyr::bind_rows(dg_samlet, dg_2020_21)
+
+dg_2020_21 <- read.csv2(
+  "~/mydata/nra/DGA_JHC10_K628_hf_aar_2020_2021_mRESHID.csv",
+  fileEncoding = "latin1") %>%
+  dplyr::filter(!is.na(AvdRESH))
+dg_2020_21$var <- dg_2020_21$Begge + dg_2020_21$Kun_NRA
+dg_2020_21$orgnr <- kobl_resh_orgnr$orgnr[match(dg_2020_21$AvdRESH, kobl_resh_orgnr$resh)]
+dg_2020_21 <- dg_2020_21 %>%
+  dplyr::rename(denominator = Total,
+                year = aar) %>%
+  dplyr::mutate(context = "caregiver",
+                ind_id = "nra_dg_sfinkter") %>%
+  dplyr::select(context, orgnr, year, var, denominator, ind_id)
+
+dg_samlet <- dplyr::bind_rows(dg_samlet, dg_2020_21)
+
+dg_2020_21 <- read.csv2(
+  "~/mydata/nra/DGA_SMN_inkl_AEA20_AEA24_hf_aar_2020_2021_mRESHID.csv",
+  fileEncoding = "latin1") %>%
+  dplyr::filter(!is.na(AvdRESH))
+dg_2020_21$var <- dg_2020_21$Begge + dg_2020_21$Kun_NRA
+dg_2020_21$orgnr <- kobl_resh_orgnr$orgnr[match(dg_2020_21$AvdRESH, kobl_resh_orgnr$resh)]
+dg_2020_21 <- dg_2020_21 %>%
+  dplyr::rename(denominator = Total,
+                year = aar) %>%
+  dplyr::mutate(context = "caregiver",
+                ind_id = "nra_dg_snm") %>%
+  dplyr::select(context, orgnr, year, var, denominator, ind_id)
+
+dg_samlet <- dplyr::bind_rows(dg_samlet, dg_2020_21)
 
 Indikatorer <- Indikatorer[ , c("year", "orgnr", "var", "denominator", "ind_id", "context")]
 Indikatorer <- dplyr::bind_rows(Indikatorer, dg_samlet)
