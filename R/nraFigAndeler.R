@@ -96,12 +96,19 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01',
       RegData$AvdRESH[RegData$AvdRESH %in% valgtShus] <- reshID
       shtxt <- 'Ditt utvalg'
     }
-    if (valgtVar %in% c('Tilfredshet', 'PGICEndring', 'PGICEndringLekkasje')) {
+    if (valgtVar %in% c('Tilfredshet_1aar', 'PGICEndring_1aar', 'PGICEndringLekkasje_1aar')) {
       RegData <- merge(RegData, RegData[which(RegData$ForlopsType1Num==3),
                                         c("Tilfredshet", "PGICEndring", "PGICEndringLekkasje", "KobletForlopsID")],
                        by.x = 'ForlopsID', by.y = 'KobletForlopsID',
                        suffixes = c('', 'Post1'), all.x = TRUE)
     }
+    if (valgtVar %in% c('Tilfredshet_5aar', 'PGICEndring_5aar', 'PGICEndringLekkasje_5aar')) {
+      RegData <- merge(RegData, RegData[which(RegData$ForlopsType1Num==4),
+                                        c("Tilfredshet", "PGICEndring", "PGICEndringLekkasje", "KobletForlopsID")],
+                       by.x = 'ForlopsID', by.y = 'KobletForlopsID',
+                       suffixes = c('', 'Post5'), all.x = TRUE)
+    }
+
 
     if (enhetsUtvalg == 2) {RegData <- 	RegData[which(RegData$AvdRESH == reshID),]}
 

@@ -148,11 +148,11 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 
-  if (valgtVar == 'PGICEndring') {
+  if (valgtVar == 'PGICEndring_1aar') {
     retn <- 'H'
     RegData$Variabel <- RegData$PGICEndringPost1
     RegData <- RegData[!is.na(RegData$Variabel), ]
-    tittel <- c('Endring i aktivitetsbegrensninger, symptomer,', 'følelser og generell livskvalitet ')
+    tittel <- c('Endring i aktivitetsbegrensninger, symptomer,', 'følelser og generell livskvalitet - 1 år')
     gr <- rev(c(99, 0:6))
     grtxt <- rev(c("Ukjent", "Ingen endring (eller tilstanden \n har blitt verre)",
                    "Har det omtrent som før, nesten ingen \n endring i tilstand i det hele tatt",
@@ -164,11 +164,48 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 
-  if (valgtVar == 'PGICEndringLekkasje') {
+  if (valgtVar == 'PGICEndringLekkasje_1aar') {
     retn <- 'H'
     RegData$Variabel <- RegData$PGICEndringLekkasjePost1
     RegData <- RegData[!is.na(RegData$Variabel), ]
-    tittel <- 'Endring i lekkasjeplager'
+    tittel <- c('Endring i lekkasjeplager', 'etter 1 år')
+    gr <- rev(c(99, 0:10))
+    grtxt <- rev(c("99 = Ukjent",
+                   "0 = Mye verre",
+                   "1",
+                   "2",
+                   "3",
+                   "4",
+                   "5 = Ingen endring",
+                   "6",
+                   "7",
+                   "8",
+                   "9",
+                   "10 = Mye bedre"))
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'PGICEndring_5aar') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$PGICEndringPost5
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('Endring i aktivitetsbegrensninger, symptomer,', 'følelser og generell livskvalitet - 5 år')
+    gr <- rev(c(99, 0:6))
+    grtxt <- rev(c("Ukjent", "Ingen endring (eller tilstanden \n har blitt verre)",
+                   "Har det omtrent som før, nesten ingen \n endring i tilstand i det hele tatt",
+                   "Noe bedring, men ingen merkbar \n endring har skjedd",
+                   "Litt bedring, men denne endringen har \n ikke utgjort noen større forskjell",
+                   "Moderat bedring og en liten, \n men merkbar forskjell",
+                   "Bedre. Det har skjedd en definitiv endring \n som utgjør en verdifull forskjell",
+                   "Mye bedre. Det har skjedd en betydelig endring \n til det bedre som utgjør all verdens forskjell"))
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'PGICEndringLekkasje_5aar') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$PGICEndringLekkasjePost5
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('Endring i lekkasjeplager', 'etter 5 år')
     gr <- rev(c(99, 0:10))
     grtxt <- rev(c("99 = Ukjent",
                    "0 = Mye verre",
@@ -226,17 +263,30 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
   }
 
 
-  if (valgtVar == 'Tilfredshet') {
+  if (valgtVar == 'Tilfredshet_1aar') {
     retn <- 'H'
     RegData$Variabel <- RegData$TilfredshetPost1
     # RegData <- RegData[RegData$ForlopsType1Num %in% 3:4, ]
     RegData <- RegData[!is.na(RegData$Variabel), ]
-    tittel <- 'Tilfredshet med behandlingstilbudet'
+    tittel <- 'Tilfredshet med behandlingstilbudet etter 1 år'
     gr <- rev(0:10)
     grtxt <- rev(c('0=Svært misfornøyd', as.character(1:9), '10=Svært fornøyd'))
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
     # subtxt <- 'Aldersgrupper'
   }
+
+  if (valgtVar == 'Tilfredshet_5aar') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$TilfredshetPost5
+    # RegData <- RegData[RegData$ForlopsType1Num %in% 3:4, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- 'Tilfredshet med behandlingstilbudet etter 5 år'
+    gr <- rev(0:10)
+    grtxt <- rev(c('0=Svært misfornøyd', as.character(1:9), '10=Svært fornøyd'))
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+    # subtxt <- 'Aldersgrupper'
+  }
+
 
   if (valgtVar == 'Komplikasjon') {
     retn <- 'H'
