@@ -366,7 +366,14 @@ nraGjsnPrePost <- function(RegData, valgtVar, datoFra='2012-04-01', datoTil='205
     par('fig'=c(0, 1, 0, 1))
     if ( outfile != '') {dev.off()}
 
-    utdata <- list(PlotMatrise=PlotMatrise, KIned=KIned, KIopp=KIopp, utvalgTxt=utvalgTxt, tittel=tittel, grtxt=grtxt, grtxt2=grtxt2, Ngr=Ngr)
+    utdata <- list(PlotMatrise=PlotMatrise,
+                   KIned=KIned,
+                   KIopp=KIopp,
+                   utvalgTxt=utvalgTxt,
+                   tittel=tittel,
+                   grtxt=grtxt,
+                   grtxt2=grtxt2,
+                   Ngr=Ngr)
 
   } else {
     FigTypUt <- rapFigurer::figtype(outfile)
