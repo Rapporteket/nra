@@ -2,6 +2,45 @@ library(nra)
 library(tidyverse)
 rm(list = ls())
 
+######## Utlevering for dekningsgradsanalyse NPR 14.06.2024 #################################
+allevar <- nra::nraHentTabell("alleVarNum")
+foversikt <- nra::nraHentTabell("ForlopsOversikt")
+RegData <- merge(allevar, foversikt[, c("ForlopsID",
+                                        names(foversikt)[!(names(foversikt) %in%
+                                                             intersect(names(allevar), names(foversikt)))])],
+                 by = "ForlopsID")
+RegData <- nraPreprosess(RegData=RegData)
+
+dg_tall <- RegData[RegData$ForlopsType1Num %in% 1:2,
+                   c("PatientID", "AvdRESH", "SenterKortNavn", "ForlopsType1", "ForlopsType2",
+                     "ProsedyreDato2A", "ProsedyreDato2AT2", "OperasjonsDato2B")]
+
+dg_tall <- dg_tall[as.numeric(format(as.Date(dg_tall$ProsedyreDato2A, format = "%Y-%m-%d"), "%Y")) %in% 2022:2023 |
+                     as.numeric(format(as.Date(dg_tall$ProsedyreDato2AT2, format = "%Y-%m-%d"), "%Y")) %in% 2022:2023 |
+                     as.numeric(format(as.Date(dg_tall$OperasjonsDato2B, format = "%Y-%m-%d"), "%Y")) %in% 2022:2023, ]
+
+dg_tall <- dg_tall[dg_tall$ForlopsType2 != "Eksplantasjon" | is.na(dg_tall$ForlopsType2), ]
+dg_tall$prosedyre <- NA
+dg_tall$prosedyre[dg_tall$ForlopsType1 == "Sfinkterplastikk"] <- "JHC10"
+dg_tall$prosedyre[dg_tall$ForlopsType2 %in% c("Test positiv", "Revisjon")] <- "ABD60/ABD65/JHGX00"
+dg_tall$prosedyre[dg_tall$ForlopsType2 %in% c("Test negativ", "Test usikker")] <- "ABD60/JHGX00"
+
+
+write.csv2(dg_tall, paste0("~/mydata/nra/aktivitetsdata_nra_", Sys.Date(), ".csv"),
+           row.names = F, fileEncoding = "Latin1", na = "")
+
+
+kobl <- read.table("~/mydata/nra/Norsk_Register_for_Analinkontinens_koblingstabell_datadump_17.06.2024.csv",
+                   sep = ";", fileEncoding = "UTF-8", stringsAsFactors = F,
+                   header = T, colClasses = 'character')
+
+
+kobl <- kobl[kobl$PID %in% dg_tall$PatientID, ]
+write.csv2(kobl, paste0("~/mydata/nra/koblingsfil_nra_", Sys.Date(), ".csv"),
+           row.names = F, fileEncoding = "Latin1", na = "")
+
+
+
 ######## Utlevering for dekningsgradsanalyse NPR 13.06.2022 #################################
 allevar <- nra::nraHentTabell("alleVarNum")
 foversikt <- nra::nraHentTabell("ForlopsOversikt")
@@ -65,7 +104,7 @@ RegData <- nraPreprosess(RegData=RegData)
 outfile <- 'StMarksTotalScore_aar_snm.pdf'
 utdata <- nraGjsnPrePost(RegData[which(RegData$AvdRESH == 601225), ], valgtVar='StMarksTotalScore', datoFra='2013-01-01',
                          outfile = outfile, preprosess=F, grvar = 'Aar',
-                        forlopstype1=2, reshID = 0,
+                         forlopstype1=2, reshID = 0,
                          sammenlign=1, inkl_konf=1, valgtShus='')
 
 samletab <- bind_rows(as_tibble(utdata[[1]]), as_tibble(utdata[[2]]), as_tibble(utdata[[3]]))
@@ -90,7 +129,7 @@ unnData <- RegData[which(RegData$AvdRESH == 601225 & RegData$Aar >=2016), ]
 
 unnData <- merge(unnData[unnData$ForlopsType1Num %in% 2, ],
                  unnData[unnData$ForlopsType1Num %in% 3, c("KobletForlopsID", "StMarksTotalScore", "Urinlekkasje")],
-      by.x = 'ForlopsID', by.y = 'KobletForlopsID', suffixes = c('Pre', 'Post1'), all.x = T)
+                 by.x = 'ForlopsID', by.y = 'KobletForlopsID', suffixes = c('Pre', 'Post1'), all.x = T)
 
 unnData %>% group_by(Aar) %>% summarise("Antall Onestage" = sum(Onestage, na.rm = T),
                                         "Antall Onestage med revisjon" = sum(ForlopsType2Num[Onestage==1]==3, na.rm = T),
@@ -113,7 +152,7 @@ RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
 RegData <- nra::nraPreprosess(RegData=RegData)
 
 dg_tall <- RegData[RegData$ForlopsType1Num %in% 1:2, c("PatientID", "AvdRESH", "SenterKortNavn", "ForlopsType1", "ForlopsType2",
-                       "ProsedyreDato2A", "ProsedyreDato2AT2", "OperasjonsDato2B")]
+                                                       "ProsedyreDato2A", "ProsedyreDato2AT2", "OperasjonsDato2B")]
 
 dg_tall <- dg_tall[as.numeric(format(as.Date(dg_tall$ProsedyreDato2A, format = "%Y-%m-%d"), "%Y")) %in% 2018:2019 |
                      as.numeric(format(as.Date(dg_tall$ProsedyreDato2AT2, format = "%Y-%m-%d"), "%Y")) %in% 2018:2019 |

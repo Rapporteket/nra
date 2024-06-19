@@ -198,6 +198,7 @@ dg_samlet <- dplyr::bind_rows(dg_samlet, dg_2020_21)
 Indikatorer <- Indikatorer[ , c("year", "orgnr", "var", "denominator", "ind_id", "context")]
 Indikatorer <- dplyr::bind_rows(Indikatorer, dg_samlet)
 
-write.csv2(Indikatorer, "~/mydata/nra/nra_ind_2022.csv",
+
+write.csv2(Indikatorer, paste0("~/mydata/nra/nra_indikatorer_", Sys.Date(), ".csv"),
            row.names = F, fileEncoding = "UTF-8")
 
