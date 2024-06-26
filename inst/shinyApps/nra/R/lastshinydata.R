@@ -14,7 +14,7 @@ lastshinydata <- function() {
 
   if (rapbase::isRapContext()) {
     # RegData <- nra::nraHentRegData()
-    allevar <- allevar <- nra::nraHentTabell("alleVarNum")
+    allevar <- nra::nraHentTabell("alleVarNum")
     foversikt <- nra::nraHentTabell("ForlopsOversikt")
     RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
                      by = "ForlopsID")

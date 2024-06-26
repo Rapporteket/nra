@@ -54,13 +54,23 @@ nraPreprosess <- function(RegData)
   # RegData$Onestage <- factor(RegData$Onestage, levels = c(0,1), labels = c("Midl. elektr.", "Permanent"))
   RegData$Testprosedyre <- factor(RegData$Testprosedyre, levels = c(1,2), labels = c("Midl. elektr.", "Permanent"))
 
-  RegData$InkontinensScore <- RegData$StMarksTotalScore
-  RegData$InkontinensScore[is.na(RegData$InkontinensScore)] <- RegData$WexnerTotalScore[is.na(RegData$InkontinensScore)]
 
-  # RegData$Indikator1_lekk_red50_v1 <- (RegData$InkontinensFoerTest - RegData$InkontinensUnderTest)/RegData$InkontinensFoerTest*100
-  # RegData$Indikator1_lekk_red50_v1[is.nan(RegData$Indikator1_lekk_red50_v1)] <- 0
-  # RegData$Indikator1_lekk_red50_v1 <- as.numeric(RegData$Indikator1_lekk_red50_v1 >= 50)
-  #
+  wexner_kohort_basis <- which(RegData$ForlopsType1Num %in% 1:2 & is.na(RegData$StMarksTotalScore) & !is.na(RegData$WexnerTotalScore))
+  wexner_kohort_oppf <- which(RegData$KobletForlopsID %in% RegData$ForlopsID[wexner_kohort_basis])
+  wexner_kohort <- c(wexner_kohort_basis, wexner_kohort_oppf)
+  RegData$InkontinensScore <- RegData$StMarksTotalScore
+  RegData$InkontinensScore[wexner_kohort] <- RegData$WexnerTotalScore[wexner_kohort]
+
+  # wexner1 <- RegData[wexner_kohort, c("ForlopsID", "WexnerTotalScore", "StMarksTotalScore")]
+  # wexner2 <- RegData[wexner_kohort_oppf1, c("KobletForlopsID", "WexnerTotalScore", "StMarksTotalScore")]
+  # wexner3 <- RegData[wexner_kohort_oppf2, c("KobletForlopsID", "WexnerTotalScore", "StMarksTotalScore")]
+  # wexner <- merge(wexner1, wexner2, by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf1"), all.x = T) %>%
+  #   merge(wexner3, by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf5"), all.x = T)
+
+
+  # RegData$InkontinensScore2 <- RegData$StMarksTotalScore
+  # RegData$InkontinensScore2[is.na(RegData$InkontinensScore2)] <- RegData$WexnerTotalScore[is.na(RegData$InkontinensScore2)]
+
 
   ##### Fjernes foreløpig  05.11.2021
 
