@@ -4,7 +4,7 @@ rm(list = ls())
 
 #### Forespørsel Tone sårruptur, 05.12.2022 ################################
 
-RegData <- read.table('C:/GIT/data/nra/alleVarNum2022-12-05 14-02-46.txt', header=TRUE,
+RegData <- read.table('C:/GIT/data/nra/allevarnum2022-12-05 14-02-46.txt', header=TRUE,
                       sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 
 # RegData[, c("ForlopsType1Num", "ForlopsType2Num", "Saarinfeksjon", "HovedDato")]
@@ -55,7 +55,7 @@ write.csv2(variant2, "C:/GIT/data/nra/variant2.csv", row.names = F,
            fileEncoding = "Latin1")
 
 
-RegData <- read.table('C:/GIT/data/nra/alleVarNum2022-12-05 14-02-46.txt', header=TRUE,
+RegData <- read.table('C:/GIT/data/nra/allevarnum2022-12-05 14-02-46.txt', header=TRUE,
                       sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 
 RegData$Onestage[is.na(RegData$Onestage)] <- 0
@@ -117,7 +117,7 @@ forlop <- merge(RegData[RegData$ForlopsType1Num %in% 1:2, c("ForlopsID", "HovedD
 ##### Ny utkjøring, nå med EndeTilEndeSutur inkludert 22.11.2021 ###########################3
 registryName <- "nra"
 dbType <- "mysql"
-query <- "SELECT * FROM alleVarNum"
+query <- "SELECT * FROM allevarnum"
 RegData <- rapbase::loadRegData(registryName, query, dbType)
 RegData_snm <- RegData[RegData$ForlopsType1Num == 2 & RegData$AvdRESH == 601225, ]
 RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_snm$ForlopsID, ]
@@ -129,7 +129,7 @@ write.csv2(utlevering, "/home/rstudio/.ssh/utlevering_nra_snm_2022_02_02.csv", r
 ##### Ny utkjøring, nå med EndeTilEndeSutur inkludert 22.11.2021 ###########################3
 registryName <- "nra"
 dbType <- "mysql"
-query <- "SELECT * FROM alleVarNum"
+query <- "SELECT * FROM allevarnum"
 RegData <- rapbase::loadRegData(registryName, query, dbType)
 RegData_sfinkt <- RegData[RegData$ForlopsType1Num == 1, ]
 RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_sfinkt$ForlopsID, ]
@@ -138,9 +138,9 @@ utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)
 write.csv2(utlevering, "/home/rstudio/.ssh/utlevering_nra_2021_11_22.csv", row.names = F, fileEncoding = "Latin1")
 
 ### Stid Norderval
-RegData <- read.table('I:/nra/alleVarNum2021-06-25 14-16-02.txt', header=TRUE,
+RegData <- read.table('I:/nra/allevarnum2021-06-25 14-16-02.txt', header=TRUE,
                       sep=";", encoding = 'UTF-8', stringsAsFactors = F)
-# ForlopData <- read.table('I:/nra/ForlopsOversikt2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+# ForlopData <- read.table('I:/nra/forlopsoversikt2021-06-25 14-16-02.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 RegData_sfinkt <- RegData[RegData$ForlopsType1Num == 1, ]
 RegData_oppf <- RegData[RegData$KobletForlopsID %in% RegData_sfinkt$ForlopsID, ]
 utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)
@@ -148,7 +148,7 @@ utlevering <- dplyr::bind_rows(RegData_sfinkt, RegData_oppf)
 write.csv2(utlevering, "I:/nra/utlevering_nra_2021_06_29.csv", row.names = F, fileEncoding = "Latin1")
 
 ### Mai Lisbeth 12.01.2021 ###############################
-Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+Skjemaoversikt <- read.table('I:/nra/skjemaoversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 Skjemaoversikt$SistLagretDato <- as.Date(Skjemaoversikt$SistLagretDato)
 aux <- Skjemaoversikt[Skjemaoversikt$SistLagretDato == "2021-12-12", ]
 
@@ -158,7 +158,7 @@ aux <- RegData[RegData$ForlopsType1Num == 3, ]
 write.csv2(RegData, "I:/nra/regdata.csv", row.names = F, fileEncoding = "Latin1")
 
 ### Ukjent bestilling ... ###############################
-RegData <- read.table('I:/nra/alleVarNum2020-09-04 15-00-46.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData <- read.table('I:/nra/allevarnum2020-09-04 15-00-46.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 
 # pr pid, kan ha to abd60 , men kun 1 abd65
 # write.csv2(tmp, "sedata.csv", fileEncoding = "Latin1")
@@ -176,7 +176,7 @@ RegData <- read.table('I:/nra/alleVarNum2020-09-04 15-00-46.txt', header=TRUE, s
 
 ### Bestilling 08.09.2020 - 5-årsoppf sfinkter og SNM  ########################################
 
-RegData <- read.table('I:/nra/alleVarNum2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData <- read.table('I:/nra/allevarnum2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -189,11 +189,11 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                        "WexLivsstilsendring", "WexnerTotalScore", "HovedForlopDato")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+ForlopData <- read.table('I:/nra/forlopsoversikt2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
-Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2020-01-07 09-52-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+Skjemaoversikt <- read.table('I:/nra/skjemaoversikt2020-01-07 09-52-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 
 RegData <- nra::nraPreprosess(RegData=RegData)
 aux <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
@@ -209,7 +209,7 @@ addmargins(table(oppf_5aar$ForlopsType1, oppf_5aar$Aar, useNA = 'ifany'))
 
 ### Bestilling januar  ########################################
 
-RegData <- read.table('I:/nra/alleVarNum2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData <- read.table('I:/nra/allevarnum2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -222,11 +222,11 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                        "WexLivsstilsendring", "WexnerTotalScore")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+ForlopData <- read.table('I:/nra/forlopsoversikt2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
-Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+Skjemaoversikt <- read.table('I:/nra/skjemaoversikt2020-09-08.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 
 RegData <- nra::nraPreprosess(RegData=RegData)
 

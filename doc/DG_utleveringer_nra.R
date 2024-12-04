@@ -3,8 +3,8 @@ library(tidyverse)
 rm(list = ls())
 
 ######## Utlevering for dekningsgradsanalyse NPR 14.06.2024 #################################
-allevar <- nra::nraHentTabell("alleVarNum")
-foversikt <- nra::nraHentTabell("ForlopsOversikt")
+allevar <- nra::nraHentTabell("allevarnum")
+foversikt <- nra::nraHentTabell("forlopsoversikt")
 RegData <- merge(allevar, foversikt[, c("ForlopsID",
                                         names(foversikt)[!(names(foversikt) %in%
                                                              intersect(names(allevar), names(foversikt)))])],
@@ -42,8 +42,8 @@ write.csv2(kobl, paste0("~/mydata/nra/koblingsfil_nra_", Sys.Date(), ".csv"),
 
 
 ######## Utlevering for dekningsgradsanalyse NPR 13.06.2022 #################################
-allevar <- nra::nraHentTabell("alleVarNum")
-foversikt <- nra::nraHentTabell("ForlopsOversikt")
+allevar <- nra::nraHentTabell("allevarnum")
+foversikt <- nra::nraHentTabell("forlopsoversikt")
 RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
                  by = "ForlopsID")
 RegData <- nraPreprosess(RegData=RegData)
@@ -81,7 +81,7 @@ write.csv2(kobl, "~/.ssh/nra/koblingsfil_nra.csv", row.names = F, fileEncoding =
 
 
 ####### Figur til Mona Rydningen 02.12.2020 #########################################
-RegData <- read.table('I:/nra/alleVarNum2020-12-02 12-16-58.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/allevarnum2020-12-02 12-16-58.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -94,7 +94,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                        "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2020-12-02 12-16-58.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+ForlopData <- read.table('I:/nra/forlopsoversikt2020-12-02 12-16-58.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -117,8 +117,8 @@ write.csv2(samletab, "Tabell_Mona_02122020.csv", row.names = F)
 
 ######## Utlevering kvalitetskontroll UNN 24.11.2020 #################################
 
-RegData <- read.table('I:/nra/alleVarNum2020-11-24 12-17-20.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
-ForlopData <- read.table('I:/nra/ForlopsOversikt2020-11-24 12-17-20.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData <- read.table('I:/nra/allevarnum2020-11-24 12-17-20.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+ForlopData <- read.table('I:/nra/forlopsoversikt2020-11-24 12-17-20.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
@@ -144,8 +144,8 @@ write.csv2(unnDataUt, "I:/nra/unndata24112020.csv", row.names = F, fileEncoding 
 
 ######## Utlevering NPR 17.09.2020 #################################
 
-RegData <- read.table('I:/nra/alleVarNum2020-09-17 15-10-35.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
-ForlopData <- read.table('I:/nra/ForlopsOversikt2020-09-17 15-10-35.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData <- read.table('I:/nra/allevarnum2020-09-17 15-10-35.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+ForlopData <- read.table('I:/nra/forlopsoversikt2020-09-17 15-10-35.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))

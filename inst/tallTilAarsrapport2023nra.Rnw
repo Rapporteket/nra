@@ -46,11 +46,11 @@ library(tidyverse)
 rm(list = ls())
 hentData <- F
 
-allevar <- nra::nraHentTabell("alleVarNum")
-foversikt <- nra::nraHentTabell("ForlopsOversikt")
+allevar <- nra::nraHentTabell("allevarnum")
+foversikt <- nra::nraHentTabell("forlopsoversikt")
 RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
                  by = "ForlopsID")
-Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
+Skjemaoversikt <- nra::nraHentTabell("skjemaoversikt")
 RegData <- nraPreprosess(RegData=RegData)
 
 rap_aar <- 2023
