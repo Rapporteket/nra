@@ -26,8 +26,8 @@ nraSNMdagbok_v2 <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31',
   RegData <- RegData[RegData$ForlopsType1Num == 2, ]
   RegData <- RegData[!is.na(RegData$UrgencyFoerTestUtenLekkasje), ]
 
-  # tmp <- !is.na(RegData[, c("AvfoeringerFoerTest", "AvfoeringerUnderTest", "UrgencyFoerTestUtenLekkasje", "UrgencyUnderUtenTestMedLekkasje",
-  #                           "UrgencyFoerTestMedLekkasje", "UrgencyUnderTestLekkasje", "UrgencyFoerPassivLekkasje", "UrgencyUnderPassivLekkasje",
+  # tmp <- !is.na(RegData[, c("AvfoeringerFoerTest", "AvfoeringerUnderTest", "UrgencyFoerTestUtenLekkasje", "UrgencyUnderUtenTestUtenLekkasje",
+  #                           "UrgencyFoerTestMedLekkasje", "UrgencyUnderTestMedLekkasje", "UrgencyFoerTestPassivLekkasje", "UrgencyUnderTestPassivLekkasje",
   #                           "LekasjeFriFoerTest", "LekasjeFriUnderTest")])
   # tmp[,1] & tmp[,2]
   #
@@ -80,19 +80,19 @@ nraSNMdagbok_v2 <- function(RegData, datoFra='2012-04-01', datoTil='2050-12-31',
 
   # PreGjsn <- colMeans(RegData[indHoved, c("InkontinensFoerTest", "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer")], na.rm = TRUE)
   PreGjsn <- colMeans(RegData[indHoved, c("AvfoeringerFoerTest", "UrgencyFoerTestUtenLekkasje", "UrgencyFoerTestMedLekkasje",
-                                          "UrgencyFoerPassivLekkasje", "LekasjeFriFoerTest")], na.rm = TRUE)
+                                          "UrgencyFoerTestPassivLekkasje", "LekasjeFriFoerTest")], na.rm = TRUE)
 
   # PostGjsn <- colMeans(RegData[indHoved, c("InkontinensUnderTest", "UrgencyUnderTest", "AvfoeringerUnderTest", "LekkasjedagerUnder")], na.rm = TRUE)
-  PostGjsn <- colMeans(RegData[indHoved, c("AvfoeringerUnderTest", "UrgencyUnderUtenTestMedLekkasje", "UrgencyUnderTestLekkasje",
-                                           "UrgencyUnderPassivLekkasje", "LekasjeFriUnderTest")], na.rm = TRUE)
+  PostGjsn <- colMeans(RegData[indHoved, c("AvfoeringerUnderTest", "UrgencyUnderUtenTestUtenLekkasje", "UrgencyUnderTestMedLekkasje",
+                                           "UrgencyUnderTestPassivLekkasje", "LekasjeFriUnderTest")], na.rm = TRUE)
 
   PlotMatrise$Hoved <- as.matrix(rbind(PreGjsn, PostGjsn))
   NHoved <- length(indHoved)
   if (medSml==1) {
     PreGjsn <- colMeans(RegData[indRest, c("AvfoeringerFoerTest", "UrgencyFoerTestUtenLekkasje", "UrgencyFoerTestMedLekkasje",
-                                           "UrgencyFoerPassivLekkasje", "LekasjeFriFoerTest")], na.rm = TRUE)
-    PostGjsn <- colMeans(RegData[indRest, c("AvfoeringerUnderTest", "UrgencyUnderUtenTestMedLekkasje", "UrgencyUnderTestLekkasje",
-                                            "UrgencyUnderPassivLekkasje", "LekasjeFriUnderTest")], na.rm = TRUE)
+                                           "UrgencyFoerTestPassivLekkasje", "LekasjeFriFoerTest")], na.rm = TRUE)
+    PostGjsn <- colMeans(RegData[indRest, c("AvfoeringerUnderTest", "UrgencyUnderUtenTestUtenLekkasje", "UrgencyUnderTestMedLekkasje",
+                                            "UrgencyUnderTestPassivLekkasje", "LekasjeFriUnderTest")], na.rm = TRUE)
     PlotMatrise$Rest <- as.matrix(rbind(PreGjsn, PostGjsn))
     Nrest <- length(indRest)
   }

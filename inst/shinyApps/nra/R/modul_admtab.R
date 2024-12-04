@@ -169,8 +169,11 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
   antskjema <- function() {
     ant_skjema <- skjemaoversikt %>%
-      dplyr::mutate(SenterKortNavn = RegData$SenterKortNavn[match(AvdRESH, RegData$AvdRESH)]) %>%
-      dplyr::mutate(Skjemanavn = factor(Skjemanavn, levels = Skjemanavn[match(sort(unique(SkjemaRekkeflg)), SkjemaRekkeflg)])) %>%
+      dplyr::mutate(
+        SenterKortNavn = RegData$SenterKortNavn[match(AvdRESH, RegData$AvdRESH)],
+        Skjemanavn = factor(Skjemanavn,
+                            levels = Skjemanavn[match(sort(unique(SkjemaRekkeflg)),
+                                                      SkjemaRekkeflg)])) %>%
       dplyr::rename(Dato = req(input$velg_datovar)) %>%
       dplyr::filter(Dato >= input$datovalg[1] & Dato <= input$datovalg[2]) %>%
       dplyr::filter(SkjemaStatus %in% as.numeric(input$skjemastatus)) %>%
@@ -242,9 +245,9 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
   output$Tabell_adm = DT::renderDT(
     DT::datatable(andre_adm_tab()$ant_skjema[-dim(andre_adm_tab()$ant_skjema)[1], ],
-              container = andre_adm_tab()$sketch,
-              rownames = F,
-              options = list(pageLength = 40)
+                  container = andre_adm_tab()$sketch,
+                  rownames = F,
+                  options = list(pageLength = 40)
     )
   )
 
@@ -261,49 +264,67 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
 
   admtab_forlop <- function() {
-    map_shnavn_kortnavn <- data.frame(shusnavn=unique(RegData$Sykehusnavn),
-                                      kortnavn=RegData$SenterKortNavn[match(unique(RegData$Sykehusnavn),
-                                                                            RegData$Sykehusnavn)])
-    skjemaoversikt <- merge(skjemaoversikt, RegData[, c("ForlopsID", "KobletForlopsID")],
+    map_shnavn_kortnavn <- data.frame(
+      shusnavn=unique(RegData$Sykehusnavn),
+      kortnavn=RegData$SenterKortNavn[match(unique(RegData$Sykehusnavn),
+                                            RegData$Sykehusnavn)])
+    skjemaoversikt <- merge(skjemaoversikt,
+                            RegData[, c("ForlopsID", "KobletForlopsID")],
                             by = "ForlopsID", all.x = T)
     skjemaoversikt$Sykehusnavn <- map_shnavn_kortnavn$kortnavn[match(skjemaoversikt$Sykehusnavn,
                                                                      map_shnavn_kortnavn$shusnavn)]
 
+
     skjemaoversikt_forlop <-
       merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "1A Anamnese",
-                           c("ForlopsID", "HovedDato", "Sykehusnavn", "AvdRESH", "SkjemaStatus")],
+                           c("ForlopsID", "HovedDato",
+                             "Sykehusnavn", "AvdRESH", "SkjemaStatus")],
             skjemaoversikt[skjemaoversikt$Skjemanavn == "1B Symptom",
                            c("SkjemaStatus", "ForlopsID")],
             by = "ForlopsID", suffixes = c("_1A", "_1B"), all = T) %>%
       merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "2B Sfinkter",
                            c("SkjemaStatus", "ForlopsID")],
             by = "ForlopsID", suffixes = c("", "_2B"), all = T) %>%
-      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "2A SNM-1",
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn %in%
+                             c("2A SNM-1", "2A SNM-2", "2A SNM-3",
+                               "2A SNM-4", "2A SNM-5"),
                            c("SkjemaStatus", "ForlopsID")],
-            by = "ForlopsID", suffixes = c("", "_2A1"), all = T) %>%
-      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "2A SNM-2",
+            by = "ForlopsID", suffixes = c("", "_2A"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn %in%
+                             c("2AT2 SNM-1", "2AT2 SNM-2", "2AT2 SNM-5"),
                            c("SkjemaStatus", "ForlopsID")],
-            by = "ForlopsID", suffixes = c("", "_2A2"), all = T) %>%
-      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "1B Oppfølging 1 år",
-                           c("SkjemaStatus", "KobletForlopsID")],
-            by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf_1aar"), all = T) %>%
-      merge(skjemaoversikt[skjemaoversikt$Skjemanavn == "1B Oppfølging 5 år",
-                           c("SkjemaStatus", "KobletForlopsID")],
-            by.x = "ForlopsID", by.y = "KobletForlopsID", suffixes = c("", "_oppf_5aar"), all = T)
+            by = "ForlopsID", suffixes = c("", "_2AT2"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn %in%
+                             c("1B Oppfølging 1 år", "3A Oppfølging 1 år"),
+                           c("SkjemaStatus", "KobletForlopsID")] %>%
+              dplyr::filter(!is.na(KobletForlopsID)),
+            by.x = "ForlopsID", by.y = "KobletForlopsID",
+            suffixes = c("", "_oppf_1aar"), all = T) %>%
+      merge(skjemaoversikt[skjemaoversikt$Skjemanavn %in%
+                             c("1B Oppfølging 5 år", "3A Oppfølging 5 år"),
+                           c("SkjemaStatus", "KobletForlopsID")] %>%
+              dplyr::filter(!is.na(KobletForlopsID)),
+            by.x = "ForlopsID", by.y = "KobletForlopsID",
+            suffixes = c("", "_oppf_5aar"), all = T)
+
     names(skjemaoversikt_forlop)[names(skjemaoversikt_forlop) == "SkjemaStatus"] <- "SkjemaStatus_2B"
 
-    skjemaoversikt_forlop <- merge(skjemaoversikt_forlop,
-                                   RegData[, c("ForlopsID", "ForlopsType1Num", "ForlopsType2Num", "PasientID", "Onestage")],
-                                   by = "ForlopsID", all.x = T)
+    skjemaoversikt_forlop <- merge(
+      skjemaoversikt_forlop,
+      RegData[, c("ForlopsID", "ForlopsType1Num",
+                  "ForlopsType2Num", "PasientID", "Onestage")],
+      by = "ForlopsID", all.x = T)
 
 
     skjemaoversikt_forlop$statusbasis <- 0
-    skjemaoversikt_forlop$statusbasis[skjemaoversikt_forlop$SkjemaStatus_1A == 1 &
-                                        skjemaoversikt_forlop$SkjemaStatus_1B == 1 &
-                                        (skjemaoversikt_forlop$SkjemaStatus_2B == 1 |
-                                           skjemaoversikt_forlop$SkjemaStatus_2A1 == 1 |
-                                           skjemaoversikt_forlop$ForlopsType2 %in%
-                                           c("Eksplantasjon", "Revisjon"))] <- 1
+    skjemaoversikt_forlop$statusbasis[
+      skjemaoversikt_forlop$SkjemaStatus_1A == 1 &
+        skjemaoversikt_forlop$SkjemaStatus_1B == 1 &
+        (skjemaoversikt_forlop$SkjemaStatus_2B == 1 |
+           (skjemaoversikt_forlop$SkjemaStatus_2A == 1 &
+           skjemaoversikt_forlop$ForlopsType2Num %in% 3:4) |
+           (skjemaoversikt_forlop$SkjemaStatus_2A == 1 &
+              skjemaoversikt_forlop$SkjemaStatus_2AT2 == 1))] <- 1
 
     if (!is.null(input$adm_tidsenhet)) {
       if (input$adm_tidsenhet == 1) {
@@ -353,7 +374,9 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
     adm_tab <- adm_tab[!is.na(adm_tab$tid), ] %>%
       tidyr::spread(value = "antall", key = "tid", fill = 0, drop = FALSE)
 
-    adm_tab <- dplyr::bind_rows(adm_tab, as_tibble(as.list(c("Sykehus"="Sum", colSums(adm_tab[, -1])))) %>% mutate_at(vars(-Sykehus), as.numeric))
+    adm_tab <- dplyr::bind_rows(
+      adm_tab, as_tibble(as.list(c("Sykehus"="Sum", colSums(adm_tab[, -1])))) %>%
+        mutate_at(vars(-Sykehus), as.numeric))
 
     sketch <- htmltools::withTags(table(
       tableHeader(adm_tab[-dim(adm_tab)[1], ]),
@@ -364,9 +387,9 @@ admtab <- function(input, output, session, reshID, RegData, userRole, hvd_sessio
 
   output$Tabell_adm_forlop = DT::renderDT(
     DT::datatable(admtab_forlop()$ant_skjema[-dim(admtab_forlop()$ant_skjema)[1], ],
-              container = admtab_forlop()$sketch,
-              rownames = F,
-              options = list(pageLength = 40)
+                  container = admtab_forlop()$sketch,
+                  rownames = F,
+                  options = list(pageLength = 40)
     )
   )
 

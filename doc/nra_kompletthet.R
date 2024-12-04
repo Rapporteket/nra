@@ -1,32 +1,19 @@
 
 
-
 library(nra)
 library(tidyverse)
 rm(list = ls())
 hentData <- F
 
-RegData <- read.table('I:/nra/alleVarNum2021-09-02 10-37-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
-# RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
-#                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
-#                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
-#                        'KirurgiForRectumprolaps', 'Gracilisplastikk', 'Stomi', 'AnnetTidligereBeh', "SenterKortNavn", "Symtomvarighet",
-#                        "Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter", "FullveggsdefektIndreSfinkter", "GenQol",
-#                        "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje", "Komplikasjon",
-#                        "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
-#                        "UrgencyFoerTest", "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyUnderTest",
-#                        "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
-#                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
-#                        "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre")]
-
-ForlopData <- read.table('I:/nra/ForlopsOversikt2021-09-02 10-37-34.txt', header=TRUE, sep=";", encoding = 'UTF-8')
-ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
-                             'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
-
-RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
+allevar <- nra::nraHentTabell("allevarnum")
+foversikt <- nra::nraHentTabell("forlopsoversikt")
+RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
+                 by = "ForlopsID")
+Skjemaoversikt <- nra::nraHentTabell("skjemaoversikt")
 RegData <- nraPreprosess(RegData=RegData)
 
-rap_aar <- 2020
+rap_aar <- 2022
+
 
 RegData_pre <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
 

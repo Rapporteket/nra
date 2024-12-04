@@ -6,7 +6,7 @@ hentData <- F
 
 # Data til presentasjon høstmøte ######################################
 
-RegData <- read.table('I:/nra/alleVarNum2019-02-22 12-14-30.txt', header=TRUE, sep=";", encoding = 'UFT-8', stringsAsFactors = F)
+RegData <- read.table('I:/nra/allevarnum2019-02-22 12-14-30.txt', header=TRUE, sep=";", encoding = 'UFT-8', stringsAsFactors = F)
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -19,7 +19,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                        "WexLivsstilsendring", "WexnerTotalScore", "HovedForlopDato")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2019-02-22 12-14-29.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+ForlopData <- read.table('I:/nra/forlopsoversikt2019-02-22 12-14-29.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -171,7 +171,7 @@ dev.off()
 
 ####### til årsrapport ########################
 
-RegData <- read.table('I:/nra/alleVarNum2018-09-14 08-32-47.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+RegData <- read.table('I:/nra/allevarnum2018-09-14 08-32-47.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -184,7 +184,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                        "WexLivsstilsendring", "WexnerTotalScore")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2018-09-14 08-32-46.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+ForlopData <- read.table('I:/nra/forlopsoversikt2018-09-14 08-32-46.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 

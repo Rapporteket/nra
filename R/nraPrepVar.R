@@ -18,6 +18,56 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
 
   RegData$Variabel <- NA
 
+  if (valgtVar == "saarinfeksjon_snm") {
+    RegData$Variabel <- pmax(RegData$Komplikasjon, RegData$KomplikasjonT2, na.rm = T)
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ] # Kun SNM
+    RegData <- RegData[RegData$ForlopsType2Num %in% c(1,2,5,3), ] # Kun test positiv, test usikker, test negativ
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
+    RegData$Variabel[which(RegData$Variabel==9 & (RegData$Komplikasjon==1 | RegData$KomplikasjonT2==1))] <- 1
+    RegData$Variabel[which(RegData$Variabel==98 & (RegData$Komplikasjon==2 | RegData$KomplikasjonT2==2))] <- 2   # Velg bekreftet eller mistenkt
+    RegData$Variabel[which(RegData$Variabel==98 & (RegData$Komplikasjon==1 | RegData$KomplikasjonT2==1))] <- 1
+    RegData$Variabel <- as.numeric(RegData$Variabel == 2)
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    grtxt <- c('Nei', 'Ja')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=0:1, labels = grtxt)
+    retn <- 'V'
+    tittel <- c("Andel bekreftet sårinfeksjon innen", "30 dager etter implantasjon")
+    VarTxt <- "bekreftet sårinfeksjon innen 30 dager etter implantasjon"
+  }
+
+  if (valgtVar == "tidligereKonservativ") {
+    # RegData <- RegData[RegData$ForlopsType1Num %in% c(1,2) & RegData$ForlopsType2Num %in% c(1,2,5, NA), ]
+    RegData$Variabel <- RegData$Konservativ_v2
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    grtxt <- c('Nei', 'Ja')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=0:1, labels = grtxt)
+    retn <- 'V'
+    tittel <- c("Andel forløp med tidligere", "konservativ behandling")
+    VarTxt <- "forløp med tidligere konservativ behandling"
+  }
+
+  if (valgtVar == "Ultralyd_utfort") {
+    RegData$Variabel <- RegData$Ultralyd
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    RegData$Variabel[RegData$Variabel %in% 1:2] <- 1
+    grtxt <- c('Nei', 'Ja')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=0:1, labels = grtxt)
+    retn <- 'V'
+    tittel <- c("Utført ultralyd")
+    VarTxt <- "forløp med utført ultralyd"
+  }
+
+  if (valgtVar == "Indikator1_lekk_red50") {
+    RegData$Variabel <- RegData[ , valgtVar]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    grtxt <- c('Nei', 'Ja')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=0:1, labels = grtxt)
+    retn <- 'V'
+    tittel <- c("Prosentvis reduksjon", "i lekkasjeepisoder >= 50%")
+    VarTxt <- "forløp med prosentvis reduksjon i lekkasjeepisoder >= 50%"
+  }
+
   if (valgtVar == 'EQ5DAngst') {
     retn <- 'H'
     RegData$Variabel <- RegData[, valgtVar]
@@ -98,11 +148,11 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 
-  if (valgtVar == 'PGICEndring') {
+  if (valgtVar == 'PGICEndring_1aar') {
     retn <- 'H'
     RegData$Variabel <- RegData$PGICEndringPost1
     RegData <- RegData[!is.na(RegData$Variabel), ]
-    tittel <- c('Endring i aktivitetsbegrensninger, symptomer,', 'følelser og generell livskvalitet ')
+    tittel <- c('Endring i aktivitetsbegrensninger, symptomer,', 'følelser og generell livskvalitet - 1 år')
     gr <- rev(c(99, 0:6))
     grtxt <- rev(c("Ukjent", "Ingen endring (eller tilstanden \n har blitt verre)",
                    "Har det omtrent som før, nesten ingen \n endring i tilstand i det hele tatt",
@@ -114,11 +164,11 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 
-  if (valgtVar == 'PGICEndringLekkasje') {
+  if (valgtVar == 'PGICEndringLekkasje_1aar') {
     retn <- 'H'
     RegData$Variabel <- RegData$PGICEndringLekkasjePost1
     RegData <- RegData[!is.na(RegData$Variabel), ]
-    tittel <- 'Endring i lekkasjeplager'
+    tittel <- c('Endring i lekkasjeplager', 'etter 1 år')
     gr <- rev(c(99, 0:10))
     grtxt <- rev(c("99 = Ukjent",
                    "0 = Mye verre",
@@ -132,6 +182,67 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
                    "8",
                    "9",
                    "10 = Mye bedre"))
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'PGICEndring_5aar') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$PGICEndringPost5
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('Endring i aktivitetsbegrensninger, symptomer,', 'følelser og generell livskvalitet - 5 år')
+    gr <- rev(c(99, 0:6))
+    grtxt <- rev(c("Ukjent", "Ingen endring (eller tilstanden \n har blitt verre)",
+                   "Har det omtrent som før, nesten ingen \n endring i tilstand i det hele tatt",
+                   "Noe bedring, men ingen merkbar \n endring har skjedd",
+                   "Litt bedring, men denne endringen har \n ikke utgjort noen større forskjell",
+                   "Moderat bedring og en liten, \n men merkbar forskjell",
+                   "Bedre. Det har skjedd en definitiv endring \n som utgjør en verdifull forskjell",
+                   "Mye bedre. Det har skjedd en betydelig endring \n til det bedre som utgjør all verdens forskjell"))
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'PGICEndringLekkasje_5aar') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$PGICEndringLekkasjePost5
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c('Endring i lekkasjeplager', 'etter 5 år')
+    gr <- rev(c(99, 0:10))
+    grtxt <- rev(c("99 = Ukjent",
+                   "0 = Mye verre",
+                   "1",
+                   "2",
+                   "3",
+                   "4",
+                   "5 = Ingen endring",
+                   "6",
+                   "7",
+                   "8",
+                   "9",
+                   "10 = Mye bedre"))
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+
+  if (valgtVar == 'BegrensSeksLiv') {
+    retn <- 'V'
+    RegData$Variabel <- RegData$BegrensSeksLiv
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    N <- sum(RegData$Variabel == 5, na.rm = T)
+    tittel <- c("Begrenser du ditt seksualliv på grunn av mulige uhell/lekkasjer ",
+                paste0("i forhold til avføring/lukt, ikke aktuelt for ", N, " pasienter"))
+    gr <- 0:4
+    grtxt <- c("Aldri", "Sjelden", "Av og til", "Vanligvis", "Alltid")
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'ICIQ_hyppighet') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$ICIQ_hyppighet
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- c("Hvor ofte lekker du urin")
+    gr <- c(0:5, 9)
+    grtxt <- c("Aldri", "Omtrent èn gang i uken \n eller sjeldnere", "2 - 3 ganger i uken",
+               "ca. 1 gang per dag", "Flere ganger per dag", "Hele tiden", "Ukjent")
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 
@@ -152,17 +263,30 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
   }
 
 
-  if (valgtVar == 'Tilfredshet') {
+  if (valgtVar == 'Tilfredshet_1aar') {
     retn <- 'H'
     RegData$Variabel <- RegData$TilfredshetPost1
     # RegData <- RegData[RegData$ForlopsType1Num %in% 3:4, ]
     RegData <- RegData[!is.na(RegData$Variabel), ]
-    tittel <- 'Tilfredshet med behandlingstilbudet'
+    tittel <- 'Tilfredshet med behandlingstilbudet etter 1 år'
     gr <- rev(0:10)
     grtxt <- rev(c('0=Svært misfornøyd', as.character(1:9), '10=Svært fornøyd'))
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
     # subtxt <- 'Aldersgrupper'
   }
+
+  if (valgtVar == 'Tilfredshet_5aar') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$TilfredshetPost5
+    # RegData <- RegData[RegData$ForlopsType1Num %in% 3:4, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- 'Tilfredshet med behandlingstilbudet etter 5 år'
+    gr <- rev(0:10)
+    grtxt <- rev(c('0=Svært misfornøyd', as.character(1:9), '10=Svært fornøyd'))
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+    # subtxt <- 'Aldersgrupper'
+  }
+
 
   if (valgtVar == 'Komplikasjon') {
     retn <- 'H'
@@ -186,6 +310,18 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     tittel <- 'Komplikasjoner SNM implantasjon innen 30 dager'
     gr <- c(0,1,2,9)
     grtxt <- c('Ingen', 'Sårinfeksjon mistenkt', 'Sårinfeksjon bekreftet','Annet')
+    RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
+  }
+
+  if (valgtVar == 'KomplikasjonT2_ny') {
+    retn <- 'H'
+    RegData$Variabel <- RegData$KomplikasjonT2
+    RegData <- RegData[RegData$HovedDato > "2020-11-15", ]
+    RegData <- RegData[RegData$ForlopsType1Num == 2, ]
+    RegData <- RegData[!is.na(RegData$Variabel), ]
+    tittel <- 'Komplikasjoner SNM implantasjon innen 30 dager'
+    gr <- c(0,2,3,98)
+    grtxt <- c('Ingen', 'Sårinfeksjon bekreftet', 'Hematom som krever intervensjon', 'Ukjent')
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 
@@ -354,6 +490,22 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     tittel <- 'Komplikasjoner ved sfinkterplastikk'
   }
 
+  if (valgtVar == 'lekker_urin_naar') {
+    retn <- 'H'
+    # RegData <- RegData[RegData$ICIQ_hyppighet != 0 & !is.na(RegData$ICIQ_hyppighet), ]
+    RegData <- RegData[RegData$ICIQ_hyppighet %in% 1:5, ]
+    N <- dim(RegData)[1]
+    AntVar <- colSums(RegData[, c("LekkerUrinAldri", "LekkerUrinFoerToalett", "LekkerUrinHoster",
+                                  "LekkerUrinSover", "LekkerUrinFysiskAktiv", "LekkerUrinEtterToalett",
+                                  "LekkerUrinIngenGrunn", "LekkerUrinHeleTiden", "LekkerUrinUkjent")], na.rm = T)
+    NVar<-rep(N, length(AntVar))
+    grtxt <- c("Aldri, jeg lekker ikke urin", "Lekker før jeg når toalettet",
+               "Lekker når jeg hoster eller nyser", "Lekker når jeg sover",
+               "Lekker når jeg er fysisk \n aktiv/trimmer",
+               "Lekker når jeg er ferdig med å late \n vannet og har tatt på meg klærne",
+               "Lekker uten noen opplagt grunn", "Lekker hele tiden", "Ukjent")
+    tittel <- 'Når lekker du urin'
+  }
 
 
   if (valgtVar == 'Symtomvarighet') {

@@ -30,7 +30,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   }
 
   if (valgtVar=='InkontinensscoreMindreEnn9') {
-    tittel <- 'Andel med Inkontinensscore 9 eller mindre'
+    tittel <- c('Andel med Inkontinensscore', '9 eller mindre')
     maal <- 30
     RegData$Indikator <- NA
     RegData$Indikator[which(RegData$StMarksTotalScore<=9 | RegData$WexnerTotalScore<=9)] <- 1
@@ -38,7 +38,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   }
 
   if (valgtVar=='InkontinensscoreMindreEnn12') {
-    tittel <- 'Andel med Inkontinensscore 12 eller mindre'
+    tittel <- c('Andel med Inkontinensscore', '12 eller mindre')
     maal <- 30
     RegData$Indikator <- NA
     RegData$Indikator[which(RegData$StMarksTotalScore<=12 | RegData$WexnerTotalScore<=12)] <- 1
@@ -46,7 +46,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   }
 
   if (valgtVar=='StMarksMindreEnn9') {
-    tittel <- 'Andel med St. Marks 9 eller mindre'
+    tittel <- c('Andel med St. Marks', '9 eller mindre')
     maal <- 30
     RegData$Indikator <- NA
     RegData$Indikator[which(RegData$StMarksTotalScore<=9)] <- 1
@@ -54,7 +54,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   }
 
   if (valgtVar=='StMarksMindreEnn12') {
-    tittel <- 'Andel med St. Marks 12 eller mindre'
+    tittel <- c('Andel med St. Marks', '12 eller mindre')
     maal <- 50
     RegData$Indikator <- NA
     RegData$Indikator[which(RegData$StMarksTotalScore<=12)] <- 1
@@ -62,7 +62,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   }
 
   if (valgtVar=='WexnerMindreEnn9') {
-    tittel <- 'Andel med Wexner 9 eller mindre'
+    tittel <- c('Andel med Wexner', '9 eller mindre')
     maal <- 30
     RegData$Indikator <- NA
     RegData$Indikator[which(RegData$WexnerTotalScore<=9)] <- 1
@@ -70,7 +70,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   }
 
   if (valgtVar=='WexnerMindreEnn12') {
-    tittel <- 'Andel med Wexner 12 eller mindre'
+    tittel <- c('Andel med Wexner', '12 eller mindre')
     maal <- 50
     RegData$Indikator <- NA
     RegData$Indikator[which(RegData$WexnerTotalScore<=12)] <- 1
@@ -78,7 +78,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   }
 
   if (valgtVar=='blitt_kontinent') {
-    tittel <- 'Andel urininkontinente før operasjon som er kontinente'
+    tittel <- c('Andel urininkontinente før', 'operasjon som er kontinente')
     maal <- NA
     RegData$Indikator <- NA
     RegData$Indikator[which(RegData$Urinlekkasje==0)] <- 1 # Ikke urininkontinent
@@ -88,7 +88,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   }
 
   if (valgtVar=='blitt_kontinent_v2') {
-    tittel <- 'Andel urininkontinente før operasjon som er kontinente'
+    tittel <- c('Andel urininkontinente før', 'operasjon som er kontinente')
     maal <- NA
     RegData$Indikator <- NA
     RegData$Indikator[which(RegData$Urinlekkasje_v2==0)] <- 1 # Ikke urininkontinent
@@ -100,11 +100,11 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   ## Skill ut oppfølginger
   if (sammenlign==1) {
     Oppfolging <- RegData[RegData$ForlopsType1Num == 3, ] # 1-årsoppfølging
-    tittel <- paste0(tittel, ' etter 1 år')
+    tittel <- paste0(tittel, c('', ' etter 1 år'))
   }
   if (sammenlign==2) {
     Oppfolging <- RegData[RegData$ForlopsType1Num == 4, ] # 5-årsoppfølging
-    tittel <- paste0(tittel, ' etter 5 år')
+    tittel <- paste0(tittel, c('', ' etter 5 år'))
   }
   Oppfolging <- Oppfolging[!is.na(Oppfolging$Indikator), ]
   RegData <- RegData[RegData$ForlopsType1Num %in% 1:2, ] # Sfinkter og SNM basisregistreringer
@@ -147,11 +147,11 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
 
   andeler <- bind_rows(andeler, tibble(SenterKortNavn='(N)', n=NA, N=NA, Andel=NA))
 
-  FigTypUt <- rapFigurer::figtype(outfile='', width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
+  FigTypUt <- rapFigurer::figtype(outfile=outfile, width=width, height=height, pointsizePDF=11, fargepalett='BlaaOff')
   farger <- FigTypUt$farger
   soyleFarger <- rep(farger[3], dim(andeler)[1])
   soyleFarger[which(substr(andeler$SenterKortNavn, 1, 6)=='Nasjon')] <- farger[4]
-  windows(width = width, height = height)
+  # windows(width = width, height = height)
 
   oldpar_mar <- par()$mar
   oldpar_fig <- par()$fig
@@ -238,7 +238,7 @@ indikatorFigRaterGrVar <- function(RegData, valgtVar='StMarksMindreEnn9', outfil
   par('fig'= oldpar_fig)
   }
 
-  if (outfile != '') {savePlot(outfile, type=substr(outfile, nchar(outfile)-2, nchar(outfile)))}
-
+  # if (outfile != '') {savePlot(outfile, type=substr(outfile, nchar(outfile)-2, nchar(outfile)))}
+  if (outfile != '') {dev.off()}
 
 }

@@ -1,6 +1,6 @@
 
 
-create view ForlopsOversikt AS  
+create view forlopsoversikt AS  
   select
     CAST(m.MCEID AS CHAR) ForlopsID,
     m.CENTREID AS AvdRESH,

@@ -13,10 +13,14 @@
 lastshinydata <- function() {
 
   if (rapbase::isRapContext()) {
-    RegData <- nra::nraHentRegData()
-    Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
+    # RegData <- nra::nraHentRegData()
+    allevar <- nra::nraHentTabell("allevarnum")
+    foversikt <- nra::nraHentTabell("forlopsoversikt")
+    RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(foversikt) %in% intersect(names(allevar), names(foversikt)))])],
+                     by = "ForlopsID")
+    Skjemaoversikt <- nra::nraHentTabell("skjemaoversikt")
   } else {
-    RegData <- read.table('I:/nra/alleVarNum2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+    RegData <- read.table('I:/nra/allevarnum2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
     RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                            'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                            'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -25,18 +29,18 @@ lastshinydata <- function() {
                            "StMarksTotalScore", "QolSexualitet", "KobletForlopsID", "Tilfredshet", "Urinlekkasje", "Komplikasjon",
                            "KomplikasjonT2", "PostopKomplikasjoner", "Bloedning", "Saarinfeksjon", "Saardehisens", "InkontinensFoerTest",
                            "AvfoeringerFoerTest", "LekkasjedagerFoer", "InkontinensUnderTest", "UrgencyFoerTest", "UrgencyUnderTest",
-                           "UrgencyFoerTestUtenLekkasje", "UrgencyFoerTestMedLekkasje", "UrgencyFoerPassivLekkasje", "UrgencyUnderPassivLekkasje",
-                           "UrgencyUnderUtenTestMedLekkasje", "UrgencyUnderTestLekkasje", #"LekasjeFriFoerTest", "LekasjeFriUnderTest",
+                           "UrgencyFoerTestUtenLekkasje", "UrgencyFoerTestMedLekkasje", "UrgencyFoerTestPassivLekkasje", "UrgencyUnderTestPassivLekkasje",
+                           "UrgencyUnderUtenTestUtenLekkasje", "UrgencyUnderTestMedLekkasje", #"LekasjeFriFoerTest", "LekasjeFriUnderTest",
                            "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig', "ICIQ_hyppighet",
                            'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                            "WexLivsstilsendring", "WexnerTotalScore", "Onestage", "Testprosedyre", "KirurgiForRectumprolaps_v2",
                            "KunstigLukkMuskel")]
 
-    ForlopData <- read.table('I:/nra/ForlopsOversikt2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+    ForlopData <- read.table('I:/nra/forlopsoversikt2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
     ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                                  'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
     RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
-    Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+    Skjemaoversikt <- read.table('I:/nra/skjemaoversikt2021-11-09 13-16-38.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
   }
   # Skjemaoversikt$SistLagretDato <- as.Date(Skjemaoversikt$SistLagretDato, format="%Y-%m-%d")
   # RegData$HovedDato[RegData$HovedDato == ''] <- as.character(Skjemaoversikt$SistLagretDato[Skjemaoversikt$ForlopsID %in%
