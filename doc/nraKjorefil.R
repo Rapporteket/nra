@@ -4,10 +4,10 @@ library(nra)
 library(tidyverse)
 
 RegData <- nra::nraHentRegData()
-Skjemaoversikt <- nra::nraHentTabell("SkjemaOversikt")
+Skjemaoversikt <- nra::nraHentTabell("skjemaoversikt")
 RegData <- nra::nraPreprosess(RegData=RegData)
 
-allevar <- nraHentTabell("alleVarNum")
+allevar <- nraHentTabell("allevarnum")
 basisdata <- allevar[allevar$ForlopsType1Num %in% 1:2, ]
 basisdata <- basisdata[, colSums(is.na(basisdata)) != dim(basisdata)[1]]
 oppfdata <- allevar[allevar$ForlopsType1Num %in% 3:4, ]
@@ -52,7 +52,7 @@ library(kableExtra)
 library(DT)
 library(lubridate)
 
-RegData <- read.table('I:/nra/alleVarNum2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+RegData <- read.table('I:/nra/allevarnum2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -65,11 +65,11 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        'ABD65', 'ABD652AT2','ABD60', "WexFastAvfoering", "WexBind", "WexFlytendeAvfoering", "WexLuft",
                        "WexLivsstilsendring", "WexnerTotalScore", "Testprosedyre")]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+ForlopData <- read.table('I:/nra/forlopsoversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 RegData <- merge(RegData, ForlopData, by = "ForlopsID", suffixes = c('', '_2'))
-Skjemaoversikt <- read.table('I:/nra/SkjemaOversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
+Skjemaoversikt <- read.table('I:/nra/skjemaoversikt2021-02-12 11-10-47.txt', header=TRUE, sep=";", encoding = 'UTF-8', stringsAsFactors = F)
 
 RegData <- nra::nraPreprosess(RegData=RegData)
 
@@ -95,7 +95,7 @@ table(skjema_utflatet[, c("SkjemaStatus", "SkjemaStatus1B")], useNA = "ifany")
 library(nra)
 rm(list = ls())
 
-RegData <- read.table('I:/nra/alleVarNum2019-09-23 09-00-05.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+RegData <- read.table('I:/nra/allevarnum2019-09-23 09-00-05.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume', 'Hemoroidereksjon', 'NevrologiskSykdom', 'ObsteriskSkade',
                        'PeriferNervskade', 'PerinealAbscess', 'Rectumreseksjon', 'Sfinkterotomi', 'AnnetEtiologi', 'Konservativ',
                        'Irrigasjon', 'Tibialisstimulering', 'AnalInjection', 'SNM', 'Sfinkterplastikk', 'Rectopexi',
@@ -107,7 +107,7 @@ RegData <- RegData[, c('ForlopsID', 'Ukjent', 'AnnenBekkenKirurgi', 'AnnetTraume
                        "AvfoeringerUnderTest", "LekkasjedagerUnder", 'OppfoelgingMulig',
                        'ABD65', 'ABD652AT2','ABD60')]
 
-ForlopData <- read.table('I:/nra/ForlopsOversikt2019-09-23 09-00-04.txt', header=TRUE, sep=";", encoding = 'UTF-8')
+ForlopData <- read.table('I:/nra/forlopsoversikt2019-09-23 09-00-04.txt', header=TRUE, sep=";", encoding = 'UTF-8')
 ForlopData <- ForlopData[, c('ForlopsID', 'HovedDato','PasientAlder', 'PasientID', 'AvdRESH', 'Sykehusnavn', 'ForlopsType1Num',
                              'ForlopsType2Num', 'ErMann', 'ForlopsType1', 'ForlopsType2', "OppflgRegStatus")]
 
@@ -232,7 +232,7 @@ tmp2 <- RegData[, c("Ultralyd", "PartiellDefekt", "FullveggsdefektYtreSfinkter",
 #                                  "Sfinkterotomi")]
 
 # Etiologi <- read.table('C:/SVN/jasper/nra/data/Etiologi2016-04-18 08-37-06.txt', header=TRUE, sep=";", encoding = 'UFT-8')
-# SkjemaOversikt <- read.table('C:/SVN/jasper/nra/data/SkjemaOversikt2016-04-18 08-37-06.txt', header=TRUE, sep=";", encoding = 'UFT-8')
+# skjemaoversikt <- read.table('C:/SVN/jasper/nra/data/skjemaoversikt2016-04-18 08-37-06.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 # Sykehuskoder <- read.table('C:/SVN/jasper/nra/data/Sykehuskoder2016-04-18 08-37-06.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 # TidligereBeh <- read.table('C:/SVN/jasper/nra/data/TidligereBeh2016-04-18 08-37-06.txt', header=TRUE, sep=";", encoding = 'UFT-8')
 # GammelData <- read.table('C:/SVN/jasper/nra/data/all_variables2015-10-27 14-38-35.txt', header=TRUE, sep=";", encoding = 'UFT-8')

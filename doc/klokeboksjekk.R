@@ -5,8 +5,8 @@ rm(list = ls())
 RegData <- nra::nraHentRegData()
 RegData <- nraPreprosess(RegData=RegData)
 
-allevarnum <- nraHentTabell("alleVarNum")
-forlopsoversikt <- nraHentTabell("ForlopsOversikt")
+allevarnum <- nraHentTabell("allevarnum")
+forlopsoversikt <- nraHentTabell("forlopsoversikt")
 
 names(allevarnum)
 names(forlopsoversikt)
@@ -26,7 +26,7 @@ bare_klokebok <- setdiff(klokebok$navn_i_rapporteket, names(allevarnum))
 
 treff2 <- stringdist::amatch(bare_allevar, bare_klokebok, method = "cosine", maxDist = .12)
 
-delmatch <- data.frame(alleVarNum=bare_allevar, Klokebok=bare_klokebok[treff2])
+delmatch <- data.frame(allevarnum=bare_allevar, Klokebok=bare_klokebok[treff2])
 write.csv2(delmatch, "~/.ssh/nra/mangler_i_klokebok.csv", row.names = F, fileEncoding = "Latin1", na = '')
 
 

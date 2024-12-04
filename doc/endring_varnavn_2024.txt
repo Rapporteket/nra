@@ -1,0 +1,7 @@
+                                   gml                               ny
+1      UrgencyUnderUtenTestMedLekkasje UrgencyUnderUtenTestUtenLekkasje
+2             UrgencyUnderTestLekkasje      UrgencyUnderTestMedLekkasje
+3            UrgencyFoerPassivLekkasje    UrgencyFoerTestPassivLekkasje
+4           UrgencyUnderPassivLekkasje   UrgencyUnderTestPassivLekkasje
+5 EXPLANT_REASON_STIMULATOR_DISCHARGED                StimulatorUtladet
+6           EXPLANT_REASON_NEED_FOR_MR                       BehovForMR

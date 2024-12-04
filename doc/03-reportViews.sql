@@ -1,8 +1,8 @@
 -- This file contains views for fairly complex to complex queries or queries that return interesting stuff (more than one report)
 
 drop view if exists followupStatus;
-DROP VIEW IF EXISTS ForlopsOversikt;
-DROP VIEW IF EXISTS SkjemaOversikt;
+DROP VIEW IF EXISTS forlopsoversikt;
+DROP VIEW IF EXISTS skjemaoversikt;
 
 create view followupStatus as 
 select 
@@ -16,7 +16,7 @@ select
     COUNT(m.FOLLOWUP_MCE IS NOT NULL AND m.Q1B_STATUS = 1) AS CNT_FOLLOWUPS
 from mcelist m, patient p where m.SSN = p.SSN group by FOLLOWUP_MCE;    
   
-create view ForlopsOversikt AS  
+create view forlopsoversikt AS  
   select
     CAST(m.MCEID AS CHAR) ForlopsID,
     m.CENTREID AS AvdRESH,
@@ -103,7 +103,7 @@ create view ForlopsOversikt AS
     LEFT OUTER JOIN q2a q2as2 ON q2as1.MCEID = q2as2.MCEID AND q2as2.STEP = 2;
     
     
-create view SkjemaOversikt AS
+create view skjemaoversikt AS
 select 
   '1A Anamnese' AS Skjemanavn,
   skjema.STATUS AS SkjemaStatus,
@@ -190,8 +190,8 @@ from
 WHERE skjema.CENTREID = c.ID;  
         
 
-drop view if exists alleVarNum;
-create view alleVarNum as
+drop view if exists allevarnum;
+create view allevarnum as
 SELECT m.MCEID AS ForlopsID,
        m.CENTREID AS AvdRESH,
        getFriendlyName(c.ID) AS Sykehusnavn,
