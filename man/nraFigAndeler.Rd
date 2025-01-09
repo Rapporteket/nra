@@ -9,6 +9,7 @@ nraFigAndeler(
   valgtVar,
   datoFra = "2012-04-01",
   datoTil = "2050-12-31",
+  tittelstr = 1.2,
   valgtShus = "",
   outfile = "",
   preprosess = TRUE,
