@@ -1,4 +1,4 @@
-#' Client (ui) for the norgast app
+#' Client (ui) for the nra app
 #'
 #' @return An shiny app ui object
 #' @export

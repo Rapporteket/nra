@@ -2,7 +2,7 @@
 % Please edit documentation in R/appUi.R
 \name{appUi}
 \alias{appUi}
-\title{Client (ui) for the norgast app}
+\title{Client (ui) for the nra app}
 \usage{
 appUi()
 }
@@ -10,5 +10,5 @@ appUi()
 An shiny app ui object
 }
 \description{
-Client (ui) for the norgast app
+Client (ui) for the nra app
 }
