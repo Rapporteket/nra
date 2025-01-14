@@ -28,6 +28,12 @@ appUi <- function() {
       nra::startside_ui("startside")
     ),
 
+    shiny::tabPanel(
+      "Fordelingsfigurer",
+      nra::fordelingsfig_ui("fordelingsfig")
+    ),
+
+
     shiny::navbarMenu(
       "Verktøy",
 

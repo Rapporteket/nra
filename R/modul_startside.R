@@ -50,8 +50,9 @@ startside_ui <- function(id){
               h4(tags$b('Datadump '), 'gir mulighet til å laste ned din egen
                  avdelings registreringer.'),
               br(),
-              h4(id = ns("SC1"), tags$b('Verktøy '), 'inneholder administrative
-                 verktøy og er kun tilgjengelig for registerledelsen.'),
+              div(id = ns("SC1"),
+                  h4(tags$b('Verktøy '), 'inneholder administrative
+                 verktøy og er kun tilgjengelig for registerledelsen.')),
               br(),
               h4(tags$b('Administrative tabeller '), 'er en samling oversikter
                  over antall registreringer.')
@@ -92,12 +93,13 @@ startside_server <- function(id, usrRole){
   moduleServer(
     id,
     function(input, output, session) {
-      observe(
+      observeEvent(shiny::req(usrRole),{
         if (shiny::req(usrRole) != "SC") {
           shinyjs::hide("SC1")
         } else {
           shinyjs::show("SC1")
         }
+      }
       )
     }
   )

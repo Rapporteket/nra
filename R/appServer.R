@@ -16,8 +16,11 @@ appServer <- function(input, output, session) {
   )
 
   nraData <-  nra::lastShinyData()
+  RegData <- nraData$RegData
 
-  # rapbase::appLogger(session = session, msg = 'Starter NRA')
+  BrValg <- BrValg(RegData=RegData)
+
+  rapbase::appLogger(session = session, msg = 'Starter NRA')
 
   ##############################################################################
   # Startside ##################################################################
@@ -26,6 +29,9 @@ appServer <- function(input, output, session) {
 
   ##############################################################################
 
+  nra::fordelingsfig_server("fordelingsfig", reshID = user$org(),
+                            RegData = RegData, hvd_session = session,
+                            BrValg = req(BrValg))
 
   ##############################################################################
   # Eksport  ###################################################################
