@@ -144,13 +144,10 @@ fordelingsfig_server <- function(id, reshID, RegData, hvd_session, BrValg){
                    'AndelHoved'=AntHoved/NHoved*100,
                    'AndelRest'=AntRest/NRest*100) %>%
             dplyr::select(Kategori, 1:2, AndelHoved, 3:4, AndelRest) %>%
-            dplyr::rename(Antall=AntHoved,
-                   N=NHoved,
-                   Andel=AndelHoved,
-                   Antall=AntRest,
-                   N=NRest,
-                   Andel=AndelRest) %>%
-            knitr::kable("html", digits = c(0,0,0,1,0,0,1)) %>%
+            knitr::kable("html",
+                         col.names = c("Kategori","Antall", "N", "Andel",
+                                       "Antall", "N", "Andel"),
+                         digits = c(0,0,0,1,0,0,1)) %>%
             kableExtra::kable_styling("hover", full_width = F) %>%
             kableExtra::add_header_above(c(" ", "Din avdeling" = 3,
                                            "Landet forøvrig" = 3))
@@ -199,46 +196,46 @@ fordelingsfig_server <- function(id, reshID, RegData, hvd_session, BrValg){
       )
 
 
-      # shiny::observe({
-      #   if (rapbase::isRapContext()) {
-      #     if (req(input$tab) == "fig") {
-      #       mld_fordeling <- paste0(
-      #         "NRA: Figur - fordeling, variabel - ",
-      #         input$valgtVar)
-      #     }
-      #     if (req(input$tab) == "tab") {
-      #       mld_fordeling <- paste(
-      #         "NRA: tabell - fordeling. variabel - ",
-      #         input$valgtVar)
-      #     }
-      #     rapbase::repLogger(
-      #       session = hvd_session,
-      #       msg = mld_fordeling
-      #     )
-      #     mldLastNedFig <- paste(
-      #       "NRA: nedlasting figur - fordeling. variabel -",
-      #       input$valgtVar
-      #     )
-      #     mldLastNedTab <- paste(
-      #       "NRA: nedlasting tabell - fordeling. variabel -",
-      #       input$valgtVar
-      #     )
-      #     shinyjs::onclick(
-      #       "lastNedBilde",
-      #       rapbase::repLogger(
-      #         session = hvd_session,
-      #         msg = mldLastNedFig
-      #       )
-      #     )
-      #     shinyjs::onclick(
-      #       "lastNed",
-      #       rapbase::repLogger(
-      #         session = hvd_session,
-      #         msg = mldLastNedTab
-      #       )
-      #     )
-      #   }
-      # })
+      shiny::observe({
+        if (rapbase::isRapContext()) {
+          if (req(input$tab) == "fig") {
+            mld_fordeling <- paste0(
+              "NRA: Figur - fordeling, variabel - ",
+              input$valgtVar)
+          }
+          if (req(input$tab) == "tab") {
+            mld_fordeling <- paste(
+              "NRA: tabell - fordeling. variabel - ",
+              input$valgtVar)
+          }
+          rapbase::repLogger(
+            session = hvd_session,
+            msg = mld_fordeling
+          )
+          mldLastNedFig <- paste(
+            "NRA: nedlasting figur - fordeling. variabel -",
+            input$valgtVar
+          )
+          mldLastNedTab <- paste(
+            "NRA: nedlasting tabell - fordeling. variabel -",
+            input$valgtVar
+          )
+          shinyjs::onclick(
+            "lastNedBilde",
+            rapbase::repLogger(
+              session = hvd_session,
+              msg = mldLastNedFig
+            )
+          )
+          shinyjs::onclick(
+            "lastNed",
+            rapbase::repLogger(
+              session = hvd_session,
+              msg = mldLastNedTab
+            )
+          )
+        }
+      })
     }
   )
 }

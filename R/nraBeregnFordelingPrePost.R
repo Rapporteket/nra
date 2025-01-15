@@ -121,12 +121,12 @@ nraBeregnFordelingPrePost  <- function(RegData, valgtVar, datoFra='2012-04-01',
                              !is.na(RegData$VariabelGr_post5), ]}
     }
 
-    tabell <- RegData %>% summarise(foer_operasjon= n(), .by = VariabelGr) %>%
-      merge(RegData %>% summarise(etter1aar = n(), .by = VariabelGr_post1),
+    tabell <- RegData %>% dplyr::summarise(foer_operasjon= dplyr::n(), .by = VariabelGr) %>%
+      merge(RegData %>% dplyr::summarise(etter1aar = dplyr::n(), .by = VariabelGr_post1),
             by.x = "VariabelGr", by.y = "VariabelGr_post1")
     if (sammenlign == 2) {
       tabell <- tabell %>%
-        merge(RegData %>% summarise(etter5aar = n(), .by = VariabelGr_post5),
+        merge(RegData %>% dplyr::summarise(etter5aar = dplyr::n(), .by = VariabelGr_post5),
               by.x = "VariabelGr", by.y = "VariabelGr_post5")
     }
 

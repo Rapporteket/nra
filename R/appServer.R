@@ -30,8 +30,14 @@ appServer <- function(input, output, session) {
   ##############################################################################
 
   nra::fordelingsfig_server("fordelingsfig", reshID = user$org(),
-                            RegData = RegData, hvd_session = session,
+                            RegData = req(RegData), hvd_session = session,
                             BrValg = req(BrValg))
+
+  ##############################################################################
+
+  nra::fordelingsfig_prepost_server("fordelingsfig_prepost_id",
+                                    reshID = user$org(), RegData = req(RegData),
+                                    hvd_session = session, BrValg = req(BrValg))
 
   ##############################################################################
   # Eksport  ###################################################################

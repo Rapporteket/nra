@@ -33,6 +33,9 @@ appUi <- function() {
       nra::fordelingsfig_ui("fordelingsfig")
     ),
 
+    tabPanel("Fordelingsfigurer - Før og etter",
+             fordelingsfig_prepost_ui(id = "fordelingsfig_prepost_id")
+    ),
 
     shiny::navbarMenu(
       "Verktøy",
