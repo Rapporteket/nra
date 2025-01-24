@@ -1,0 +1,4 @@
+"time","user","name","group","role","resh_id","environment","call","message"
+"2025-01-24 14:19:36","test@tester.no","",97,"SC",601225,"nra","`::\nshiny\nobserve`()","NRA: Figur - fordeling, variabel - "
+"2025-01-24 14:19:36","test@tester.no","",97,"SC",601225,"nra","`::\nshiny\nobserve`()","NRA: Figur - tidsvisning, variabel - tidligereKonservativ"
+"2025-01-24 14:19:46","test@tester.no","",97,"SC",601225,"nra","`::\nshiny\nobserve`()","NRA: Figur - fordeling, variabel - PasientAlder"

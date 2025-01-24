@@ -8,15 +8,20 @@
 #' @export
 
 appServer <- function(input, output, session) {
+  rapbase::logShinyInputChanges(input)
+  nraData <-  nra::lastShinyData()
+  RegData <- nraData$RegData
+  map_avdeling <- data.frame(
+    UnitId = unique(RegData$AvdRESH),
+    orgname = RegData$SenterKortNavn[match(unique(RegData$AvdRESH),
+                                        RegData$AvdRESH)])
 
   user <- rapbase::navbarWidgetServer2(
     "navbar-widget",
     orgName = "nra",
-    caller = "nra"
+    caller = "nra",
+    map_orgname = shiny::req(map_avdeling)
   )
-
-  nraData <-  nra::lastShinyData()
-  RegData <- nraData$RegData
 
   BrValg <- BrValg(RegData=RegData)
 
@@ -25,21 +30,28 @@ appServer <- function(input, output, session) {
   ##############################################################################
   # Startside ##################################################################
 
-  nra::startside_server("startside", usrRole = user$role())
+  nra::startside_server("startside", usrRole = user$role)
 
   ##############################################################################
 
-  nra::fordelingsfig_server("fordelingsfig", reshID = user$org(),
+  nra::fordelingsfig_server("fordelingsfig", reshID = user$org,
                             RegData = req(RegData), hvd_session = session,
-                            BrValg = req(BrValg))
+                            BrValg = req(BrValg), userRole = user$role)
 
   ##############################################################################
 
   nra::fordelingsfig_prepost_server("fordelingsfig_prepost_id",
-                                    reshID = user$org(), RegData = req(RegData),
-                                    hvd_session = session, BrValg = req(BrValg))
+                                    reshID = user$org, RegData = req(RegData),
+                                    hvd_session = session, userRole = user$role,
+                                    BrValg = req(BrValg))
 
   ##############################################################################
+
+  nra::andeler_tid_server("andeler_tid_id", reshID = user$org,
+                          RegData = RegData, hvd_session = session,
+                          BrValg = req(BrValg), userRole = user$role)
+
+
   # Eksport  ###################################################################
   rapbase::exportUCServer("nraExport", "nra")
 

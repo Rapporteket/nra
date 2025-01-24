@@ -2,7 +2,8 @@
 % Please edit documentation in R/nraUtvalg.R
 \name{nraUtvalg}
 \alias{nraUtvalg}
-\title{Funksjon som gjør utvalg av dataene, returnerer det reduserte datasettet og utvalgsteksten.}
+\title{Funksjon som gjør utvalg av dataene, returnerer det reduserte
+datasettet og utvalgsteksten.}
 \usage{
 nraUtvalg(
   RegData,
@@ -51,11 +52,14 @@ Denne overstyrer reshID og er bare tilgjengelig for SC-bruker.}
 4: Eksplantasjon Et eksisterende implantat eksplanteres, ingen kobling til ev. opprinnelig forløp
 5: Test eksplantasjon -}
 
-\item{fargepalett}{Hvilken fargepalett skal brukes i figurer (Default: BlaaRapp)}
+\item{fargepalett}{Hvilken fargepalett skal brukes i
+figurer (Default: BlaaRapp)}
 }
 \value{
-UtData En liste bestående av det filtrerte datasettet, utvalgstekst for figur og tekststreng som angir fargepalett
+UtData En liste bestående av det filtrerte datasettet, utvalgstekst
+for figur og tekststreng som angir fargepalett
 }
 \description{
-Funksjon som gjør utvalg av dataene, returnerer det reduserte datasettet og utvalgsteksten.
+Funksjon som gjør utvalg av dataene, returnerer det reduserte
+datasettet og utvalgsteksten.
 }

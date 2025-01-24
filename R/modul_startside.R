@@ -94,7 +94,7 @@ startside_server <- function(id, usrRole){
     id,
     function(input, output, session) {
       observeEvent(shiny::req(usrRole),{
-        if (shiny::req(usrRole) != "SC") {
+        if (shiny::req(usrRole()) != "SC") {
           shinyjs::hide("SC1")
         } else {
           shinyjs::show("SC1")

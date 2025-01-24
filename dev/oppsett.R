@@ -1,15 +1,14 @@
 devtools::install("../rapbase/.")
 devtools::install(upgrade = FALSE, dependencies = FALSE)
 
-Sys.setenv(FALK_EXTENDED_USER_RIGHTS="[{\"A\":81,\"R\":\"LC\",\"U\":601225},
-           {\"A\":81,\"R\":\"SC\",\"U\":601225},
-           {\"A\":81,\"R\":\"LC\",\"U\":4211928}]")
 Sys.setenv(FALK_USER_EMAIL="kevin.thon@gmail.com")
 Sys.setenv(R_RAP_INSTANCE="QAC")
-# Sys.setenv(R_RAP_CONFIG_PATH="/home/rstudio/norgast/data-raw/config")
-# Sys.setenv(MYSQL_DB_DATA="NoRGastReportDataStaging")
+Sys.setenv(R_RAP_CONFIG_PATH="/home/rstudio/nra/data-raw/config")
 
 nra::nraApp()
+
+
+
 
 RegData <- rapbase::loadRegData(
   registryName = "data",

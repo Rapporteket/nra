@@ -74,15 +74,20 @@ fordelingsfig_ui <- function(id){
 #'
 #' @export
 #'
-fordelingsfig_server <- function(id, reshID, RegData, hvd_session, BrValg){
+fordelingsfig_server <- function(id, reshID, RegData, hvd_session,
+                                 BrValg, userRole){
   moduleServer(
     id,
     function(input, output, session) {
 
       output$valgtShus_ui <- renderUI({
         ns <- session$ns
-        selectInput(inputId = ns("valgtShus"), label = "Velg sykehus",
-                    choices = BrValg$sykehus, multiple = TRUE)
+        if (userRole() == 'SC') {
+          selectInput(inputId = ns("valgtShus"),
+                      label = "Velg sykehus",
+                      choices = BrValg$sykehus,
+                      multiple = TRUE)
+        }
       })
 
       output$valgtVar_ui <- renderUI({
@@ -112,8 +117,9 @@ fordelingsfig_server <- function(id, reshID, RegData, hvd_session, BrValg){
           minald=as.numeric(input$alder[1]),
           maxald=as.numeric(input$alder[2]),
           datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-          valgtShus = if (!is.null(input$valgtShus)) {input$valgtShus} else {''},
-          erMann = as.numeric(input$erMann), reshID = reshID,
+          valgtShus = if (!is.null(input$valgtShus) & userRole() == "SC") {
+            input$valgtShus} else {''},
+          erMann = as.numeric(input$erMann), reshID = reshID(),
           enhetsUtvalg = input$enhetsUtvalg,
           forlopstype1=if(!is.null(input$forlopstype1)){
             as.numeric(input$forlopstype1)} else {99},
@@ -141,8 +147,8 @@ fordelingsfig_server <- function(id, reshID, RegData, hvd_session, BrValg){
         if (input$enhetsUtvalg == 1) {
           Tabell1 <- dplyr::as_tibble(TabellData$tabelldata) %>%
             dplyr::mutate('Kategori'=TabellData$grtxt,
-                   'AndelHoved'=AntHoved/NHoved*100,
-                   'AndelRest'=AntRest/NRest*100) %>%
+                          'AndelHoved'=AntHoved/NHoved*100,
+                          'AndelRest'=AntRest/NRest*100) %>%
             dplyr::select(Kategori, 1:2, AndelHoved, 3:4, AndelRest) %>%
             knitr::kable("html",
                          col.names = c("Kategori","Antall", "N", "Andel",
@@ -154,7 +160,7 @@ fordelingsfig_server <- function(id, reshID, RegData, hvd_session, BrValg){
         } else {
           Tabell1 <- dplyr::as_tibble(TabellData$tabelldata) %>%
             dplyr::mutate('Kategori'=TabellData$grtxt,
-                   'Andel'=AntHoved/NHoved*100) %>%
+                          'Andel'=AntHoved/NHoved*100) %>%
             dplyr::select(Kategori, 1:2, Andel) %>%
             dplyr::rename(Antall=AntHoved, N=NHoved) %>%
             knitr::kable("html", digits = c(0,0,0,1)) %>%
@@ -172,13 +178,13 @@ fordelingsfig_server <- function(id, reshID, RegData, hvd_session, BrValg){
           if (input$enhetsUtvalg == 1) {
             Tabell1 <- dplyr::as_tibble(TabellData$tabelldata) %>%
               dplyr::mutate('Kategori'=TabellData$grtxt,
-                     'AndelHoved'=AntHoved/NHoved*100,
-                     'AndelRest'=AntRest/NRest*100) %>%
+                            'AndelHoved'=AntHoved/NHoved*100,
+                            'AndelRest'=AntRest/NRest*100) %>%
               dplyr::select(Kategori, 1:2, AndelHoved, 3:4, AndelRest)
           } else {
             Tabell1 <- dplyr::as_tibble(TabellData$tabelldata) %>%
               dplyr::mutate('Kategori'=TabellData$grtxt,
-                     'Andel'=AntHoved/NHoved*100) %>%
+                            'Andel'=AntHoved/NHoved*100) %>%
               dplyr::select(Kategori, 1:2, Andel)
           }
           write.csv2(Tabell1, file, row.names = F)

@@ -65,7 +65,8 @@ fordelingsfig_prepost_ui <- function(id){
 #'
 #' @export
 #'
-fordelingsfig_prepost_server <- function(id, reshID, RegData, hvd_session, BrValg){
+fordelingsfig_prepost_server <- function(id, reshID, RegData, hvd_session,
+                                         userRole, BrValg){
   moduleServer(
     id,
     function(input, output, session) {
@@ -80,8 +81,10 @@ fordelingsfig_prepost_server <- function(id, reshID, RegData, hvd_session, BrVal
 
       output$valgtShus_ui <- renderUI({
         ns <- session$ns
-        selectInput(inputId = ns("valgtShus"), label = "Velg sykehus",
-                    choices = BrValg$sykehus, multiple = TRUE)
+        if (userRole() == 'SC') {
+          selectInput(inputId = ns("valgtShus"), label = "Velg sykehus",
+                      choices = BrValg$sykehus, multiple = TRUE)
+        }
       })
 
 
@@ -93,10 +96,10 @@ fordelingsfig_prepost_server <- function(id, reshID, RegData, hvd_session, BrVal
           maxald=as.numeric(input$alder[2]),
           datoFra = input$datovalg[1],
           datoTil = input$datovalg[2],
-          valgtShus = if (!is.null(input$valgtShus)) {
+          valgtShus = if (!is.null(input$valgtShus) & userRole() == "SC") {
             input$valgtShus} else {''},
           outfile = '',
-          erMann = as.numeric(input$erMann), reshID = reshID,
+          erMann = as.numeric(input$erMann), reshID = reshID(),
           enhetsUtvalg = input$enhetsUtvalg,
           forlopstype1=if(!is.null(input$forlopstype1)){
             as.numeric(input$forlopstype1)} else {99},
@@ -113,9 +116,9 @@ fordelingsfig_prepost_server <- function(id, reshID, RegData, hvd_session, BrVal
       #                               minald=as.numeric(input$alder[1]),
       #                               maxald=as.numeric(input$alder[2]),
       #                               datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-      #                               valgtShus = if (!is.null(input$valgtShus)) {input$valgtShus} else {''},
+      #                               valgtShus = if (!is.null(input$valgtShus) & userRole() == "SC") {input$valgtShus} else {''},
       #                               outfile = '', preprosess=F,
-      #                               erMann = as.numeric(input$erMann), reshID = reshID,
+      #                               erMann = as.numeric(input$erMann), reshID = reshID(),
       #                               enhetsUtvalg = input$enhetsUtvalg, hentData=F,
       #                               forlopstype1=if(!is.null(input$forlopstype1)){as.numeric(input$forlopstype1)} else {99},
       #                               forlopstype2=if(!is.null(input$forlopstype2_verdi)){as.numeric(input$forlopstype2_verdi)} else {99},
@@ -184,10 +187,10 @@ fordelingsfig_prepost_server <- function(id, reshID, RegData, hvd_session, BrVal
             maxald=as.numeric(input$alder[2]),
             datoFra = input$datovalg[1],
             datoTil = input$datovalg[2],
-            valgtShus = if (!is.null(input$valgtShus)) {
+            valgtShus = if (!is.null(input$valgtShus) & userRole() == "SC") {
               input$valgtShus} else {''},
             erMann = as.numeric(input$erMann),
-            reshID = reshID,
+            reshID = reshID(),
             enhetsUtvalg = input$enhetsUtvalg,
             forlopstype1=if(!is.null(input$forlopstype1)){
               as.numeric(input$forlopstype1)} else {99},

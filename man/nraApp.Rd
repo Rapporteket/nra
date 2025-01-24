@@ -4,7 +4,7 @@
 \alias{nraApp}
 \title{Run the NRA Shiny Application}
 \usage{
-nraApp()
+nraApp(logAsJson = TRUE)
 }
 \value{
 An object representing the NRA app

@@ -15,8 +15,8 @@ appUi <- function() {
     title = shiny::div(shiny::a(
       shiny::includeHTML(
         system.file('www/logo.svg', package='rapbase')
-        )
-        ),
+      )
+    ),
     regTitle),
     windowTitle = regTitle,
     theme = "rap/bootstrap.css",
@@ -33,9 +33,17 @@ appUi <- function() {
       nra::fordelingsfig_ui("fordelingsfig")
     ),
 
-    tabPanel("Fordelingsfigurer - Før og etter",
-             fordelingsfig_prepost_ui(id = "fordelingsfig_prepost_id")
+    shiny::tabPanel(
+      "Fordelingsfigurer - Før og etter",
+      nra::fordelingsfig_prepost_ui(id = "fordelingsfig_prepost_id")
     ),
+
+    shiny::tabPanel(
+      "Tidsutvikling andeler",
+             nra::andeler_tid_ui(id = "andeler_tid_id")
+    ),
+
+
 
     shiny::navbarMenu(
       "Verktøy",

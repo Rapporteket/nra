@@ -4,7 +4,14 @@
 \alias{fordelingsfig_prepost_server}
 \title{Modul for før/etter-figur i NRA sin shiny-app på Rapporteket}
 \usage{
-fordelingsfig_prepost_server(id, reshID, RegData, hvd_session, BrValg)
+fordelingsfig_prepost_server(
+  id,
+  reshID,
+  RegData,
+  hvd_session,
+  userRole,
+  BrValg
+)
 }
 \arguments{
 \item{reshID}{Parameter følger fra innlogging helseregister.no og angir
