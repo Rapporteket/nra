@@ -51,6 +51,10 @@ appServer <- function(input, output, session) {
                           RegData = RegData, hvd_session = session,
                           BrValg = req(BrValg), userRole = user$role)
 
+  ##############################################################################
+  nra::gjsn_prepost_server("gjsn_prepost_id", reshID = user$org,
+                           RegData = RegData, hvd_session = session)
+
 
   # Eksport  ###################################################################
   rapbase::exportUCServer("nraExport", "nra")

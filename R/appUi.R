@@ -43,7 +43,9 @@ appUi <- function() {
              nra::andeler_tid_ui(id = "andeler_tid_id")
     ),
 
-
+    tabPanel("Gjennomsnitt/andeler før og etter operasjon",
+             gjsn_prepost_ui(id = "gjsn_prepost_id")
+    ),
 
     shiny::navbarMenu(
       "Verktøy",
