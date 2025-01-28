@@ -1,7 +1,6 @@
 devtools::install("../rapbase/.")
 devtools::install(upgrade = FALSE, dependencies = FALSE)
 
-Sys.setenv(FALK_USER_EMAIL="kevin.thon@gmail.com")
 Sys.setenv(R_RAP_INSTANCE="QAC")
 Sys.setenv(R_RAP_CONFIG_PATH="/home/rstudio/nra/data-raw/config")
 

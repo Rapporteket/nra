@@ -164,7 +164,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
               'Andel (%)' = as.numeric(TabellData$PlotMatrise),
               N = TabellData$Ngr) %>%
               knitr::kable("html", digits = c(0,0,1,0)) %>%
-              kable_styling("hover", full_width = F)
+              kableExtra::kable_styling("hover", full_width = F)
           } else {
             if (as.numeric(input$sammenlign) == 1) {
               Tabell1 <- dplyr::tibble(
@@ -177,8 +177,8 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                 'Andel (%)' = as.numeric(TabellData$PlotMatrise[2,]),
                 N = TabellData$Ngr, .name_repair = "minimal") %>%
                 knitr::kable("html", digits = c(0,0,1,0,1,0)) %>%
-                kable_styling("hover", full_width = F) %>%
-                add_header_above(c(" ", "Før intervensjon" = 2,
+                kableExtra::kable_styling("hover", full_width = F) %>%
+                kableExtra::add_header_above(c(" ", "Før intervensjon" = 2,
                                    "1-årskontroll" = 2, " "))
             } else {
               if (as.numeric(input$sammenlign) == 2) {
@@ -195,8 +195,8 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                   'Andel (%)' = as.numeric(TabellData$PlotMatrise[3,]),
                   N = TabellData$Ngr, .name_repair = "minimal") %>%
                   knitr::kable("html", digits = c(0,0,1,0,1,0,1,0)) %>%
-                  kable_styling("hover", full_width = F) %>%
-                  add_header_above(c(" ", "Før intervensjon" = 2,
+                  kableExtra::kable_styling("hover", full_width = F) %>%
+                  kableExtra::add_header_above(c(" ", "Før intervensjon" = 2,
                                      "1-årskontroll" = 2,
                                      "5-årskontroll" = 2, " "))
               } else {
@@ -211,8 +211,8 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                     'Andel (%)' = as.numeric(TabellData$PlotMatrise[2,]),
                     N = TabellData$Ngr, .name_repair = "minimal") %>%
                     knitr::kable("html", digits = c(0,0,1,0,1,0)) %>%
-                    kable_styling("hover", full_width = F) %>%
-                    add_header_above(c(" ", "Før intervensjon" = 2,
+                    kableExtra::kable_styling("hover", full_width = F) %>%
+                    kableExtra::add_header_above(c(" ", "Før intervensjon" = 2,
                                        "5-årskontroll" = 2, " "))
                 } else {
                   if (as.numeric(input$sammenlign) == 4) {
@@ -223,7 +223,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                       'Andel (%)' = as.numeric(TabellData$PlotMatrise),
                       N = TabellData$Ngr) %>%
                       knitr::kable("html", digits = c(0,0,1,0)) %>%
-                      kable_styling("hover", full_width = F)
+                      kableExtra::kable_styling("hover", full_width = F)
                   } else {
                     if (as.numeric(input$sammenlign) == 5) {
                       Tabell1 <- dplyr::tibble(
@@ -234,7 +234,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                           TabellData$PlotMatrise),
                         N = TabellData$Ngr) %>%
                         knitr::kable("html", digits = c(0,0,1,0)) %>%
-                        kable_styling("hover", full_width = F)
+                        kableExtra::kable_styling("hover", full_width = F)
                     }
                   }
                 }
@@ -251,7 +251,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                           sprintf("%.1f", as.numeric(TabellData$KIopp))),
               N = TabellData$Ngr) %>%
               knitr::kable("html", digits = c(0,1,0,0)) %>%
-              kable_styling("hover", full_width = F)
+              kableExtra::kable_styling("hover", full_width = F)
           } else {
             if (as.numeric(input$sammenlign) == 1) {
               Tabell1 <- dplyr::tibble(
@@ -266,8 +266,8 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                                          as.numeric(TabellData$KIopp[2,]))),
                 N = TabellData$Ngr, .name_repair = "minimal") %>%
                 knitr::kable("html", digits = c(0,1,0,1,0,0)) %>%
-                kable_styling("hover", full_width = F) %>%
-                add_header_above(c(" ", "Før intervensjon" = 2,
+                kableExtra::kable_styling("hover", full_width = F) %>%
+                kableExtra::add_header_above(c(" ", "Før intervensjon" = 2,
                                    "1-årskontroll" = 2, " "))
             } else {
               if (as.numeric(input$sammenlign) == 2) {
@@ -287,8 +287,8 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                     sprintf("%.1f", as.numeric(TabellData$KIopp[3,]))),
                   N = TabellData$Ngr, .name_repair = "minimal") %>%
                   knitr::kable("html", digits = c(0,1,0,1,0,1,0,0)) %>%
-                  kable_styling("hover", full_width = F) %>%
-                  add_header_above(c(" ", "Før intervensjon" = 2,
+                  kableExtra::kable_styling("hover", full_width = F) %>%
+                  kableExtra::add_header_above(c(" ", "Før intervensjon" = 2,
                                      "1-årskontroll" = 2,
                                      "5-årskontroll" = 2, " "))
               } else {
@@ -305,8 +305,8 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                       sprintf("%.1f", as.numeric(TabellData$KIopp[2,]))),
                     N = TabellData$Ngr, .name_repair = "minimal") %>%
                     knitr::kable("html", digits = c(0,1,0,1,0,0)) %>%
-                    kable_styling("hover", full_width = F) %>%
-                    add_header_above(c(" ", "Før intervensjon" = 2,
+                    kableExtra::kable_styling("hover", full_width = F) %>%
+                    kableExtra::add_header_above(c(" ", "Før intervensjon" = 2,
                                        "5-årskontroll" = 2, " "))
                 } else {
                   if (as.numeric(input$sammenlign) == 4) {
@@ -318,7 +318,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                         sprintf("%.1f", as.numeric(TabellData$KIopp))),
                       N = TabellData$Ngr) %>%
                       knitr::kable("html", digits = c(0,1,0,0)) %>%
-                      kable_styling("hover", full_width = F)
+                      kableExtra::kable_styling("hover", full_width = F)
                   } else {
                     if (as.numeric(input$sammenlign) == 5) {
                       Tabell1 <- dplyr::tibble(
@@ -329,7 +329,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                           sprintf("%.1f", as.numeric(TabellData$KIopp))),
                         N = TabellData$Ngr) %>%
                         knitr::kable("html", digits = c(0,1,0,0)) %>%
-                        kable_styling("hover", full_width = F)
+                        kableExtra::kable_styling("hover", full_width = F)
                     }
                   }
                 }
@@ -389,9 +389,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
                       Antall = round(as.numeric(
                         TabellData$PlotMatrise[2,])*TabellData$Ngr/100),
                       'Andel (%)' = as.numeric(TabellData$PlotMatrise[2,]),
-                      N = TabellData$Ngr, .name_repair = "minimal") %>%
-                      knitr::kable("html", digits = c(0,0,1,0,1,0)) %>%
-                      kable_styling("hover", full_width = F)
+                      N = TabellData$Ngr, .name_repair = "minimal")
                   } else {
                     if (as.numeric(input$sammenlign) == 4) {
                       Tabell1 <- dplyr::tibble(

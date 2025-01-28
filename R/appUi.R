@@ -27,24 +27,23 @@ appUi <- function() {
 
       nra::startside_ui("startside")
     ),
-
     shiny::tabPanel(
       "Fordelingsfigurer",
       nra::fordelingsfig_ui("fordelingsfig")
     ),
-
     shiny::tabPanel(
       "Fordelingsfigurer - Før og etter",
       nra::fordelingsfig_prepost_ui(id = "fordelingsfig_prepost_id")
     ),
-
     shiny::tabPanel(
       "Tidsutvikling andeler",
              nra::andeler_tid_ui(id = "andeler_tid_id")
     ),
-
     tabPanel("Gjennomsnitt/andeler før og etter operasjon",
              gjsn_prepost_ui(id = "gjsn_prepost_id")
+    ),
+    tabPanel("Indikatorer",
+             indikatorfig_ui(id = "indikator_id")
     ),
 
     shiny::navbarMenu(

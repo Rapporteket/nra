@@ -220,8 +220,8 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
     indikator$var <- indikator$Konservativ_v2
     indikator <- indikator[!is.na(indikator$var), ]
-    indikator <- indikator %>% group_by(PasientID, Aar, AvdRESH) %>%
-      summarise(var = max(var),
+    indikator <- indikator %>% dplyr::group_by(PasientID, Aar, AvdRESH) %>%
+      dplyr::summarise(var = max(var),
                 ForlopsID = ForlopsID[var==max(var)][1])
     indikator$denominator <- 1
     indikator$ind_id <- "nra_tidl_konservativ"
@@ -240,8 +240,8 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
     indikator$var <- indikator$Konservativ_v2
     indikator <- indikator[!is.na(indikator$var), ]
-    indikator <- indikator %>% group_by(PasientID, Aar, AvdRESH) %>%
-      summarise(var = max(var),
+    indikator <- indikator %>% dplyr::group_by(PasientID, Aar, AvdRESH) %>%
+      dplyr::summarise(var = max(var),
                 ForlopsID = ForlopsID[var==max(var)][1])
     indikator$denominator <- 1
     indikator$ind_id <- "nra_tidl_konservativ_snm"
@@ -260,8 +260,8 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[ , c("Aar", "AvdRESH", "PasientID", "ForlopsID", "Konservativ_v2")]
     indikator$var <- indikator$Konservativ_v2
     indikator <- indikator[!is.na(indikator$var), ]
-    indikator <- indikator %>% group_by(PasientID, Aar, AvdRESH) %>%
-      summarise(var = max(var),
+    indikator <- indikator %>% dplyr::group_by(PasientID, Aar, AvdRESH) %>%
+      dplyr::summarise(var = max(var),
                 ForlopsID = ForlopsID[var==max(var)][1])
     indikator$denominator <- 1
     indikator$ind_id <- "nra_tidl_konservativ_sfinkt"
@@ -874,7 +874,8 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
                        oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
                        by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
+    indikator <- indikator %>%
+      dplyr::mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_red4_1aar_sfinkt"
@@ -894,7 +895,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
                        oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
                        by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
+    indikator <- indikator %>% dplyr::mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_inkontinensscore_12_5aar_sfinkt"
@@ -915,7 +916,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
                        oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
                        by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
+    indikator <- indikator %>% dplyr::mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_reduksjon_4_stmarks_1aar_snm"
@@ -936,7 +937,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
                        oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
                        by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
+    indikator <- indikator %>% dplyr::mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_reduksjon_4_stmarks_1aar_snm"
@@ -956,7 +957,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
                        oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
                        by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
+    indikator <- indikator %>% dplyr::mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_reduksjon_40pst_stmarks_1aar_sfinkt"
@@ -976,7 +977,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
                        oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
                        by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
+    indikator <- indikator %>% dplyr::mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_reduksjon_40pst_stmarks_5aar_sfinkt"
@@ -997,7 +998,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
                        oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
                        by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
+    indikator <- indikator %>% dplyr::mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_reduksjon_40pst_stmarks_1aar_snm"
@@ -1018,7 +1019,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
                        oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
                        by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
+    indikator <- indikator %>% dplyr::mutate(var = ifelse((StMarksTotalScore - StMarksTotalScore_post)/StMarksTotalScore > .4, 1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_reduksjon_40pst_stmarks_5aar_snm"

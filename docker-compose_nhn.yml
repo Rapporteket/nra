@@ -13,6 +13,7 @@ x-environment: &environment
   SHINYPROXY_USERGROUPS: "pilot"
   R_RAP_INSTANCE: "QAC"
   FALK_USER_EMAIL: kevin.thon@gmail.com
+  R_RAP_CONFIG_PATH: /home/rstudio/nra/data-raw/config
 
 
 services:
@@ -53,7 +54,7 @@ services:
   dev:
     depends_on:
       - db
-    image: rapporteket/norgast-dev:nhn
+    image: rapporteket/pilot-dev:main
     volumes:
       - ~/.ssh:/home/rstudio/.ssh
       - ~/.gitconfig:/home/rstudio/.gitconfig

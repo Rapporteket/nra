@@ -21,7 +21,6 @@ Imports:
     dplyr,
     kableExtra,
     shinyjs,
-    shinyWidgets,
     rapFigurer,
     rapbase
 Remotes:
