@@ -45,6 +45,12 @@ appUi <- function() {
     tabPanel("Indikatorer",
              indikatorfig_ui(id = "indikator_id")
     ),
+    tabPanel("Datadump",
+             datadump_ui(id = "datadump_id")
+    ),
+    tabPanel("Administrative tabeller",
+             admtab_ui(id = "admtab_id")
+    ),
 
     shiny::navbarMenu(
       "Verktøy",

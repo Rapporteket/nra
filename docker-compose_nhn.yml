@@ -8,11 +8,11 @@ x-environment: &environment
   MYSQL_PASSWORD: root
   FALK_APP_ID: 97
   # FALK_EXTENDED_USER_RIGHTS: "[{\\\"A\\\":97,\\\"R\\\":\\\"SC\\\",\\\"U\\\":601225},{\\\"A\\\":97,\\\"R\\\":\\\"LU\\\",\\\"U\\\":601225},{\\\"A\\\":84,\\\"R\\\":\\\"LU\\\",\\\"U\\\":8},{\\\"A\\\":97,\\\"R\\\":\\\"LU\\\",\\\"U\\\":700922}]"
-  FALK_EXTENDED_USER_RIGHTS: "[{\"A\":97,\"R\":\"SC\",\"U\":601225},{\"A\":97,\"R\":\"LU\",\"U\":601225},{\"A\":84,\"R\":\"LU\",\"U\":8},{\"A\":97,\"R\":\"LU\",\"U\":700922}]"
+  # FALK_EXTENDED_USER_RIGHTS: "[{\"A\":97,\"R\":\"SC\",\"U\":601225},{\"A\":97,\"R\":\"LU\",\"U\":601225},{\"A\":84,\"R\":\"LU\",\"U\":8},{\"A\":97,\"R\":\"LU\",\"U\":700922}]"
   USERORGID: "pilot"
   SHINYPROXY_USERNAME: test@tester.no
   SHINYPROXY_USERGROUPS: "pilot"
-  R_RAP_INSTANCE: "QAC"
+  # R_RAP_INSTANCE: "QAC"
   FALK_USER_EMAIL: kevin.thon@gmail.com
   # R_RAP_CONFIG_PATH: /home/rstudio/nra/data-raw/config
 
@@ -50,6 +50,8 @@ services:
       - ./data-raw/config:/app/R
     environment:
       R_RAP_CONFIG_PATH: /app/R
+      R_RAP_INSTANCE: "QAC"
+      FALK_EXTENDED_USER_RIGHTS: "[{\"A\":97,\"R\":\"SC\",\"U\":601225},{\"A\":97,\"R\":\"LU\",\"U\":601225},{\"A\":84,\"R\":\"LU\",\"U\":8},{\"A\":97,\"R\":\"LU\",\"U\":700922}]"
       << : *environment
 
   dev:
@@ -68,7 +70,9 @@ services:
     environment:
       << : *environment
       DISABLE_AUTH: "true"
-      R_RAP_CONFIG_PATH: /home/rstudio/rap_config
+      R_RAP_CONFIG_PATH: /home/rstudio/nra/data-raw/config
+      R_RAP_INSTANCE: "QAC"
+      FALK_EXTENDED_USER_RIGHTS: "[{\\\"A\\\":97,\\\"R\\\":\\\"SC\\\",\\\"U\\\":601225},{\\\"A\\\":97,\\\"R\\\":\\\"LU\\\",\\\"U\\\":601225},{\\\"A\\\":84,\\\"R\\\":\\\"LU\\\",\\\"U\\\":8},{\\\"A\\\":97,\\\"R\\\":\\\"LU\\\",\\\"U\\\":700922}]"
 
   adminer:
     depends_on:

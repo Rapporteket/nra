@@ -22,6 +22,7 @@ Imports:
     tidyr,
     kableExtra,
     shinyjs,
+    shinyWidgets,
     rapFigurer,
     rapbase
 Remotes:
