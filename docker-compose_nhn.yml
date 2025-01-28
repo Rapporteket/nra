@@ -7,13 +7,14 @@ x-environment: &environment
   MYSQL_USER: root
   MYSQL_PASSWORD: root
   FALK_APP_ID: 97
-  FALK_EXTENDED_USER_RIGHTS: "[{\\\"A\\\":97,\\\"R\\\":\\\"SC\\\",\\\"U\\\":601225},{\\\"A\\\":97,\\\"R\\\":\\\"LU\\\",\\\"U\\\":601225},{\\\"A\\\":84,\\\"R\\\":\\\"LU\\\",\\\"U\\\":8},{\\\"A\\\":97,\\\"R\\\":\\\"LU\\\",\\\"U\\\":700922}]"
+  # FALK_EXTENDED_USER_RIGHTS: "[{\\\"A\\\":97,\\\"R\\\":\\\"SC\\\",\\\"U\\\":601225},{\\\"A\\\":97,\\\"R\\\":\\\"LU\\\",\\\"U\\\":601225},{\\\"A\\\":84,\\\"R\\\":\\\"LU\\\",\\\"U\\\":8},{\\\"A\\\":97,\\\"R\\\":\\\"LU\\\",\\\"U\\\":700922}]"
+  FALK_EXTENDED_USER_RIGHTS: "[{\"A\":97,\"R\":\"SC\",\"U\":601225},{\"A\":97,\"R\":\"LU\",\"U\":601225},{\"A\":84,\"R\":\"LU\",\"U\":8},{\"A\":97,\"R\":\"LU\",\"U\":700922}]"
   USERORGID: "pilot"
   SHINYPROXY_USERNAME: test@tester.no
   SHINYPROXY_USERGROUPS: "pilot"
   R_RAP_INSTANCE: "QAC"
   FALK_USER_EMAIL: kevin.thon@gmail.com
-  R_RAP_CONFIG_PATH: /home/rstudio/nra/data-raw/config
+  # R_RAP_CONFIG_PATH: /home/rstudio/nra/data-raw/config
 
 
 services:
@@ -33,23 +34,23 @@ services:
     ports:
       - 3306:3306 
 
-  # app:
-  #   depends_on:
-  #     - db
-  #   image: rapporteket/norgast:3.0.1
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 900M
-  #       reservations:
-  #         memory: 900M
-  #   ports:
-  #     - 3838:3838
-  #   volumes:
-  #     - ./data-raw/config:/app/R
-  #   environment:
-  #     R_RAP_CONFIG_PATH: /app/R
-  #     << : *environment
+  app:
+    depends_on:
+      - db
+    image: rapporteket/nra:main
+    deploy:
+      resources:
+        limits:
+          memory: 900M
+        reservations:
+          memory: 900M
+    ports:
+      - 3838:3838
+    volumes:
+      - ./data-raw/config:/app/R
+    environment:
+      R_RAP_CONFIG_PATH: /app/R
+      << : *environment
 
   dev:
     depends_on:
