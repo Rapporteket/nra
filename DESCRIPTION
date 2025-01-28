@@ -26,5 +26,4 @@ Imports:
 Remotes:
   Rapporteket/rapbase@main,
   Rapporteket/rapFigurer
-VignetteBuilder: knitr
 RoxygenNote: 7.3.2
