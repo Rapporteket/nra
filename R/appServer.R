@@ -1,4 +1,4 @@
-#' Server logic for the norgast app
+#' Server logic for the nra app
 #'
 #' @param input shiny input object
 #' @param output shiny output object
@@ -27,6 +27,18 @@ appServer <- function(input, output, session) {
   BrValg <- BrValg(RegData=RegData)
 
   rapbase::appLogger(session = session, msg = 'Starter NRA')
+
+  shiny::observeEvent(
+    shiny::req(user$role()), {
+      if (user$role() != 'SC') {
+        # shiny::hideTab("nra_app_id", target = "Utsending")
+        shiny::hideTab("nra_app_id", target = "Verktøy")
+      } else {
+        # shiny::showTab("nra_app_id", target = "Utsending")
+        shiny::showTab("nra_app_id", target = "Verktøy")
+      }
+    })
+
 
   ##############################################################################
   # Innholdsmoduler ############################################################

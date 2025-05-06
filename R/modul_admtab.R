@@ -262,20 +262,20 @@ admtab_server <- function(id, RegData, hvd_session, skjemaoversikt){
           req(input$datovalg_adm_tid_mnd)
           tilDato <- as.Date(paste0(input$datovalg_adm_tid_mnd))
           fraDato <- tilDato %m-% months(as.numeric(input$ant_mnd)-1) %>%
-            floor_date(unit="months")
+            lubridate::floor_date(unit="months")
 
           aux$mnd <- factor(
             format(aux$HovedDato, format='%b-%y'),
             levels = format(seq(fraDato, tilDato, by="month"), "%b-%y"))
 
           ant_skjema <-  as.data.frame.matrix(addmargins(table(
-            aux[, c('SenterKortNavn', 'mnd')]))) %>% as_tibble(rownames = 'Sykehus')
+            aux[, c('SenterKortNavn', 'mnd')]))) %>% dplyr::as_tibble(rownames = 'Sykehus')
         }
 
         if (input$adm_tidsenhet == 2) {
           req(input$datovalg_adm_tid_aar)
           fraDato <- as.Date(input$datovalg_adm_tid_aar) %m-%
-            years(input$ant_aar-1) %>% floor_date(unit="years")
+            lubridate::years(input$ant_aar-1) %>% lubridate::floor_date(unit="years")
 
           aux$mnd <- factor(
             format(aux$HovedDato, format='%Y'),
@@ -284,12 +284,12 @@ admtab_server <- function(id, RegData, hvd_session, skjemaoversikt){
                                 by="year"), "%Y"))
 
           ant_skjema <-  as.data.frame.matrix(addmargins(table(
-            aux[, c('SenterKortNavn', 'mnd')]))) %>% as_tibble(rownames = 'Sykehus')
+            aux[, c('SenterKortNavn', 'mnd')]))) %>% dplyr::as_tibble(rownames = 'Sykehus')
         }
 
         sketch <- htmltools::withTags(table(
-          tableHeader(ant_skjema[-dim(ant_skjema)[1], ]),
-          tableFooter(c('Sum' ,
+          DT::tableHeader(ant_skjema[-dim(ant_skjema)[1], ]),
+          DT::tableFooter(c('Sum' ,
                         as.numeric(ant_skjema[dim(ant_skjema)[1],
                                               2:dim(ant_skjema)[2]])))))
         list(ant_skjema=ant_skjema, sketch=sketch)
@@ -387,7 +387,7 @@ admtab_server <- function(id, RegData, hvd_session, skjemaoversikt){
             req(input$datovalg_adm_tid_mnd)
             tilDato <- as.Date(paste0(input$datovalg_adm_tid_mnd))
             fraDato <- tilDato %m-% months(as.numeric(input$ant_mnd)-1) %>%
-              floor_date(unit="months")
+              lubridate::floor_date(unit="months")
 
             skjemaoversikt_forlop$tid <- factor(
               format(skjemaoversikt_forlop$HovedDato, format='%b-%y'),
@@ -396,8 +396,8 @@ admtab_server <- function(id, RegData, hvd_session, skjemaoversikt){
           if (input$adm_tidsenhet == 2) {
             req(input$datovalg_adm_tid_aar)
             fraDato <- as.Date(input$datovalg_adm_tid_aar) %m-%
-              years(input$ant_aar-1) %>%
-              floor_date(unit="years")
+              lubridate::years(input$ant_aar-1) %>%
+              lubridate::floor_date(unit="years")
 
             skjemaoversikt_forlop$tid <- factor(
               format(skjemaoversikt_forlop$HovedDato, format='%Y'),
@@ -442,13 +442,13 @@ admtab_server <- function(id, RegData, hvd_session, skjemaoversikt){
           tidyr::spread(value = "antall", key = "tid", fill = 0, drop = FALSE)
 
         adm_tab <- dplyr::bind_rows(
-          adm_tab, as_tibble(as.list(
+          adm_tab, dplyr::as_tibble(as.list(
             c("Sykehus"="Sum", colSums(adm_tab[, -1])))) %>%
-            mutate_at(vars(-Sykehus), as.numeric))
+            dplyr::mutate_at(dplyr::vars(-Sykehus), as.numeric))
 
         sketch <- htmltools::withTags(table(
-          tableHeader(adm_tab[-dim(adm_tab)[1], ]),
-          tableFooter(
+          DT::tableHeader(adm_tab[-dim(adm_tab)[1], ]),
+          DT::tableFooter(
             c('Sum' , as.numeric(adm_tab[dim(adm_tab)[1], 2:dim(adm_tab)[2]])))))
         list(ant_skjema=adm_tab, sketch=sketch)
 

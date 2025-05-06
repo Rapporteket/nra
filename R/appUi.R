@@ -24,7 +24,6 @@ appUi <- function() {
     shiny::tabPanel(
       "Startside",
       rapbase::navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
-
       nra::startside_ui("startside")
     ),
     shiny::tabPanel(

@@ -16,7 +16,7 @@ datadump_ui <- function(id){
                      max = Sys.Date(), start  = '2014-01-01',
                      end = Sys.Date(), separator = " til "),
       selectInput(inputId = ns("dumptype"), label = "Velg type datadump",
-                  choices = c('allevar', 'allevarnum', 'forlopsoversikt',
+                  choices = c('allevarnum', 'forlopsoversikt',
                               'skjemaoversikt', 'allevarnum_utflatet')),
       tags$hr(),
       downloadButton(ns("lastNed_dump"), "Last ned datadump")
@@ -28,8 +28,6 @@ datadump_ui <- function(id){
          Lokale brukere vil bare kunne laste ned data for egen avdeling.'),
       br(),
       h4(tags$b(tags$u('Forklaring til de ulike datadump-typene:'))),
-      h4(tags$b('allevar '), 'inneholder alle kliniske variabler i registeret
-         og benytter etikettene til kategoriske variabler.'),
       h4(tags$b('allevarnum '), 'inneholder alle kliniske variabler i
          registeret og benytter tallkodene til kategoriske variabler.'),
       h4(tags$b('forlopsoversikt '), 'inneholder en del administrative data
@@ -64,11 +62,11 @@ datadump_server <- function(id, reshID, userRole, hvd_session){
           if (
             rapbase::isRapContext()) {
             if (input$dumptype == c('allevarnum_utflatet')) {
-              allevar <- nraHentTabell("allevarnum")
-              basisdata <- allevar[allevar$ForlopsType1Num %in% 1:2, ]
+              allevarnum <- nraHentTabell("allevarnum")
+              basisdata <- allevarnum[allevarnum$ForlopsType1Num %in% 1:2, ]
               basisdata <- basisdata[, colSums(is.na(basisdata)) !=
                                        dim(basisdata)[1]]
-              oppfdata <- allevar[allevar$ForlopsType1Num %in% 3:4, ]
+              oppfdata <- allevarnum[allevarnum$ForlopsType1Num %in% 3:4, ]
               oppfdata <- oppfdata[, colSums(is.na(oppfdata)) !=
                                      dim(oppfdata)[1]]
               oppf1 <- oppfdata[oppfdata$ForlopsType1Num==3, ]
