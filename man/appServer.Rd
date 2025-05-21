@@ -2,7 +2,7 @@
 % Please edit documentation in R/appServer.R
 \name{appServer}
 \alias{appServer}
-\title{Server logic for the norgast app}
+\title{Server logic for the nra app}
 \usage{
 appServer(input, output, session)
 }
@@ -17,5 +17,5 @@ appServer(input, output, session)
 A shiny app server object
 }
 \description{
-Server logic for the norgast app
+Server logic for the nra app
 }
