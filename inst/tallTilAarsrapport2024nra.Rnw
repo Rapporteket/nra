@@ -16,7 +16,7 @@ linkcolor=black,
 urlcolor=black
 }
 
-\title{Figurer og tabeller til årsrapport for NRA 2023}
+\title{Figurer og tabeller til årsrapport for NRA 2024}
 \author{NRA}
 
 \renewcommand\thempfootnote{\fnsymbol{mpfootnote}}
@@ -53,7 +53,7 @@ RegData <- merge(allevar, foversikt[, c("ForlopsID", names(foversikt)[!(names(fo
 Skjemaoversikt <- nra::nraHentTabell("skjemaoversikt")
 RegData <- nraPreprosess(RegData=RegData)
 
-rap_aar <- 2023
+rap_aar <- 2024
 
 reshID <- 700116 #  #Må sendes med til funksjon
 minald <- 0  #alder, fra og med
@@ -107,7 +107,7 @@ skriftStr=2.0
 pktStr=1.5
 onestage <- 99
 grvar='SenterKortNavn'
-figfolder <- "~/mydata/nra/aarsrapp_2023/"
+figfolder <- "C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/aarsrapport_2024/indikatorer_2024/"
 valgtVar <- 'StMarksTotalScore'
 outfile <- ''
 
@@ -976,7 +976,6 @@ if (utformat!='pdf') {
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
                 valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2)
 }
-
 outfile <- paste0(figfolder, "Tilfredshet_sfinkt.pdf")
 nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet_1aar', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
@@ -1954,13 +1953,13 @@ if (utformat!='pdf') {
 # }
 
 outfile <- paste0(figfolder, "Tilfredshet_snm_onestage.pdf")
-nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet_1aar', datoFra=datoFra, datoTil=datoTil,
               minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
               reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
               valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2, onestage=1)
 if (utformat!='pdf') {
   outfile <- paste0(substr(outfile, 1,nchar(outfile)-3), utformat)
-  nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet', datoFra=datoFra, datoTil=datoTil,
+  nraFigAndeler(RegData=RegData, valgtVar='Tilfredshet_1aar', datoFra=datoFra, datoTil=datoTil,
                 minald=minald, maxald=maxald, erMann=erMann, outfile=outfile,
                 reshID=reshID, enhetsUtvalg=enhetsUtvalg, preprosess=preprosess, hentData=hentData,
                 valgtShus = valgtShus, forlopstype1=2, forlopstype2=forlopstype2, onestage=1)

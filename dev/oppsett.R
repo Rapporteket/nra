@@ -4,9 +4,8 @@ devtools::install(upgrade = FALSE, dependencies = FALSE)
 Sys.setenv(R_RAP_INSTANCE="QAC")
 Sys.setenv(R_RAP_CONFIG_PATH="/home/rstudio/nra/data-raw/config")
 
+
 nra::nraApp()
-
-
 
 
 RegData <- rapbase::loadRegData(
@@ -21,3 +20,5 @@ query <- paste0("INSERT INTO `autoreport` VALUES ('", tmp_json, "');")
 con <- rapbase::rapOpenDbConnection("autoreport")$con
 DBI::dbExecute(con, query)
 rapbase::rapCloseDbConnection(con)
+
+
