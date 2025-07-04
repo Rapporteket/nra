@@ -86,7 +86,7 @@ variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardi
                "Inkontinensskår <=12 5 år etter sfinkterplastikk - alle" = "nra_inkontinensscore_12_5aar_sfinkt_v2"
 )
 
-figfolder <- "C:/Users/kth200/OneDrive - Helse Nord RHF/Dokumenter/regdata/nra/aarsrapp2024/nra_indikatorer_2024/"
+figfolder <- "C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/indikatorer"
 if (!dir.exists(figfolder)) {
   dir.create(figfolder)
 }
@@ -117,8 +117,9 @@ Indikatorer <- Indikatorer %>%
                               "nra_inkontinensscore_9_1aar_snm", "nra_inkontinensscore_12_1aar_snm",
                               "nra_inkontinensscore_9_1aar_sfinkt", "nra_inkontinensscore_12_1aar_sfinkt",
                               "nra_inkontinensscore_9_5aar_snm", "nra_inkontinensscore_12_5aar_snm",
-                              "nra_inkontinensscore_9_5aar_sfinkt", "nra_inkontinensscore_12_5aar_sfinkt",
-                              "nra_inform_oppf"))
+                              "nra_inkontinensscore_9_5aar_sfinkt", "nra_inkontinensscore_12_5aar_sfinkt"))
+
+# "nra_inform_oppf" utgått som indikator pr. juli 2025
 
 ################## NØKKELTALL ######################################
 
@@ -135,7 +136,7 @@ nokkeltall <- RegData %>% group_by(Aar) %>%
             'Andel med symptomvarighet mer enn 10 år' = sum(Symtomvarighet[ForlopsType1Num %in% 1:2]==4)/sum(ForlopsType1Num %in% 1:2)
   )
 
-dg_samlet <- read.csv2("~/mydata/nra/ind_imongr_20230623.csv") %>%
+dg_samlet <- read.csv2("C:/Users/ibo600/repo/rapporteket/nra/ignore/fil_fra_imongr_04.07.25.csv") %>%
   dplyr::filter(substr(ind_id, 1, 6) == "nra_dg") %>%
   dplyr::mutate(var = ifelse(var > denominator, denominator, var))
 
@@ -143,62 +144,108 @@ kobl_resh_orgnr <- data.frame(resh = c(601225, 108162, 107440, 700116, 700922,
                                        111138, 107505, 4210588, 601233,
                                        114271),
                               orgnr = c(974795787, 974706490, 974749025,
-                                        983971768, 974557746, 974724960,
+                                        100, 974557746, 974724960,
                                         974116804, 974733013, 974795396,
                                         974703300),
                               shus = c("UNN", "Akershus", "St.Olav", "Østfold",
                                        "Haukeland", "Innlandet", "DS",
                                        "Kristiansand", "UNN Narvik",
                                        "Stavanger"))
-# dg_2020_21 <- read.csv2(
-#   "~/mydata/nra/DGA_begge_operasjonstyper_hf_aar_2020_2021_mRESHID.csv",
-#   fileEncoding = "latin1") %>%
-#   dplyr::filter(!is.na(AvdRESH))
-# dg_2020_21$var <- dg_2020_21$Begge + dg_2020_21$Kun_NRA
-# dg_2020_21$orgnr <- kobl_resh_orgnr$orgnr[match(dg_2020_21$AvdRESH, kobl_resh_orgnr$resh)]
-# dg_2020_21 <- dg_2020_21 %>%
-#   dplyr::rename(denominator = Total,
-#                 year = aar) %>%
-#   dplyr::mutate(context = "caregiver",
-#                 ind_id = "nra_dg_total") %>%
-#   dplyr::select(context, orgnr, year, var, denominator, ind_id)
-#
-# dg_samlet <- dplyr::bind_rows(dg_samlet, dg_2020_21)
-#
-# dg_2020_21 <- read.csv2(
-#   "~/mydata/nra/DGA_JHC10_K628_hf_aar_2020_2021_mRESHID.csv",
-#   fileEncoding = "latin1") %>%
-#   dplyr::filter(!is.na(AvdRESH))
-# dg_2020_21$var <- dg_2020_21$Begge + dg_2020_21$Kun_NRA
-# dg_2020_21$orgnr <- kobl_resh_orgnr$orgnr[match(dg_2020_21$AvdRESH, kobl_resh_orgnr$resh)]
-# dg_2020_21 <- dg_2020_21 %>%
-#   dplyr::rename(denominator = Total,
-#                 year = aar) %>%
-#   dplyr::mutate(context = "caregiver",
-#                 ind_id = "nra_dg_sfinkter") %>%
-#   dplyr::select(context, orgnr, year, var, denominator, ind_id)
-#
-# dg_samlet <- dplyr::bind_rows(dg_samlet, dg_2020_21)
-#
-# dg_2020_21 <- read.csv2(
-#   "~/mydata/nra/DGA_SMN_inkl_AEA20_AEA24_hf_aar_2020_2021_mRESHID.csv",
-#   fileEncoding = "latin1") %>%
-#   dplyr::filter(!is.na(AvdRESH))
-# dg_2020_21$var <- dg_2020_21$Begge + dg_2020_21$Kun_NRA
-# dg_2020_21$orgnr <- kobl_resh_orgnr$orgnr[match(dg_2020_21$AvdRESH, kobl_resh_orgnr$resh)]
-# dg_2020_21 <- dg_2020_21 %>%
-#   dplyr::rename(denominator = Total,
-#                 year = aar) %>%
-#   dplyr::mutate(context = "caregiver",
-#                 ind_id = "nra_dg_snm") %>%
-#   dplyr::select(context, orgnr, year, var, denominator, ind_id)
-#
-# dg_samlet <- dplyr::bind_rows(dg_samlet, dg_2020_21)
+
+#--- Dekningsgrad total ---#
+dg_2022_23 <- read.csv2("C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/dekningsgrad_22-23/DGA_begge_operasjonstyper_hf_aar_2022_2023_mRESHID.csv",
+                        fileEncoding = "latin1") %>%
+  dplyr::mutate(AvdRESH = dplyr::case_when(hf_standard == "Sykehuset Innlandet HF" ~ 111138,
+                                           hf_standard == "Diakonhjemmet sykehus" ~ 107505,
+                                           .default = AvdRESH)) %>%
+  dplyr::filter(!is.na(AvdRESH))
+
+# Regne ut nevner (var)
+dg_2022_23 <- dg_2022_23 %>%
+  mutate(var = Begge + Kun_NRA)
+
+# Koble resh med orgnr
+dg_2022_23$orgnr <- kobl_resh_orgnr$orgnr[match(dg_2022_23$AvdRESH, kobl_resh_orgnr$resh)]
+
+# Gi nye navn
+dg_2022_23 <- dg_2022_23 %>%
+  dplyr::rename(denominator = Total,
+                year = aar) %>%
+  dplyr::mutate(context = "caregiver",
+                ind_id = "nra_dg_total") %>%
+  dplyr::select(context, orgnr, year, var, denominator, ind_id)
+
+# Binde det sammen med resten av datafila
+dg_samlet <- full_join(dg_samlet, dg_2022_23)
+
+#--- Dekningsgrad sfinkter ---#
+
+# Laste inn data
+dg_2022_23_sfinkter <- read.csv2(
+  "C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/dekningsgrad_22-23/DGA_JHC10_K628_hf_aar_2022_2023_mRESHID.csv",
+  fileEncoding = "latin1") %>%
+  dplyr::mutate(AvdRESH = dplyr::case_when(hf_standard == "Sykehuset Innlandet HF" ~ 111138,
+                                           hf_standard == "Diakonhjemmet sykehus" ~ 107505,
+                                           .default = AvdRESH)) %>%
+  dplyr::filter(!is.na(AvdRESH))
+
+# Regne ut nevner (var)
+dg_2022_23_sfinkter <- dg_2022_23_sfinkter %>%
+  mutate(var = Begge + Kun_NRA)
+
+# Koble resh med orgnr
+dg_2022_23_sfinkter$orgnr <- kobl_resh_orgnr$orgnr[match(dg_2022_23_sfinkter$AvdRESH, kobl_resh_orgnr$resh)]
+
+# Gi nye navn
+dg_2022_23_sfinkter <- dg_2022_23_sfinkter %>%
+  dplyr::rename(denominator = Total,
+                year = aar) %>%
+  dplyr::mutate(context = "caregiver",
+                ind_id = "nra_dg_sfinkter") %>%
+  dplyr::select(context, orgnr, year, var, denominator, ind_id)
+
+# Binde det sammen med resten av datafila
+dg_samlet <- dplyr::full_join(dg_samlet, dg_2022_23_sfinkter)
+
+
+#--- Dekningsgrad SNM ---#
+dg_2022_23_snm <- read.csv2(
+  "C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/dekningsgrad_22-23/DGA_SMN_inkl_AEA20_AEA24_hf_aar_2022_2023_mRESHID.csv",
+  fileEncoding = "latin1") %>%
+  dplyr::filter(!is.na(AvdRESH))
+
+# Regne ut nevner (var)
+dg_2022_23_snm <- dg_2022_23_snm %>%
+  mutate(var = Begge + Kun_NRA)
+
+# Koble resh med orgnr
+dg_2022_23_snm$orgnr <- kobl_resh_orgnr$orgnr[match(dg_2022_23_snm$AvdRESH, kobl_resh_orgnr$resh)]
+
+# Gi nye navn
+dg_2022_23_snm <- dg_2022_23_snm %>%
+  dplyr::rename(denominator = Total,
+                year = aar) %>%
+  dplyr::mutate(context = "caregiver",
+                ind_id = "nra_dg_snm") %>%
+  dplyr::select(context, orgnr, year, var, denominator, ind_id)
+
+# Binde det sammen med resten av datafila
+dg_samlet <- dplyr::full_join(dg_samlet, dg_2022_23_snm)
+
 
 Indikatorer <- Indikatorer[ , c("year", "orgnr", "var", "denominator", "ind_id", "context")]
-# Indikatorer <- dplyr::bind_rows(Indikatorer, dg_samlet)
 
+Indikatorer <- dplyr::bind_rows(Indikatorer, dg_samlet)
 
-write.csv2(Indikatorer, paste0("~/mydata/nra/nra_indikatorer_", Sys.Date(), ".csv"),
+Indikatorer <- Indikatorer %>%
+  dplyr::mutate(orgnr = ifelse(orgnr == 983971768, 100, orgnr))
+
+Indikatorer <- Indikatorer %>%
+  arrange(ind_id)
+
+write.csv2(Indikatorer, paste0("C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/indikatorer_NRA_2024-", Sys.Date(), ".csv"),
            row.names = F, fileEncoding = "UTF-8")
 
+
+ff <- Indikatorer %>%
+  distinct(orgnr)
