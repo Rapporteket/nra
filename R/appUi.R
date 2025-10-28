@@ -5,21 +5,15 @@
 
 appUi <- function() {
 
-  shiny::addResourcePath('rap', system.file('www', package='rapbase'))
   regTitle = "NRA"
 
   # Define UI for application
   ui <- shiny::navbarPage(
     shinyjs::useShinyjs(),
     id = "nra_app_id",
-    title = shiny::div(shiny::a(
-      shiny::includeHTML(
-        system.file('www/logo.svg', package='rapbase')
-      )
-    ),
-    regTitle),
+    title = rapbase::title(regTitle),
     windowTitle = regTitle,
-    theme = "rap/bootstrap.css",
+    theme = rapbase::theme(),
 
     shiny::tabPanel(
       "Startside",
