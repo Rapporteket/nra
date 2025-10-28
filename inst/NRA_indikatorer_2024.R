@@ -91,6 +91,7 @@ if (!dir.exists(figfolder)) {
   dir.create(figfolder)
 }
 
+
 Indikatorer <- data.frame(year=numeric(), AvdRESH=character(), var=numeric(), denominator=numeric(), ind_id=character(),
                           orgnr=numeric(), SenterKortNavn=character(), context=character())
 
@@ -122,18 +123,20 @@ Indikatorer <- Indikatorer %>%
 # "nra_inform_oppf" utgått som indikator pr. juli 2025
 
 ################## NØKKELTALL ######################################
+library(tidyverse)
 
-
-nokkeltall <- RegData %>% group_by(Aar) %>%
+nokkeltall <- RegData %>%
+  group_by(Aar) %>%
+  filter(!is.na(Aar)) %>% # alle Aar registrert som NA tas ut
   summarise('Antall SNM' = sum(ForlopsType1Num==2),
-            'Antall sfinkt'  = sum(ForlopsType1Num==1),
-            'Antall 1-årsoppf.' = sum(ForlopsType1Num==3),
-            'Antall 5-årsoppf.' = sum(ForlopsType1Num==4),
-            'Totalt' = n(),
-            'Antall sykehus' = length(unique(AvdRESH)),
-            'Gjennomsnittsalder' = mean(PasientAlder[ForlopsType1Num %in% 1:2]),
-            'Andel 65 år og eldre' = sum(PasientAlder[ForlopsType1Num %in% 1:2]>=65)/sum(ForlopsType1Num %in% 1:2),
-            'Andel med symptomvarighet mer enn 10 år' = sum(Symtomvarighet[ForlopsType1Num %in% 1:2]==4)/sum(ForlopsType1Num %in% 1:2)
+                   'Antall sfinkt'  = sum(ForlopsType1Num==1),
+                   'Antall 1-årsoppf.' = sum(ForlopsType1Num==3),
+                   'Antall 5-årsoppf.' = sum(ForlopsType1Num==4),
+                   'Totalt' = n(),
+                   'Antall sykehus' = length(unique(AvdRESH)),
+                   'Gjennomsnittsalder' = mean(PasientAlder[ForlopsType1Num %in% 1:2]),
+                   'Andel 65 år og eldre' = sum(PasientAlder[ForlopsType1Num %in% 1:2]>=65)/sum(ForlopsType1Num %in% 1:2),
+                   'Andel med symptomvarighet mer enn 10 år' = sum(Symtomvarighet[ForlopsType1Num %in% 1:2]==4)/sum(ForlopsType1Num %in% 1:2)
   )
 
 dg_samlet <- read.csv2("C:/regdata/nra/DG/fil_fra_imongr_04.07.25.csv") %>% # fil mangler
