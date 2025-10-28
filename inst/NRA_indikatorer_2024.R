@@ -86,7 +86,7 @@ variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardi
                "Inkontinensskår <=12 5 år etter sfinkterplastikk - alle" = "nra_inkontinensscore_12_5aar_sfinkt_v2"
 )
 
-figfolder <- "C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/indikatorer"
+figfolder <- "C:/regdata/nra/indikatorer/"
 if (!dir.exists(figfolder)) {
   dir.create(figfolder)
 }
@@ -136,7 +136,7 @@ nokkeltall <- RegData %>% group_by(Aar) %>%
             'Andel med symptomvarighet mer enn 10 år' = sum(Symtomvarighet[ForlopsType1Num %in% 1:2]==4)/sum(ForlopsType1Num %in% 1:2)
   )
 
-dg_samlet <- read.csv2("C:/Users/ibo600/repo/rapporteket/nra/ignore/fil_fra_imongr_04.07.25.csv") %>%
+dg_samlet <- read.csv2("C:/regdata/nra/DG/fil_fra_imongr_04.07.25.csv") %>% # fil mangler
   dplyr::filter(substr(ind_id, 1, 6) == "nra_dg") %>%
   dplyr::mutate(var = ifelse(var > denominator, denominator, var))
 
@@ -153,7 +153,7 @@ kobl_resh_orgnr <- data.frame(resh = c(601225, 108162, 107440, 700116, 700922,
                                        "Stavanger"))
 
 #--- Dekningsgrad total ---#
-dg_2022_23 <- read.csv2("C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/dekningsgrad_22-23/DGA_begge_operasjonstyper_hf_aar_2022_2023_mRESHID.csv",
+dg_2022_23 <- read.csv2("C:/regdata/nra/DG/DGA_begge_operasjonstyper_hf_aar_2022_2023_mRESHID.csv",
                         fileEncoding = "latin1") %>%
   dplyr::mutate(AvdRESH = dplyr::case_when(hf_standard == "Sykehuset Innlandet HF" ~ 111138,
                                            hf_standard == "Diakonhjemmet sykehus" ~ 107505,
@@ -182,7 +182,7 @@ dg_samlet <- full_join(dg_samlet, dg_2022_23)
 
 # Laste inn data
 dg_2022_23_sfinkter <- read.csv2(
-  "C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/dekningsgrad_22-23/DGA_JHC10_K628_hf_aar_2022_2023_mRESHID.csv",
+  "C:/regdata/nra/DG/DGA_JHC10_K628_hf_aar_2022_2023_mRESHID.csv",
   fileEncoding = "latin1") %>%
   dplyr::mutate(AvdRESH = dplyr::case_when(hf_standard == "Sykehuset Innlandet HF" ~ 111138,
                                            hf_standard == "Diakonhjemmet sykehus" ~ 107505,
@@ -210,7 +210,7 @@ dg_samlet <- dplyr::full_join(dg_samlet, dg_2022_23_sfinkter)
 
 #--- Dekningsgrad SNM ---#
 dg_2022_23_snm <- read.csv2(
-  "C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/dekningsgrad_22-23/DGA_SMN_inkl_AEA20_AEA24_hf_aar_2022_2023_mRESHID.csv",
+  "C:/regdata/nra/DG/DGA_SMN_inkl_AEA20_AEA24_hf_aar_2022_2023_mRESHID.csv",
   fileEncoding = "latin1") %>%
   dplyr::filter(!is.na(AvdRESH))
 
@@ -243,7 +243,7 @@ Indikatorer <- Indikatorer %>%
 Indikatorer <- Indikatorer %>%
   arrange(ind_id)
 
-write.csv2(Indikatorer, paste0("C:/Users/ibo600/OneDrive - Helse Nord RHF/SKDE/Register/nra/indikatorer_2024/indikatorer_NRA_2024-", Sys.Date(), ".csv"),
+write.csv2(Indikatorer, paste0("C:/regdata/nra/indikatorer/indikatorer_NRA_2024-", Sys.Date(), ".csv"),
            row.names = F, fileEncoding = "UTF-8")
 
 
