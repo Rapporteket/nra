@@ -12,7 +12,7 @@ RegData <- merge(
 Skjemaoversikt <- nra::nraHentTabell("skjemaoversikt")
 RegData <- nraPreprosess(RegData=RegData)
 
-rap_aar <- 2024
+rap_aar <- 2025
 variabler <- c("Andel operert etter standardisert metode" = "Indikator_standardisert",
                "Andel skjema levert innen 4mnd postoperativt" = "Indikator_aktualitet",
                "Andel skjema levert innen 4mnd postoperativt - SNM" = "Indikator_aktualitet_snm",
@@ -246,7 +246,7 @@ Indikatorer <- Indikatorer %>%
 Indikatorer <- Indikatorer %>%
   arrange(ind_id)
 
-write.csv2(Indikatorer, paste0("C:/regdata/nra/indikatorer/indikatorer_NRA_2024-", Sys.Date(), ".csv"),
+write.csv2(Indikatorer, paste0("C:/regdata/nra/indikatorer/indikatorer_NRA_", Sys.Date(), ".csv"),
            row.names = F, fileEncoding = "UTF-8")
 
 
