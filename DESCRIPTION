@@ -27,6 +27,6 @@ Imports:
     rapFigurer,
     rapbase
 Remotes:
-  Rapporteket/rapbase@main,
+  Rapporteket/rapbase,
   Rapporteket/rapFigurer
 RoxygenNote: 7.3.2
