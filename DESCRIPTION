@@ -22,6 +22,7 @@ Imports:
     tidyr,
     lubridate,
     kableExtra,
+    rapbase (>= 3.6.0),
     shinyjs,
     shinyWidgets,
     rapFigurer,
