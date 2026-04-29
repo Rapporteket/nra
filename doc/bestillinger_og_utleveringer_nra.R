@@ -1,6 +1,67 @@
 library(nra)
-library(tidyverse)
+library(dplyr)
 rm(list = ls())
+
+#### Oppfølgingsrate
+
+Skjemaoversikt <- nra::nraHentTabell("skjemaoversikt")
+allevarnum <- nra::nraHentTabell("allevarnum")
+foversikt <- nra::nraHentTabell("forlopsoversikt")
+RegData <- merge(
+  allevarnum,
+  foversikt[
+    , c("ForlopsID", names(foversikt)[
+      !(names(foversikt) %in% intersect(names(allevarnum), names(foversikt)))])],
+  by = "ForlopsID")
+basisdata <- allevarnum[allevarnum$ForlopsType1Num %in% 1:2, ]
+basisdata <- basisdata[, colSums(is.na(basisdata)) !=
+                         dim(basisdata)[1]]
+oppfdata <- allevarnum[allevarnum$ForlopsType1Num %in% 3:4, ]
+oppfdata <- oppfdata[, colSums(is.na(oppfdata)) !=
+                       dim(oppfdata)[1]]
+oppf1 <- oppfdata[oppfdata$ForlopsType1Num==3, ]
+oppf5 <- oppfdata[oppfdata$ForlopsType1Num==4, ]
+names(oppf1) <- paste0(names(oppf1), "_oppf1")
+names(oppf5) <- paste0(names(oppf5), "_oppf5")
+utflatet <- basisdata |>
+  merge(oppf1, by.x = "ForlopsID",
+        by.y = "KobletForlopsID_oppf1", all.x = T) |>
+  merge(oppf5, by.x = "ForlopsID",
+        by.y = "KobletForlopsID_oppf5", all.x = T)
+
+oppf_rate <- utflatet |>
+  mutate(Aar = as.Date(HovedDato) |> lubridate::year(),
+         ForlopsType = ifelse(is.na(ForlopsType2), ForlopsType1, ForlopsType2)) |>
+  summarise(fulgt_opp_1aar = sum(BasisRegStatus_oppf1, na.rm = TRUE),
+            fulgt_opp_5aar = sum(BasisRegStatus_oppf5, na.rm = TRUE),
+            N = n(),
+            rate1aar = fulgt_opp_1aar/N*100,
+            rate5aar = fulgt_opp_5aar/N*100,
+            .by = c(Aar, ForlopsType)) |>
+  arrange(ForlopsType, Aar)
+
+oppf_rate_v2 <- utflatet |>
+  mutate(Aar = as.Date(HovedDato) |> lubridate::year()) |>
+  filter(ForlopsType2Num %in% 2:3 | is.na(ForlopsType2Num)) |>
+  summarise(fulgt_opp_1aar = sum(BasisRegStatus_oppf1, na.rm = TRUE),
+            fulgt_opp_5aar = sum(BasisRegStatus_oppf5, na.rm = TRUE),
+            N = n(),
+            rate1aar = fulgt_opp_1aar/N*100,
+            rate5aar = fulgt_opp_5aar/N*100,
+            .by = c(Aar, ForlopsType1)) |>
+  arrange(ForlopsType1, Aar)
+
+write.csv2(oppf_rate, "C:/Users/kth200/regdata/nra/oppf_rate_nra.csv",
+           row.names = F, fileEncoding = "Latin1")
+
+
+# tmp <- utflatet |>
+#   dplyr::select(ForlopsID, PatientID, ForlopsType1, HovedDato, BasisRegStatus,
+#          "STATUS1a", STATUS1b, "STATUS2a", "STATUS2b", BasisRegStatus_oppf1,
+#          "STATUS1b_oppf1", "STATUS3a_oppf1", BasisRegStatus_oppf5,
+#          "STATUS1b_oppf5", "STATUS3a_oppf5")
+
+
 
 #### Forespørsel Tone sårruptur, 05.12.2022 ################################
 
@@ -233,10 +294,10 @@ RegData <- nra::nraPreprosess(RegData=RegData)
 aux_0 <- RegData[RegData$ForlopsType1Num %in% 1:2, ]
 
 aux <- aux_0 %>% group_by(PasientID) %>% summarise(snm = 2 %in% ForlopsType1Num,
-                                              sfinkt = 1 %in% ForlopsType1Num,
-                                              N =n())
+                                                   sfinkt = 1 %in% ForlopsType1Num,
+                                                   N =n())
 aux2 <- aux %>% group_by(PasientID) %>% summarise(ant_ulik =
-                                                  N =n())
+                                                    N =n())
 
 aux <- aux[aux$snm & aux$sfinkt, ]
 
