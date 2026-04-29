@@ -22,11 +22,12 @@ Imports:
     tidyr,
     lubridate,
     kableExtra,
+    rapbase (>= 3.6.0),
     shinyjs,
     shinyWidgets,
     rapFigurer,
     rapbase
 Remotes:
-  Rapporteket/rapbase@main,
+  Rapporteket/rapbase,
   Rapporteket/rapFigurer
 RoxygenNote: 7.3.2

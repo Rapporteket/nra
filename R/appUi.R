@@ -11,9 +11,9 @@ appUi <- function() {
   ui <- shiny::navbarPage(
     shinyjs::useShinyjs(),
     id = "nra_app_id",
-    title = rapbase::title(regTitle),
+    title = rapbase::regTitle(regTitle),
     windowTitle = regTitle,
-    theme = rapbase::theme(),
+    theme = rapbase::rapTheme(),
 
     shiny::tabPanel(
       "Startside",
