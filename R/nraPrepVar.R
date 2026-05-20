@@ -154,13 +154,14 @@ nraPrepVar <- function(RegData, valgtVar, enhetsUtvalg, reshID)
     RegData <- RegData[!is.na(RegData$Variabel), ]
     tittel <- c('Endring i aktivitetsbegrensninger, symptomer,', 'følelser og generell livskvalitet - 1 år')
     gr <- rev(c(99, 0:6))
-    grtxt <- rev(c("Ukjent", "Ingen endring (eller tilstanden \n har blitt verre)",
-                   "Har det omtrent som før, nesten ingen \n endring i tilstand i det hele tatt",
-                   "Noe bedring, men ingen merkbar \n endring har skjedd",
-                   "Litt bedring, men denne endringen har \n ikke utgjort noen større forskjell",
-                   "Moderat bedring og en liten, \n men merkbar forskjell",
-                   "Bedre. Det har skjedd en definitiv endring \n som utgjør en verdifull forskjell",
-                   "Mye bedre. Det har skjedd en betydelig endring \n til det bedre som utgjør all verdens forskjell"))
+    grtxt <- rev(
+      c("Ukjent", "Ingen endring (eller tilstanden \n har blitt verre)",
+        "Har det omtrent som før, nesten ingen \n endring i tilstand i det hele tatt",
+        "Noe bedring, men ingen merkbar \n endring har skjedd",
+        "Litt bedring, men denne endringen har \n ikke utgjort noen større forskjell",
+        "Moderat bedring og en liten, \n men merkbar forskjell",
+        "Bedre. Det har skjedd en definitiv endring \n som utgjør en verdifull forskjell",
+        "Mye bedre. Det har skjedd en betydelig endring \n til det bedre som utgjør all verdens forskjell"))
     RegData$VariabelGr <- factor(RegData$Variabel, levels=gr, labels = grtxt)
   }
 

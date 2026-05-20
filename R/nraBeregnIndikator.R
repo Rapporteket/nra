@@ -9,22 +9,103 @@
 
 nraBeregnIndikator <- function(RegData, valgtVar) {
 
-  kobl_resh_orgnr <- data.frame(resh = c(601225, 108162, 107440, 700116, 700922,
-                                         111138, 107505, 4210588, 601233,
-                                         114271),
-                                orgnr = c(974795787, 974706490, 974749025,
-                                          983971768, 974557746, 974724960,
-                                          974116804, 974733013, 974795396,
-                                          974703300),
-                                shus = c("UNN", "Akershus", "St.Olav", "Østfold",
-                                         "Haukeland", "Innlandet", "DS",
-                                         "Kristiansand", "UNN Narvik",
-                                         "Stavanger"))
+  kobl_resh_orgnr <- data.frame(
+    resh = c(601225, 108162, 107440, 700116, 700922,
+             111138, 107505, 4210588, 601233,
+             114271),
+    orgnr = c(974795787, 974706490, 974749025,
+              983971768, 974557746, 974724960,
+              974116804, 974733013, 974795396,
+              974703300),
+    shus = c("UNN", "Akershus", "St.Olav", "Østfold",
+             "Haukeland", "Innlandet", "DS",
+             "Kristiansand", "UNN Narvik",
+             "Stavanger"))
 
   terskel <- 5 # minste antall man viser avdelingens resultater for
   maalRetn <- "hoy"
   xmax <- NA
   decreasing <- FALSE
+
+  if (valgtVar == "bedring_pgic_1aar_sfinkt") {
+    nraUtvalg <- nra::nraUtvalg(RegData=RegData, forlopstype1=c(1))
+    indikator <- nraUtvalg$RegData
+    indikator <- indikator |>
+      dplyr::select(-PGICEndring) |>
+      merge(RegData |> dplyr::filter(
+        ForlopsType1Num == 3,
+        PGICEndring %in% 0:6) |>
+          dplyr::select(KobletForlopsID, PGICEndring),
+        by.x = "ForlopsID",
+        by.y = "KobletForlopsID") |>
+      dplyr::mutate(
+        var = ifelse(PGICEndring %in% 4:6, 1, 0),
+        ind_id = "nra_bedring_pgic_1aar",
+        orgnr = kobl_resh_orgnr$orgnr[
+          match(AvdRESH, kobl_resh_orgnr$resh)],
+        SenterKortNavn <- kobl_resh_orgnr$shus[
+          match(AvdRESH, kobl_resh_orgnr$resh)],
+        denominator = 1,
+        year = Aar + 1) |>
+      dplyr::select(orgnr, year,	var, denominator,
+                    ind_id, AvdRESH, SenterKortNavn)
+    tittel <- c("Andel med bedring i PGIC", "ved ett års oppfølging")
+    maal <- 60
+    minstekrav <-40
+  }
+
+  if (valgtVar == "bedring_pgic_1aar_snm") {
+    nraUtvalg <- nra::nraUtvalg(RegData=RegData, forlopstype1=c(2))
+    indikator <- nraUtvalg$RegData
+    indikator <- indikator |>
+      dplyr::select(-PGICEndring) |>
+      merge(RegData |> dplyr::filter(
+        ForlopsType1Num == 3,
+        PGICEndring %in% 0:6) |>
+          dplyr::select(KobletForlopsID, PGICEndring),
+        by.x = "ForlopsID",
+        by.y = "KobletForlopsID") |>
+      dplyr::mutate(
+        var = ifelse(PGICEndring %in% 4:6, 1, 0),
+        ind_id = "nra_bedring_pgic_1aar",
+        orgnr = kobl_resh_orgnr$orgnr[
+          match(AvdRESH, kobl_resh_orgnr$resh)],
+        SenterKortNavn <- kobl_resh_orgnr$shus[
+          match(AvdRESH, kobl_resh_orgnr$resh)],
+        denominator = 1,
+        year = Aar + 1) |>
+      dplyr::select(orgnr, year,	var, denominator,
+                    ind_id, AvdRESH, SenterKortNavn)
+    tittel <- c("Andel med bedring i PGIC", "ved ett års oppfølging")
+    maal <- 60
+    minstekrav <-40
+  }
+  if (valgtVar == "bedring_pgic_1aar") {
+    nraUtvalg <- nra::nraUtvalg(RegData=RegData, forlopstype1=c(1,2))
+    indikator <- nraUtvalg$RegData
+    indikator <- indikator |>
+      dplyr::select(-PGICEndring) |>
+      merge(RegData |> dplyr::filter(
+        ForlopsType1Num == 3,
+        PGICEndring %in% 0:6) |>
+          dplyr::select(KobletForlopsID, PGICEndring),
+        by.x = "ForlopsID",
+        by.y = "KobletForlopsID") |>
+      dplyr::mutate(
+        var = ifelse(PGICEndring %in% 4:6, 1, 0),
+        ind_id = "nra_bedring_pgic_1aar",
+        orgnr = kobl_resh_orgnr$orgnr[
+          match(AvdRESH, kobl_resh_orgnr$resh)],
+        SenterKortNavn <- kobl_resh_orgnr$shus[
+          match(AvdRESH, kobl_resh_orgnr$resh)],
+        denominator = 1,
+        year = Aar + 1) |>
+      dplyr::select(orgnr, year,	var, denominator,
+                    ind_id, AvdRESH, SenterKortNavn)
+    tittel <- c("Andel med bedring i PGIC", "ved ett års oppfølging")
+    maal <- 60
+    minstekrav <-40
+  }
 
   if (valgtVar == "andel_inform_oppf") {
     nraUtvalg <- nraUtvalg(RegData=RegData, forlopstype1=c(1,2))
@@ -222,7 +303,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[!is.na(indikator$var), ]
     indikator <- indikator %>% dplyr::group_by(PasientID, Aar, AvdRESH) %>%
       dplyr::summarise(var = max(var),
-                ForlopsID = ForlopsID[var==max(var)][1])
+                       ForlopsID = ForlopsID[var==max(var)][1])
     indikator$denominator <- 1
     indikator$ind_id <- "nra_tidl_konservativ"
     names(indikator)[names(indikator)=="Aar"] <- "year"
@@ -242,7 +323,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[!is.na(indikator$var), ]
     indikator <- indikator %>% dplyr::group_by(PasientID, Aar, AvdRESH) %>%
       dplyr::summarise(var = max(var),
-                ForlopsID = ForlopsID[var==max(var)][1])
+                       ForlopsID = ForlopsID[var==max(var)][1])
     indikator$denominator <- 1
     indikator$ind_id <- "nra_tidl_konservativ_snm"
     names(indikator)[names(indikator)=="Aar"] <- "year"
@@ -262,7 +343,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     indikator <- indikator[!is.na(indikator$var), ]
     indikator <- indikator %>% dplyr::group_by(PasientID, Aar, AvdRESH) %>%
       dplyr::summarise(var = max(var),
-                ForlopsID = ForlopsID[var==max(var)][1])
+                       ForlopsID = ForlopsID[var==max(var)][1])
     indikator$denominator <- 1
     indikator$ind_id <- "nra_tidl_konservativ_sfinkt"
     names(indikator)[names(indikator)=="Aar"] <- "year"
@@ -868,85 +949,140 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
     minstekrav <-30
   }
 
-  if (valgtVar == "nra_reduksjon_4_stmarks_1aar_sfinkt") {
-    predata <- RegData[which(RegData$ForlopsType1Num == 1 & !is.na(RegData$StMarksTotalScore)), ]
-    oppfolging <- RegData[which(!is.na(RegData$StMarksTotalScore) & RegData$ForlopsType1Num == 3), ]
-    indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
-                       oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
-                       by.y = "KobletForlopsID", suffixes = c("", "_post"))
+  if (valgtVar == "nra_reduksjon_5_stmarks_1aar_sfinkt") {
+    predata <- RegData[which(RegData$ForlopsType1Num == 1 &
+                               !is.na(RegData$StMarksTotalScore)), ]
+    oppfolging <- RegData[which(!is.na(RegData$StMarksTotalScore) &
+                                  RegData$ForlopsType1Num == 3), ]
+    indikator <- merge(
+      predata[, c("Aar", "AvdRESH", "PasientID",
+                  "ForlopsID", "StMarksTotalScore")],
+      oppfolging[, c("KobletForlopsID", "StMarksTotalScore")],
+      by.x = "ForlopsID",
+      by.y = "KobletForlopsID", suffixes = c("", "_post"))
     indikator <- indikator %>%
-      dplyr::mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
+      dplyr::mutate(
+        var = ifelse(StMarksTotalScore - StMarksTotalScore_post >= 5,
+                     1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_red4_1aar_sfinkt"
-    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
-    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
-    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
-    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    indikator <- indikator[ , c("AvdRESH", "year", "var",
+                                "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[
+      match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[
+      match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",
+                               "denominator",	"ind_id", "AvdRESH",
+                               "SenterKortNavn")]
     indikator$year <- indikator$year + 1
-    tittel <- c("Minst 4 reduksjon i St. Marks", "1 år etter sfinkterplastikk")
+    tittel <- c("Minst 5 reduksjon i St. Marks",
+                "1 år etter sfinkterplastikk")
     maal <- NA
     minstekrav <-NA
   }
 
-  if (valgtVar == "nra_reduksjon_4_stmarks_5aar_sfinkt") {
-    predata <- RegData[which(RegData$ForlopsType1Num == 1 & !is.na(RegData$StMarksTotalScore)), ]
-    oppfolging <- RegData[which(!is.na(RegData$StMarksTotalScore) & RegData$ForlopsType1Num == 4), ]
-    indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
-                       oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
-                       by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% dplyr::mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
+  if (valgtVar == "nra_reduksjon_5_stmarks_5aar_sfinkt") {
+    predata <- RegData[which(RegData$ForlopsType1Num == 1 &
+                               !is.na(RegData$StMarksTotalScore)), ]
+    oppfolging <- RegData[which(!is.na(RegData$StMarksTotalScore) &
+                                  RegData$ForlopsType1Num == 4), ]
+    indikator <- merge(
+      predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID",
+                  "StMarksTotalScore")],
+      oppfolging[, c("KobletForlopsID", "StMarksTotalScore")],
+      by.x = "ForlopsID",
+      by.y = "KobletForlopsID", suffixes = c("", "_post"))
+    indikator <- indikator %>%
+      dplyr::mutate(
+        var = ifelse(StMarksTotalScore - StMarksTotalScore_post >= 5,
+                     1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
     indikator$ind_id <- "nra_inkontinensscore_12_5aar_sfinkt"
-    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
-    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
-    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
-    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    indikator <- indikator[ , c("AvdRESH", "year", "var",
+                                "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[
+      match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[
+      match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",
+                               "denominator",	"ind_id", "AvdRESH",
+                               "SenterKortNavn")]
     indikator$year <- indikator$year + 5
-    tittel <- c("Minst 4 reduksjon i St. Marks", "5 år etter sfinkterplastikk")
+    tittel <- c("Minst 5 reduksjon i St. Marks",
+                "5 år etter sfinkterplastikk")
     maal <- NA
     minstekrav <-NA
   }
 
-  if (valgtVar == "nra_reduksjon_4_stmarks_1aar_snm") {
-    predata <- RegData[which(RegData$ForlopsType1Num == 2 & !is.na(RegData$StMarksTotalScore) &
+  if (valgtVar == "nra_reduksjon_5_stmarks_1aar_snm") {
+    predata <- RegData[which(RegData$ForlopsType1Num == 2 &
+                               !is.na(RegData$StMarksTotalScore) &
                                RegData$ForlopsType2Num %in% c(2,3)), ]
-    oppfolging <- RegData[which(!is.na(RegData$StMarksTotalScore) & RegData$ForlopsType1Num == 3), ]
-    indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
-                       oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
-                       by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% dplyr::mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
+    oppfolging <- RegData[which(!is.na(RegData$StMarksTotalScore) &
+                                  RegData$ForlopsType1Num == 3), ]
+    indikator <- merge(
+      predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID",
+                  "StMarksTotalScore")],
+      oppfolging[, c("KobletForlopsID", "StMarksTotalScore")],
+      by.x = "ForlopsID",
+      by.y = "KobletForlopsID", suffixes = c("", "_post"))
+    indikator <- indikator %>%
+      dplyr::mutate(
+        var = ifelse(StMarksTotalScore - StMarksTotalScore_post >= 5,
+                     1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
-    indikator$ind_id <- "nra_reduksjon_4_stmarks_1aar_snm"
-    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
-    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
-    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
-    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    indikator$ind_id <- "nra_reduksjon_5_stmarks_1aar_snm"
+    indikator <- indikator[ , c("AvdRESH", "year", "var",
+                                "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[
+      match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[
+      match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",
+                               "denominator",	"ind_id", "AvdRESH",
+                               "SenterKortNavn")]
     indikator$year <- indikator$year + 1
-    tittel <- c("Minst 4 reduksjon i St. Marks", "1 år etter operasjon med SNM")
+    tittel <- c("Minst 5 reduksjon i St. Marks",
+                "1 år etter operasjon med SNM")
     maal <- NA
     minstekrav <-NA
   }
 
-  if (valgtVar == "nra_reduksjon_4_stmarks_5aar_snm") {
-    predata <- RegData[which(RegData$ForlopsType1Num == 2 & !is.na(RegData$StMarksTotalScore) &
+  if (valgtVar == "nra_reduksjon_5_stmarks_5aar_snm") {
+    predata <- RegData[which(RegData$ForlopsType1Num == 2 &
+                               !is.na(RegData$StMarksTotalScore) &
                                RegData$ForlopsType2Num %in% c(2,3)), ]
-    oppfolging <- RegData[which(!is.na(RegData$StMarksTotalScore) & RegData$ForlopsType1Num == 4), ]
-    indikator <- merge(predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID", "StMarksTotalScore")],
-                       oppfolging[, c("KobletForlopsID", "StMarksTotalScore")], by.x = "ForlopsID",
-                       by.y = "KobletForlopsID", suffixes = c("", "_post"))
-    indikator <- indikator %>% dplyr::mutate(var = ifelse(StMarksTotalScore - StMarksTotalScore_post > 4, 1, 0))
+    oppfolging <- RegData[which(!is.na(RegData$StMarksTotalScore) &
+                                  RegData$ForlopsType1Num == 4), ]
+    indikator <- merge(
+      predata[, c("Aar", "AvdRESH", "PasientID", "ForlopsID",
+                  "StMarksTotalScore")],
+      oppfolging[, c("KobletForlopsID", "StMarksTotalScore")],
+      by.x = "ForlopsID",
+      by.y = "KobletForlopsID", suffixes = c("", "_post"))
+    indikator <- indikator %>%
+      dplyr::mutate(
+        var = ifelse(StMarksTotalScore - StMarksTotalScore_post >= 5,
+                     1, 0))
     indikator$denominator <- 1
     names(indikator)[names(indikator)=="Aar"] <- "year"
-    indikator$ind_id <- "nra_reduksjon_4_stmarks_1aar_snm"
-    indikator <- indikator[ , c("AvdRESH", "year", "var", "denominator", "ind_id")]
-    indikator$orgnr <- kobl_resh_orgnr$orgnr[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
-    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
-    indikator <- indikator[, c("orgnr",	"year",	"var",	"denominator",	"ind_id", "AvdRESH", "SenterKortNavn")]
+    indikator$ind_id <- "nra_reduksjon_5_stmarks_1aar_snm"
+    indikator <- indikator[ , c("AvdRESH", "year", "var",
+                                "denominator", "ind_id")]
+    indikator$orgnr <- kobl_resh_orgnr$orgnr[
+      match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator$SenterKortNavn <- kobl_resh_orgnr$shus[
+      match(indikator$AvdRESH, kobl_resh_orgnr$resh)]
+    indikator <- indikator[, c("orgnr",	"year",	"var",
+                               "denominator",	"ind_id",
+                               "AvdRESH", "SenterKortNavn")]
     indikator$year <- indikator$year + 5
-    tittel <- c("Minst 4 reduksjon i St. Marks", "5 år etter operasjon med SNM")
+    tittel <- c("Minst 5 reduksjon i St. Marks",
+                "5 år etter operasjon med SNM")
     maal <- NA
     minstekrav <-NA
   }
@@ -1570,8 +1706,10 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
 
   indikator$context <- "caregiver"
 
-  utputt <- list(indikator=indikator, tittel=tittel, maal=maal, terskel=terskel,
-                 maalRetn=maalRetn, xmax=xmax, decreasing=decreasing, minstekrav = minstekrav)
+  utputt <- list(indikator=indikator, tittel=tittel,
+                 maal=maal, terskel=terskel,
+                 maalRetn=maalRetn, xmax=xmax,
+                 decreasing=decreasing, minstekrav = minstekrav)
 
   return(utputt)
 
