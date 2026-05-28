@@ -50,8 +50,8 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
       dplyr::select(orgnr, year,	var, denominator,
                     ind_id, AvdRESH, SenterKortNavn)
     tittel <- c("Andel med bedring i PGIC", "ved ett års oppfølging")
-    maal <- 60
-    minstekrav <-40
+    maal <- 50
+    minstekrav <-30
   }
 
   if (valgtVar == "bedring_pgic_1aar_snm") {
@@ -77,8 +77,8 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
       dplyr::select(orgnr, year,	var, denominator,
                     ind_id, AvdRESH, SenterKortNavn)
     tittel <- c("Andel med bedring i PGIC", "ved ett års oppfølging")
-    maal <- 60
-    minstekrav <-40
+    maal <- 50
+    minstekrav <- 30
   }
   if (valgtVar == "bedring_pgic_1aar") {
     nraUtvalg <- nra::nraUtvalg(RegData=RegData, forlopstype1=c(1,2))
@@ -103,8 +103,8 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
       dplyr::select(orgnr, year,	var, denominator,
                     ind_id, AvdRESH, SenterKortNavn)
     tittel <- c("Andel med bedring i PGIC", "ved ett års oppfølging")
-    maal <- 60
-    minstekrav <-40
+    maal <- 50
+    minstekrav <-30
   }
 
   if (valgtVar == "andel_inform_oppf") {
