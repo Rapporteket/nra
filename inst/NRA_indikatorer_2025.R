@@ -139,7 +139,8 @@ Indikatorer <- Indikatorer %>%
       "nra_inkontinensscore_9_5aar_snm",
       "nra_inkontinensscore_12_5aar_snm",
       "nra_inkontinensscore_9_5aar_sfinkt",
-      "nra_inkontinensscore_12_5aar_sfinkt"))
+      "nra_inkontinensscore_12_5aar_sfinkt")) |>
+  dplyr::select(year, var, denominator, ind_id, orgnr, context)
 
 # "nra_inform_oppf" utgått som indikator pr. juli 2025
 
@@ -176,9 +177,9 @@ nokkeltall <- RegData %>%
 #                                        "Kristiansand", "UNN Narvik",
 #                                        "Stavanger"))
 #
-# write.csv2(
-#   Indikatorer,
-#   paste0("C:/regdata/nra/indikatorer/indikatorer_NRA_", Sys.Date(), ".csv"),
-#   row.names = F, fileEncoding = "UTF-8")
+write.csv2(
+  Indikatorer,
+  paste0("C:/Users/kth200/regdata/nra/indikatorer/indikatorer_NRA_", Sys.Date(), ".csv"),
+  row.names = F, fileEncoding = "UTF-8")
 
 
