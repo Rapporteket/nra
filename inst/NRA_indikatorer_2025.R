@@ -125,7 +125,7 @@ for (p in 1:length(variabler)){
 Indikatorer <- Indikatorer %>%
   dplyr::filter(
     ind_id %in% c(
-      "nra_bedring_pgic_1aar",
+      "nra_pgic_1aar",
       "nra_aktualitet",
       "nra_tidl_konservativ",
       "nra_ultralyd",
@@ -179,7 +179,8 @@ nokkeltall <- RegData %>%
 #
 write.csv2(
   Indikatorer,
-  paste0("C:/Users/kth200/regdata/nra/indikatorer/indikatorer_NRA_", Sys.Date(), ".csv"),
+  paste0("C:/Users/kth200/regdata/nra/indikatorer/indikatorer_NRA_",
+         Sys.Date(), ".csv"),
   row.names = F, fileEncoding = "UTF-8")
 
 

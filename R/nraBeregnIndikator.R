@@ -40,7 +40,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
         by.y = "KobletForlopsID") |>
       dplyr::mutate(
         var = ifelse(PGICEndring %in% 4:6, 1, 0),
-        ind_id = "nra_bedring_pgic_1aar",
+        ind_id = "nra_pgic_1aar_sfinkt",
         orgnr = kobl_resh_orgnr$orgnr[
           match(AvdRESH, kobl_resh_orgnr$resh)],
         SenterKortNavn <- kobl_resh_orgnr$shus[
@@ -67,7 +67,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
         by.y = "KobletForlopsID") |>
       dplyr::mutate(
         var = ifelse(PGICEndring %in% 4:6, 1, 0),
-        ind_id = "nra_bedring_pgic_1aar",
+        ind_id = "nra_pgic_1aar_snm",
         orgnr = kobl_resh_orgnr$orgnr[
           match(AvdRESH, kobl_resh_orgnr$resh)],
         SenterKortNavn <- kobl_resh_orgnr$shus[
@@ -93,7 +93,7 @@ nraBeregnIndikator <- function(RegData, valgtVar) {
         by.y = "KobletForlopsID") |>
       dplyr::mutate(
         var = ifelse(PGICEndring %in% 4:6, 1, 0),
-        ind_id = "nra_bedring_pgic_1aar",
+        ind_id = "nra_pgic_1aar",
         orgnr = kobl_resh_orgnr$orgnr[
           match(AvdRESH, kobl_resh_orgnr$resh)],
         SenterKortNavn <- kobl_resh_orgnr$shus[
