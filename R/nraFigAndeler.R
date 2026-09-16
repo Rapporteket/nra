@@ -132,9 +132,14 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01',
       RegData <- RegData[which(RegData$AvdRESH == reshID),]}
 
     nraUtvalg <- nraUtvalg(
-      RegData=RegData, datoFra=datoFra, datoTil=datoTil,
-      minald=minald, maxald=maxald, erMann=erMann, valgtShus=valgtShus,
-      forlopstype1=forlopstype1, forlopstype2=forlopstype2, onestage=onestage)
+      RegData=RegData, datoFra=datoFra,
+      datoTil=datoTil,
+      minald=minald, maxald=maxald,
+      erMann=erMann,
+      valgtShus=valgtShus,
+      forlopstype1=forlopstype1,
+      forlopstype2=forlopstype2,
+      onestage=onestage)
     RegData <- nraUtvalg$RegData
     utvalgTxt <- nraUtvalg$utvalgTxt
 
@@ -143,8 +148,10 @@ nraFigAndeler  <- function(RegData, valgtVar, datoFra='2012-04-01',
     NRest <- 0
     AntRest <- 0
 
-    if (valgtVar %in% c('Etiologi','Etiologi_v2' , 'TidlBeh', 'TidlBeh_v2',
-                        'TidlBeh_v3', 'KomplSfinkter', 'lekker_urin_naar')) {
+    if (valgtVar %in% c('Etiologi','Etiologi_v2' ,
+                        'TidlBeh', 'TidlBeh_v2',
+                        'TidlBeh_v3', 'KomplSfinkter',
+                        'lekker_urin_naar')) {
       flerevar <- 1
     } else {
       flerevar <- 0
