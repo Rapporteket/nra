@@ -66,7 +66,7 @@ admtab_ui <- function(id){
 #'
 #' @return Serverdel av modul for adm. tab
 #' @export
-admtab_server <- function(id, RegData, hvd_session, skjemaoversikt){
+admtab_server <- function(id, RegData, skjemaoversikt){
   moduleServer(
     id,
     function(input, output, session) {
@@ -474,40 +474,6 @@ admtab_server <- function(id, RegData, hvd_session, skjemaoversikt){
         }
       )
 
-
-
-      shiny::observe({
-        if (rapbase::isRapContext()) {
-          rapbase::repLogger(
-            session = hvd_session,
-            msg = 'NRA: Kjører administrativ rapport.'
-          )
-
-          shinyjs::onclick(
-            "lastNed_adm_forlopstype",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = "NRA: nedlasting adm. tabell. forlopstype"
-            )
-          )
-
-          shinyjs::onclick(
-            "lastNed_adm_forlop",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = "NRA: nedlasting adm. tabell. forlopsbasert"
-            )
-          )
-
-          shinyjs::onclick(
-            "lastNed_adm_skjematype",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = "NRA: nedlasting adm. tabell. etter skjematype"
-            )
-          )
-        }
-      })
     }
   )
 }

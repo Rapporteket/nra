@@ -83,15 +83,15 @@ andeler_tid_ui <- function(id){
 #' @return server-del av tidsfigur
 #' @export
 #'
-andeler_tid_server <- function(id, reshID, RegData, hvd_session,
-                               BrValg, userRole){
+andeler_tid_server <- function(id, RegData, hvd_session,
+                               BrValg, user){
   moduleServer(
     id,
     function(input, output, session) {
 
       output$valgtShus_ui <- renderUI({
         ns <- session$ns
-        if (userRole() == "SC") {
+        if (user$role() == "SC") {
           selectInput(inputId = ns("valgtShus"), label = "Velg sykehus",
                       choices = BrValg$sykehus, multiple = TRUE)
         }
@@ -122,14 +122,14 @@ andeler_tid_server <- function(id, reshID, RegData, hvd_session,
           minald=as.numeric(input$alder[1]),
           maxald=as.numeric(input$alder[2]), datoFra = input$datovalg[1],
           datoTil = input$datovalg[2],
-          valgtShus = if (!is.null(input$valgtShus) & userRole() == "SC") {
+          valgtShus = if (!is.null(input$valgtShus) & user$role() == "SC") {
             input$valgtShus} else {''},
           outfile = '',
           tidsenhet = if (!is.null(input$tidsenhet)) {
             input$tidsenhet} else {99},
           inkl_konf = if (!is.null(input$inkl_konf)) {
             input$inkl_konf} else {99},
-          erMann = as.numeric(input$erMann), reshID = reshID(),
+          erMann = as.numeric(input$erMann), reshID = user$org(),
           enhetsUtvalg = input$enhetsUtvalg,
           forlopstype1=if(!is.null(input$forlopstype1)){
             as.numeric(input$forlopstype1)} else {99},
@@ -147,14 +147,14 @@ andeler_tid_server <- function(id, reshID, RegData, hvd_session,
           maxald=as.numeric(input$alder[2]),
           datoFra = input$datovalg[1],
           datoTil = input$datovalg[2],
-          valgtShus = if (!is.null(input$valgtShus) & userRole() == "SC") {
+          valgtShus = if (!is.null(input$valgtShus) & user$role() == "SC") {
             input$valgtShus} else {''},
           outfile = '',
           tidsenhet = if (!is.null(input$tidsenhet)) {
             input$tidsenhet} else {99},
           inkl_konf = if (!is.null(input$inkl_konf)) {
             input$inkl_konf} else {99},
-          erMann = as.numeric(input$erMann), reshID = reshID(),
+          erMann = as.numeric(input$erMann), reshID = user$org(),
           enhetsUtvalg = input$enhetsUtvalg,
           forlopstype1=if(!is.null(input$forlopstype1)){
             as.numeric(input$forlopstype1)} else {99},
@@ -250,14 +250,14 @@ andeler_tid_server <- function(id, reshID, RegData, hvd_session,
             maxald=as.numeric(input$alder[2]),
             datoFra = input$datovalg[1],
             datoTil = input$datovalg[2],
-            valgtShus = if (!is.null(input$valgtShus) & userRole() == "SC") {
+            valgtShus = if (!is.null(input$valgtShus) & user$role() == "SC") {
               input$valgtShus} else {''},
             outfile = file,
             tidsenhet = if (!is.null(input$tidsenhet)) {
               input$tidsenhet} else {99},
             inkl_konf = if (!is.null(input$inkl_konf)) {
               input$inkl_konf} else {99},
-            erMann = as.numeric(input$erMann), reshID = reshID(),
+            erMann = as.numeric(input$erMann), reshID = user$org(),
             enhetsUtvalg = input$enhetsUtvalg,
             forlopstype1=if(!is.null(input$forlopstype1)){
               as.numeric(input$forlopstype1)} else {99},
@@ -267,45 +267,6 @@ andeler_tid_server <- function(id, reshID, RegData, hvd_session,
               as.numeric(input$onestage)} else {99})
         }
       )
-
-      shiny::observe({
-        if (rapbase::isRapContext()) {
-          if (req(input$tab) == "fig") {
-            mld_fordeling <- paste0(
-              "NRA: Figur - tidsvisning, variabel - ",
-              input$valgtVar)
-          }
-          if (req(input$tab) == "tab") {
-            mld_fordeling <- paste(
-              "NRA: tabell - tidsvisning variabel - ",
-              input$valgtVar)
-          }
-          rapbase::repLogger(
-            session = hvd_session,
-            msg = mld_fordeling
-          )
-          shinyjs::onclick(
-            "lastNedBilde",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = paste(
-                "NRA: nedlasting figur - tidsvisning, variabel -",
-                input$valgtVar
-              )
-            )
-          )
-          shinyjs::onclick(
-            "lastNed",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = paste(
-                "NRA: nedlasting tabell - tidsvisning, variabel -",
-                input$valgtVar
-              )
-            )
-          )
-        }
-      })
     }
   )
 }

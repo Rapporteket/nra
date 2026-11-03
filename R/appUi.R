@@ -17,7 +17,8 @@ appUi <- function() {
 
     shiny::tabPanel(
       "Startside",
-      rapbase::navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
+      rapbase::navbarWidgetInput("navbar-widget",
+                                 selectOrganization = TRUE),
       nra::startside_ui("startside")
     ),
     shiny::tabPanel(
@@ -43,34 +44,34 @@ appUi <- function() {
     ),
     tabPanel("Administrative tabeller",
              admtab_ui(id = "admtab_id")
-    ),
-
-    shiny::navbarMenu(
-      "Verktøy",
-
-      shiny::tabPanel(
-        "Eksport",
-        shiny::sidebarLayout(
-          shiny::sidebarPanel(
-            rapbase::exportUCInput("nraExport")
-          ),
-          shiny::mainPanel(
-            rapbase::exportGuideUI("nraExportGuide")
-          )
-        )
-      ),
-
-      shiny::tabPanel(
-        "Bruksstatistikk",
-        shiny::sidebarLayout(
-          shiny::sidebarPanel(rapbase::statsInput("nraStats")),
-          shiny::mainPanel(
-            rapbase::statsUI("nraStats"),
-            rapbase::statsGuideUI("nraStatsGuide")
-          )
-        )
-      )
     )
+
+    # shiny::navbarMenu(
+    #   "Verktøy",
+    #
+    #   shiny::tabPanel(
+    #     "Eksport",
+    #     shiny::sidebarLayout(
+    #       shiny::sidebarPanel(
+    #         rapbase::exportUCInput("nraExport")
+    #       ),
+    #       shiny::mainPanel(
+    #         rapbase::exportGuideUI("nraExportGuide")
+    #       )
+    #     )
+    #   ),
+    #
+    #   shiny::tabPanel(
+    #     "Bruksstatistikk",
+    #     shiny::sidebarLayout(
+    #       shiny::sidebarPanel(rapbase::statsInput("nraStats")),
+    #       shiny::mainPanel(
+    #         rapbase::statsUI("nraStats"),
+    #         rapbase::statsGuideUI("nraStatsGuide")
+    #       )
+    #     )
+    #   )
+    # )
   )
 
 }

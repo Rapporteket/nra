@@ -74,15 +74,14 @@ fordelingsfig_ui <- function(id){
 #'
 #' @export
 #'
-fordelingsfig_server <- function(id, reshID, RegData, hvd_session,
-                                 BrValg, userRole){
+fordelingsfig_server <- function(id, RegData, BrValg, user){
   moduleServer(
     id,
     function(input, output, session) {
 
       output$valgtShus_ui <- renderUI({
         ns <- session$ns
-        if (userRole() == 'SC') {
+        if (user$role() == 'SC') {
           selectInput(inputId = ns("valgtShus"),
                       label = "Velg sykehus",
                       choices = BrValg$sykehus,
@@ -117,9 +116,9 @@ fordelingsfig_server <- function(id, reshID, RegData, hvd_session,
           minald=as.numeric(input$alder[1]),
           maxald=as.numeric(input$alder[2]),
           datoFra = input$datovalg[1], datoTil = input$datovalg[2],
-          valgtShus = if (!is.null(input$valgtShus) & userRole() == "SC") {
+          valgtShus = if (!is.null(input$valgtShus) & user$role() == "SC") {
             input$valgtShus} else {''},
-          erMann = as.numeric(input$erMann), reshID = reshID(),
+          erMann = as.numeric(input$erMann), reshID = user$org(),
           enhetsUtvalg = input$enhetsUtvalg,
           forlopstype1=if(!is.null(input$forlopstype1)){
             as.numeric(input$forlopstype1)} else {99},
@@ -201,47 +200,6 @@ fordelingsfig_server <- function(id, reshID, RegData, hvd_session,
         }
       )
 
-
-      shiny::observe({
-        if (rapbase::isRapContext()) {
-          if (req(input$tab) == "fig") {
-            mld_fordeling <- paste0(
-              "NRA: Figur - fordeling, variabel - ",
-              input$valgtVar)
-          }
-          if (req(input$tab) == "tab") {
-            mld_fordeling <- paste(
-              "NRA: tabell - fordeling. variabel - ",
-              input$valgtVar)
-          }
-          rapbase::repLogger(
-            session = hvd_session,
-            msg = mld_fordeling
-          )
-          mldLastNedFig <- paste(
-            "NRA: nedlasting figur - fordeling. variabel -",
-            input$valgtVar
-          )
-          mldLastNedTab <- paste(
-            "NRA: nedlasting tabell - fordeling. variabel -",
-            input$valgtVar
-          )
-          shinyjs::onclick(
-            "lastNedBilde",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = mldLastNedFig
-            )
-          )
-          shinyjs::onclick(
-            "lastNed",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = mldLastNedTab
-            )
-          )
-        }
-      })
     }
   )
 }

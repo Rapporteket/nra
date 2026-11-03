@@ -4,7 +4,7 @@
 \alias{datadump_server}
 \title{Modul for datadump-fane i NRA sin shiny-app på Rapporteket}
 \usage{
-datadump_server(id, reshID, userRole, hvd_session)
+datadump_server(id, user)
 }
 \value{
 Datadump av registerets tabeller

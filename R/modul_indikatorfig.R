@@ -173,7 +173,7 @@ indikatorfig_ui <- function(id){
 #' @return Serverdel av indikatorfane
 #' @export
 #'
-indikatorfig_server <- function(id, RegData, hvd_session){
+indikatorfig_server <- function(id, RegData){
   moduleServer(
     id,
     function(input, output, session) {
@@ -258,47 +258,6 @@ indikatorfig_server <- function(id, RegData, hvd_session){
         }
       )
 
-
-      shiny::observe({
-        if (rapbase::isRapContext()) {
-          if (req(input$tab) == "fig") {
-            mld_fordeling <- paste0(
-              "NRA: indikatorfig. variabel - ",
-              input$valgtVar)
-          }
-          if (req(input$tab) == "tab") {
-            mld_fordeling <- paste(
-              "NRA: indikatortab. variabel - ",
-              input$valgtVar)
-          }
-          rapbase::repLogger(
-            session = hvd_session,
-            msg = mld_fordeling
-          )
-          mldLastNedFig <- paste(
-            "NRA: nedlasting indikatorfig. variabel -",
-            input$valgtVar
-          )
-          mldLastNedTab <- paste(
-            "NRA: nedlasting indikatortab. variabel -",
-            input$valgtVar
-          )
-          shinyjs::onclick(
-            "lastNedBilde",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = mldLastNedFig
-            )
-          )
-          shinyjs::onclick(
-            "lastNed_tab",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = mldLastNedTab
-            )
-          )
-        }
-      })
     }
   )
 }

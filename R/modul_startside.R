@@ -89,12 +89,12 @@ startside_ui <- function(id){
 #'
 #' @export
 #'
-startside_server <- function(id, usrRole){
+startside_server <- function(id, user){
   moduleServer(
     id,
     function(input, output, session) {
-      observeEvent(shiny::req(usrRole),{
-        if (shiny::req(usrRole()) != "SC") {
+      observeEvent(shiny::req(user$role),{
+        if (shiny::req(user$role()) != "SC") {
           shinyjs::hide("SC1")
         } else {
           shinyjs::show("SC1")

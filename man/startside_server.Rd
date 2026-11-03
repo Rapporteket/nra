@@ -4,7 +4,7 @@
 \alias{startside_server}
 \title{Server-modul for startsiden til NRA sin Rapporteket-app}
 \usage{
-startside_server(id, usrRole)
+startside_server(id, user)
 }
 \description{
 Server-modul for startsiden til NRA sin Rapporteket-app

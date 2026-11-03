@@ -90,7 +90,7 @@ gjsn_prepost_ui <- function(id){
 #' @return Serverdel av figur med andeler før og etter
 #' @export
 #'
-gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
+gjsn_prepost_server <- function(id, RegData, user){
   moduleServer(
     id,
     function(input, output, session) {
@@ -118,7 +118,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
           grvar=input$gr_var, outfile = '',
           preprosess=F, erMann = as.numeric(input$erMann),
           sammenlign=as.numeric(input$sammenlign),
-          reshID = reshID(), hentData=F,
+          reshID = user$org(), hentData=F,
           forlopstype1=as.numeric(input$forlopstype1),
           forlopstype2=if(!is.null(input$forlopstype2_verdi)){
             as.numeric(input$forlopstype2_verdi)} else {99},
@@ -136,7 +136,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
           grvar=input$gr_var, outfile = '',
           preprosess=F, erMann = as.numeric(input$erMann),
           sammenlign=as.numeric(input$sammenlign),
-          reshID = reshID(), hentData=F,
+          reshID = user$org(), hentData=F,
           forlopstype1=as.numeric(input$forlopstype1),
           forlopstype2=if(!is.null(input$forlopstype2_verdi)){
             as.numeric(input$forlopstype2_verdi)} else {99},
@@ -509,7 +509,7 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
             grvar=input$gr_var, preprosess=F,
             erMann = as.numeric(input$erMann),
             sammenlign=as.numeric(input$sammenlign),
-            reshID = reshID(), hentData=F,
+            reshID = user$org(), hentData=F,
             forlopstype1=as.numeric(input$forlopstype1),
             forlopstype2=if(!is.null(input$forlopstype2_verdi)){
               as.numeric(input$forlopstype2_verdi)} else {99},
@@ -519,46 +519,6 @@ gjsn_prepost_server <- function(id, reshID, RegData, hvd_session){
         }
       )
 
-      shiny::observe({
-        if (rapbase::isRapContext()) {
-          if (req(input$tab) == "fig") {
-            mld_fordeling <- paste0(
-              "NRA: Figur - gj.sn. pre-post, variabel - ",
-              input$valgtVar)
-          }
-          if (req(input$tab) == "tab") {
-            mld_fordeling <- paste(
-              "NRA: tabell - gj.sn. pre-post, variabel - ",
-              input$valgtVar)
-          }
-          rapbase::repLogger(
-            session = hvd_session,
-            msg = mld_fordeling
-          )
-          mldLastNedFig <- paste(
-            "NRA: nedlasting figur - gj.sn. pre-post variabel -",
-            input$valgtVar
-          )
-          mldLastNedTab <- paste(
-            "NRA: nedlasting tabell - gj.sn. pre-post variabel -",
-            input$valgtVar
-          )
-          shinyjs::onclick(
-            "lastNedBilde",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = mldLastNedFig
-            )
-          )
-          shinyjs::onclick(
-            "lastNed",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = mldLastNedTab
-            )
-          )
-        }
-      })
     }
   )
 }
