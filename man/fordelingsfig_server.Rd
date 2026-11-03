@@ -4,12 +4,9 @@
 \alias{fordelingsfig_server}
 \title{Modul for fordelingsfigurer i NRA sin shiny-app på Rapporteket}
 \usage{
-fordelingsfig_server(id, reshID, RegData, hvd_session, BrValg, userRole)
+fordelingsfig_server(id, RegData, BrValg, user)
 }
 \arguments{
-\item{reshID}{Parameter følger fra innlogging helseregister.no og angir
-hvilken enhet i spesialisthelsetjenesten brukeren tilhører}
-
 \item{RegData}{En dataramme med alle nødvendige variabler fra registeret}
 }
 \value{

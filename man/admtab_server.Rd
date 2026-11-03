@@ -4,7 +4,7 @@
 \alias{admtab_server}
 \title{Modul for Administrative tabeller-fane i NRA sin shiny-app på Rapporteket}
 \usage{
-admtab_server(id, RegData, hvd_session, skjemaoversikt)
+admtab_server(id, RegData, skjemaoversikt)
 }
 \value{
 Serverdel av modul for adm. tab

@@ -4,7 +4,7 @@
 \alias{indikatorfig_server}
 \title{Modul for indikatorfigurer i NRA sin shiny-app på Rapporteket}
 \usage{
-indikatorfig_server(id, RegData, hvd_session)
+indikatorfig_server(id, RegData)
 }
 \value{
 Serverdel av indikatorfane

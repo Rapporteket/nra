@@ -49,7 +49,7 @@ datadump_ui <- function(id){
 #' @return Datadump av registerets tabeller
 #' @export
 #'
-datadump_server <- function(id, reshID, userRole, hvd_session){
+datadump_server <- function(id, user){
   moduleServer(
     id,
     function(input, output, session) {
@@ -59,8 +59,7 @@ datadump_server <- function(id, reshID, userRole, hvd_session){
           paste0(input$dumptype, '_NRA', Sys.time(), '.csv')
         },
         content = function(file){
-          if (
-            rapbase::isRapContext()) {
+          if (rapbase::isRapContext()) {
             if (input$dumptype == c('allevarnum_utflatet')) {
               allevarnum <- nraHentTabell("allevarnum")
               basisdata <- allevarnum[allevarnum$ForlopsType1Num %in% 1:2, ]
@@ -89,32 +88,28 @@ datadump_server <- function(id, reshID, userRole, hvd_session){
           dumpdata <- tmpData[which(
             as.Date(tmpData$HovedDato) >= input$datovalg[1] &
               as.Date(tmpData$HovedDato) <= input$datovalg[2]), ]
-          if (userRole() != 'SC') {
-            dumpdata <- dumpdata[dumpdata$AvdRESH %in% reshID(), ]
+          if (user$role() != 'SC') {
+            dumpdata <- dumpdata[dumpdata$AvdRESH %in% user$org(), ]
           }
           if (input$dumptype == "forlopsoversikt") {
             dumpdata <- apply(dumpdata, 2, as.character)
             dumpdata <- as.data.frame(dumpdata)
             dumpdata <- dumpdata[which(dumpdata$PasientID != ""), ]
           }
+
+          rapbase::repLogger2(
+            user = user,
+            msg = paste0(
+              "NRA: nedlasting datadump f.o.m. ",
+              input$datovalg[1], " t.o.m. ", input$datovalg[2],
+              " , tabell: ", input$dumptype
+            )
+          )
+
           write.csv2(dumpdata, file, row.names = F, na = '',
                      fileEncoding = 'Latin1')
         }
       )
-
-      shiny::observe({
-        if (rapbase::isRapContext()) {
-
-          shinyjs::onclick(
-            "lastNed_dump",
-            rapbase::repLogger(
-              session = hvd_session,
-              msg = paste0("NRA: nedlasting datadump: ",
-                           input$dumptype)
-            )
-          )
-        }
-      })
     }
   )
 }
